@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="hydrated">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Example Capacitor App</title>
+    <meta
+      name="viewport"
+      content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+  </head>
+  <body>
+    <main>
+      <h1>Capacitor Test GliaWidgets Plugin Project</h1>
+      <p>
+        This project can be used to test out the functionality of GliaWidgets plugin.
+      </p>
+      <p>
+        <h3>SDK Configuration</h3>
+        <button onclick="configure()">Configure SDK</button>
+      </p>
+      <p>
+        <h3>Start Engagement</h3>
+        <button onclick="startChat()">Start Engagement</button>
+        <button onclick="startAudio()">Start Audio</button>
+        <button onclick="startVideo()">Start Video</button>
+        <button onclick="startSecureConversation()">Start Secure Conversation</button>
+      </p>
+      <p>
+        <h3>Clear Visitor Session</h3>
+      <button onclick="clearVisitorSession()">Clear Visitor Session</button>
+      </p>
+      <p>
+        <h3>List Queues</h3>
+        <button onclick="listQueues()">List Queue</button>
+      </p>
+      <p>
+        <h3>Authentication / IdToken</h3>
+        <input type="text" id="idTokenInput" name="idTokenInput" value="" />
+        <input type="text" id="accessTokenInput" name="accessTokenInput" value="" />
+        <button onclick="authenticate()">Authenticate</button>
+        <button onclick="isAuthenticated()">isAuthenticated</button>
+        <button onclick="deauthenticate()">Deauthenticate</button>
+        <button onclick="refreshAuthentication()">Refresh Authentication</button>
+    </p>
+
+    <p>
+      <h3>Visitor Code</h3>
+      <button onclick="showVisitorCodeViewController()">Show Visitor Code</button>
+    </p>
+    </main>
+
+    <script src="./js/example.js" type="module"></script>
+  </body>
+</html>
