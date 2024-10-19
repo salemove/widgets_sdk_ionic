@@ -3,6 +3,18 @@
   "version": "1.0.0",
   "description": "An Amazing Capacitor App",
   "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "capacitor",
     "mobile"
@@ -25,5 +37,5 @@
     "vite": "^5.4.2"
   },
   "author": "",
-  "license": "ISC"
+  "license": "MIT"
 }
