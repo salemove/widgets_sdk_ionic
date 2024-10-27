@@ -97,6 +97,8 @@ npx cap sync
 * [`deauthenticate()`](#deauthenticate)
 * [`isAuthenticated()`](#isauthenticated)
 * [`refreshAuthentication(...)`](#refreshauthentication)
+* [`pauseLiveObservation()`](#pauseliveobservation)
+* [`resumeLiveObservation()`](#resumeliveobservation)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 
@@ -266,6 +268,28 @@ Refreshes authentication access properties.
 | Param         | Type                                                    |
 | ------------- | ------------------------------------------------------- |
 | **`options`** | <code>{ idToken: string; accessToken?: string; }</code> |
+
+--------------------
+
+
+### pauseLiveObservation()
+
+```typescript
+pauseLiveObservation() => Promise<void>
+```
+
+Makes a pause for ongoing LiveObservation session.
+
+--------------------
+
+
+### resumeLiveObservation()
+
+```typescript
+resumeLiveObservation() => Promise<void>
+```
+
+Resumes ongoing LiveObservation session.
 
 --------------------
 

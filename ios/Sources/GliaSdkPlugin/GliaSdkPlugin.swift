@@ -20,6 +20,8 @@ public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "refreshAuthentication", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "showVisitorCodeViewController", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startSecureConversation", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "pauseLiveObservation", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "resumeLiveObservation", returnType: CAPPluginReturnPromise)
     ]
     private let implementation = GliaSdk()
 
@@ -61,6 +63,14 @@ public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
 
     @objc func startSecureConversation(_ call: CAPPluginCall) {
         implementation.startSecureConversation(call)
+    }
+    
+    @objc func pauseLiveObservation(_ call: CAPPluginCall) {
+        implementation.pauseLiveObservation(call)
+    }
+    
+    @objc func resumeLiveObservation(_ call: CAPPluginCall) {
+        implementation.resumeLiveObservation(call)
     }
 }
 

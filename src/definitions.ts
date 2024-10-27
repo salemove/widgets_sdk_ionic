@@ -87,4 +87,13 @@ export interface GliaSdkPlugin {
    * Refreshes authentication access properties.
    */
   refreshAuthentication(options: { idToken: string; accessToken?: string }): Promise<void>;
+
+  /**
+   * Makes a pause for ongoing LiveObservation session.
+   */
+  pauseLiveObservation(): Promise<void>;
+  /**
+   * Resumes ongoing LiveObservation session.
+   */
+  resumeLiveObservation(): Promise<void>;
 }

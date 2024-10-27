@@ -16,11 +16,11 @@ import GliaWidgets
         }
 
         guard
-            let apiKey = call.getObject("siteApiKey"),
+            let apiKey = call.getObject("apiKey"),
             let siteApiKeyId = apiKey["id"] as? String,
             let siteApiKeySecret = apiKey["secret"] as? String
         else {
-            call.reject("'siteApiKey' is missed or invalid.")
+            call.reject("'apiKey' is missed or invalid.")
             return
         }
 
@@ -249,6 +249,20 @@ import GliaWidgets
             } catch {
                 call.reject("Can't start Secure Conversation flow. Error='\(error)'.")
             }
+        }
+    }
+    
+    @objc public func pauseLiveObservation(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            GliaCore.sharedInstance.liveObservation.pause()
+            call.resolve()
+        }
+    }
+    
+    @objc public func resumeLiveObservation(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            GliaCore.sharedInstance.liveObservation.resume()
+            call.resolve()
         }
     }
 
