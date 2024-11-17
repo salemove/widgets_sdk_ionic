@@ -2,83 +2,36 @@
 
 GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. It provides all the necessary UI components to quickly integrate GliaSDK into your project.
 
-## Project structure
+## Installation
 
-- `src` - contains ts source code and interfaces available in Ionic environment.
+To install this package, add the following to your `.npmrc` file:
 
-  - `definitions.ts` - Ionic Plugin interfaces
-  - `index.ts` - exposes `GliaSdk` namespace and registers platforms (ios and android registered automatically). In case of introducing a new platform, see `web.ts` file.
-  - `web.ts` - example of using Ionic Plugin on web platform.
-
-- `ios` - iOS implementation of Ionic Plugin.
-
-  - `GliaSdkPlugin.swift` - the Plugin entry point.
-  - `GliaSdk.swift` - implementation for each Ionic Plugin interface.
-
-- `android` - Android implementation of Ionic Plugin.
-
-  - TBD
-
-- `example-app` - Example project with integrated GliaWidgets Ionic Plugin locally. Using for testing purposes.
-  - `src` - Ionic specific UI. Regular web page that uses Glia Widgets Ionic Plugin.
-  - `ios` - Sample iOS project. This project is using as an wrapper for Ionic Plugin since this sample project doesn't introduce any new functionality.
-    - `public` - precomiled JS code for using during iOS bundling.
-  - `android` - Sample Android project. This project is using as an wrapper for Ionic Plugin since this sample project doesn't introduce any new functionality.
-  - `dist` - precompiled JS code.
-
-## Add New Interface/Function
-
-- create a new interface in `definition.ts` file.
-- add handling for `ios`:
-  - extend `pluginMethods` function in `GliaSdkPlugin.swift` file with `CAPPluginMethod`.
-- add handling for `android`:
-  - TBD
-
-## Troubleshooting
-
-This project uses different folder for caching:
-
-- `node_modules` - installed npm modules
-- `.build` - Ionic build folder
-- `dist` - precompiled JS code
-
-Be aware that root folder has these files as a `example-app` also has the same project structure.
-
-In case of unexpected building, compilation, changing tracking (introduced method is not existed in `ios`/`android` projects) issues, try to remove cache folders and install everything again.
-
-```bash
-# remove folder with dependencies
-rm -rf node_modules
-# install dependencies based on lock file
-npm i
+```text
+@salemove:registry=https://npm.pkg.github.com
 ```
 
-```bash
-# remove precompiled code
-rm -rf dist
-# build TS/JS source code
-npm run build
+then run
+
+```shell
+npm install @your-username/ionic-plugin-example
 ```
 
-```bash
-# generate documentation
-npm run docgen
-```
+# How to use GliaSDK in Ionic environment
 
-If changes in `example-app/src/index.html` are not visible in platform specific code, try to sync changes manually:
+```js
+// Import `glia-widgets-ionic` plugin
+import { GliaSdk } from 'glia-widgets-ionic';
 
-```bash
-cd example-app
+// Configure SDK
+GliaSdk.configure({
+  siteId: 'site-id',
+  apiKey: { id: 'api-key-id', secret: 'api-key-secret' },
+  region: 'us',
+  companyName: 'Ionic Company',
+});
 
-# for ios, it would be beneficial to do `rm -rf ios/App/App/public`
-npm run build & npx cap sync ios
-```
-
-## Plugin Installation
-
-```bash
-npm install glia-widgets-ionic
-npx cap sync
+// Start engagement
+GliaSdk.startAudio();
 ```
 
 ## API
