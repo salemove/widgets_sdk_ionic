@@ -1,0 +1,283 @@
+{
+  "api": {
+    "name": "GliaSdkPlugin",
+    "slug": "gliasdkplugin",
+    "docs": "",
+    "tags": [],
+    "methods": [
+      {
+        "name": "configure",
+        "signature": "(options: { siteId: string; apiKey: ApiKey; region: Region; companyName: string; overrideLocale?: string; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ siteId: string; apiKey: ApiKey; region: Region; companyName: string; overrideLocale?: string | undefined; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "configures GliaWidgets SDK with credentials.\n\nNB! To make plugin work properly, use `create-visitor` credentials for Site APIKey only.",
+        "complexTypes": [
+          "ApiKey",
+          "Region"
+        ],
+        "slug": "configure"
+      },
+      {
+        "name": "startChat",
+        "signature": "(options: { queueIds?: string[]; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ queueIds?: string[] | undefined; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Starts a new chat/text engagement with queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.",
+        "complexTypes": [],
+        "slug": "startchat"
+      },
+      {
+        "name": "startAudio",
+        "signature": "(options: { queueIds?: string[]; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ queueIds?: string[] | undefined; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Starts a new audio engagement with queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.",
+        "complexTypes": [],
+        "slug": "startaudio"
+      },
+      {
+        "name": "startVideo",
+        "signature": "(options: { queueIds?: string[]; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ queueIds?: string[] | undefined; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Starts a new video engagement for queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.",
+        "complexTypes": [],
+        "slug": "startvideo"
+      },
+      {
+        "name": "startSecureConversation",
+        "signature": "(options: { startScreen: SecureConversationStartScreen; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ startScreen: SecureConversationStartScreen; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Starts Secure Conversation flow with passed `start screen`.\nSecure Conversation requires authentication/IdToken.",
+        "complexTypes": [
+          "SecureConversationStartScreen"
+        ],
+        "slug": "startsecureconversation"
+      },
+      {
+        "name": "clearVisitorSession",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Recreates currently used visitor in SDK.",
+        "complexTypes": [],
+        "slug": "clearvisitorsession"
+      },
+      {
+        "name": "listQueues",
+        "signature": "() => Promise<any>",
+        "parameters": [],
+        "returns": "Promise<any>",
+        "tags": [],
+        "docs": "Fetches all queues with its info for current site.",
+        "complexTypes": [],
+        "slug": "listqueues"
+      },
+      {
+        "name": "showVisitorCodeViewController",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Presents GliaWidgets UI with visitor code for sharing with operator to start an engagement.",
+        "complexTypes": [],
+        "slug": "showvisitorcodeviewcontroller"
+      },
+      {
+        "name": "authenticate",
+        "signature": "(options: { behavior: AuthenticationBehavior; idToken: string; accessToken?: string; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "- Provides options for authentication such as behavior, idToken, and accessToken.",
+            "type": "{ behavior: AuthenticationBehavior; idToken: string; accessToken?: string | undefined; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "options - Provides options for authentication such as behavior, idToken, and accessToken."
+          }
+        ],
+        "docs": "Authenticates visitor.",
+        "complexTypes": [
+          "AuthenticationBehavior"
+        ],
+        "slug": "authenticate"
+      },
+      {
+        "name": "deauthenticate",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Deauthenticates visitor. Be aware that deauthentication process relies on `AuthenticationBehavior`",
+        "complexTypes": [],
+        "slug": "deauthenticate"
+      },
+      {
+        "name": "isAuthenticated",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Provides current authentication state",
+        "complexTypes": [],
+        "slug": "isauthenticated"
+      },
+      {
+        "name": "refreshAuthentication",
+        "signature": "(options: { idToken: string; accessToken?: string; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ idToken: string; accessToken?: string | undefined; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Refreshes authentication access properties.",
+        "complexTypes": [],
+        "slug": "refreshauthentication"
+      },
+      {
+        "name": "pauseLiveObservation",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Makes a pause for ongoing LiveObservation session.",
+        "complexTypes": [],
+        "slug": "pauseliveobservation"
+      },
+      {
+        "name": "resumeLiveObservation",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Resumes ongoing LiveObservation session.",
+        "complexTypes": [],
+        "slug": "resumeliveobservation"
+      }
+    ],
+    "properties": []
+  },
+  "interfaces": [
+    {
+      "name": "ApiKey",
+      "slug": "apikey",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "id",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "secret",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "typeAliases": [
+    {
+      "name": "Region",
+      "slug": "region",
+      "docs": "Site's region.",
+      "types": [
+        {
+          "text": "'us'",
+          "complexTypes": []
+        },
+        {
+          "text": "'eu'",
+          "complexTypes": []
+        },
+        {
+          "text": "'beta'",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "SecureConversationStartScreen",
+      "slug": "secureconversationstartscreen",
+      "docs": "Start screen for Secure Conversation flow.",
+      "types": [
+        {
+          "text": "'welcome'",
+          "complexTypes": []
+        },
+        {
+          "text": "'chatTranscript'",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "AuthenticationBehavior",
+      "slug": "authenticationbehavior",
+      "docs": "Authentication (IdToken) behavior.\nforbiddenDuringEngagement - Prevent creation a new engagement if ongoing engagement exists. Default behavior.\nallowedDuringEngagement - Allows creation a new engagement if ongoing engagement exists. During this behavior original engagement will be ended and a new engagement engagement will be restarted with the same operator after authentication is succeded.",
+      "types": [
+        {
+          "text": "'forbiddenDuringEngagement'",
+          "complexTypes": []
+        },
+        {
+          "text": "'allowedDuringEngagement'",
+          "complexTypes": []
+        }
+      ]
+    }
+  ],
+  "pluginConfigs": []
+}
