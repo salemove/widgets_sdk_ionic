@@ -32,22 +32,22 @@ GliaSdk.startAudio();
 
 <docgen-index>
 
-- [`configure(...)`](#configure)
-- [`startChat(...)`](#startchat)
-- [`startAudio(...)`](#startaudio)
-- [`startVideo(...)`](#startvideo)
-- [`startSecureConversation(...)`](#startsecureconversation)
-- [`clearVisitorSession()`](#clearvisitorsession)
-- [`listQueues()`](#listqueues)
-- [`showVisitorCodeViewController()`](#showvisitorcodeviewcontroller)
-- [`authenticate(...)`](#authenticate)
-- [`deauthenticate()`](#deauthenticate)
-- [`isAuthenticated()`](#isauthenticated)
-- [`refreshAuthentication(...)`](#refreshauthentication)
-- [`pauseLiveObservation()`](#pauseliveobservation)
-- [`resumeLiveObservation()`](#resumeliveobservation)
-- [Interfaces](#interfaces)
-- [Type Aliases](#type-aliases)
+* [`configure(...)`](#configure)
+* [`startChat(...)`](#startchat)
+* [`startAudio(...)`](#startaudio)
+* [`startVideo(...)`](#startvideo)
+* [`startSecureConversation(...)`](#startsecureconversation)
+* [`clearVisitorSession()`](#clearvisitorsession)
+* [`listQueues()`](#listqueues)
+* [`showVisitorCodeViewController()`](#showvisitorcodeviewcontroller)
+* [`authenticate(...)`](#authenticate)
+* [`deauthenticate()`](#deauthenticate)
+* [`isAuthenticated()`](#isauthenticated)
+* [`refreshAuthentication(...)`](#refreshauthentication)
+* [`pauseLiveObservation()`](#pauseliveobservation)
+* [`resumeLiveObservation()`](#resumeliveobservation)
+* [Interfaces](#interfaces)
+* [Type Aliases](#type-aliases)
 
 </docgen-index>
 
@@ -68,7 +68,8 @@ NB! To make plugin work properly, use `create-visitor` credentials for Site APIK
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **`options`** | <code>{ siteId: string; apiKey: <a href="#apikey">ApiKey</a>; region: <a href="#region">Region</a>; companyName: string; overrideLocale?: string; }</code> |
 
----
+--------------------
+
 
 ### startChat(...)
 
@@ -82,7 +83,8 @@ Starts a new chat/text engagement with queue identifiers. If `queueIds` is null 
 | ------------- | ------------------------------------- |
 | **`options`** | <code>{ queueIds?: string[]; }</code> |
 
----
+--------------------
+
 
 ### startAudio(...)
 
@@ -96,7 +98,8 @@ Starts a new audio engagement with queue identifiers. If `queueIds` is null or e
 | ------------- | ------------------------------------- |
 | **`options`** | <code>{ queueIds?: string[]; }</code> |
 
----
+--------------------
+
 
 ### startVideo(...)
 
@@ -110,7 +113,8 @@ Starts a new video engagement for queue identifiers. If `queueIds` is null or em
 | ------------- | ------------------------------------- |
 | **`options`** | <code>{ queueIds?: string[]; }</code> |
 
----
+--------------------
+
 
 ### startSecureConversation(...)
 
@@ -125,7 +129,8 @@ Secure Conversation requires authentication/IdToken.
 | ------------- | --------------------------------------------------------------------------------------------------------- |
 | **`options`** | <code>{ startScreen: <a href="#secureconversationstartscreen">SecureConversationStartScreen</a>; }</code> |
 
----
+--------------------
+
 
 ### clearVisitorSession()
 
@@ -135,7 +140,8 @@ clearVisitorSession() => Promise<void>
 
 Recreates currently used visitor in SDK.
 
----
+--------------------
+
 
 ### listQueues()
 
@@ -147,7 +153,8 @@ Fetches all queues with its info for current site.
 
 **Returns:** <code>Promise&lt;any&gt;</code>
 
----
+--------------------
+
 
 ### showVisitorCodeViewController()
 
@@ -157,7 +164,8 @@ showVisitorCodeViewController() => Promise<void>
 
 Presents GliaWidgets UI with visitor code for sharing with operator to start an engagement.
 
----
+--------------------
+
 
 ### authenticate(...)
 
@@ -171,7 +179,8 @@ Authenticates visitor.
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | **`options`** | <code>{ behavior: <a href="#authenticationbehavior">AuthenticationBehavior</a>; idToken: string; accessToken?: string; }</code> | - Provides options for authentication such as behavior, idToken, and accessToken. |
 
----
+--------------------
+
 
 ### deauthenticate()
 
@@ -181,7 +190,8 @@ deauthenticate() => Promise<void>
 
 Deauthenticates visitor. Be aware that deauthentication process relies on <a href="#authenticationbehavior">`AuthenticationBehavior`</a>
 
----
+--------------------
+
 
 ### isAuthenticated()
 
@@ -191,7 +201,8 @@ isAuthenticated() => Promise<void>
 
 Provides current authentication state
 
----
+--------------------
+
 
 ### refreshAuthentication(...)
 
@@ -205,7 +216,8 @@ Refreshes authentication access properties.
 | ------------- | ------------------------------------------------------- |
 | **`options`** | <code>{ idToken: string; accessToken?: string; }</code> |
 
----
+--------------------
+
 
 ### pauseLiveObservation()
 
@@ -215,7 +227,8 @@ pauseLiveObservation() => Promise<void>
 
 Makes a pause for ongoing LiveObservation session.
 
----
+--------------------
+
 
 ### resumeLiveObservation()
 
@@ -225,9 +238,11 @@ resumeLiveObservation() => Promise<void>
 
 Resumes ongoing LiveObservation session.
 
----
+--------------------
+
 
 ### Interfaces
+
 
 #### ApiKey
 
@@ -236,7 +251,9 @@ Resumes ongoing LiveObservation session.
 | **`id`**     | <code>string</code> |
 | **`secret`** | <code>string</code> |
 
+
 ### Type Aliases
+
 
 #### Region
 
@@ -244,11 +261,13 @@ Site's region.
 
 <code>'us' | 'eu' | 'beta'</code>
 
+
 #### SecureConversationStartScreen
 
 Start screen for Secure Conversation flow.
 
 <code>'welcome' | 'chatTranscript'</code>
+
 
 #### AuthenticationBehavior
 
