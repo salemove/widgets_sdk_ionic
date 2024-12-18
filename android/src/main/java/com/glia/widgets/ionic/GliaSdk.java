@@ -165,10 +165,10 @@ public class GliaSdk {
     Authentication authentication;
     public void authenticate(PluginCall call) {
         String authRawBehaviorValue = call.getString("behavior");
-        String jwtToken = call.getString("jwtToken");
+        String jwtToken = call.getString("idToken");
 
         if (jwtToken == null) {
-            call.reject("'jwtToken' is missing");
+            call.reject("'idToken' is missing");
             return;
         }
         if (authRawBehaviorValue == null) {
