@@ -7,13 +7,14 @@ on:
         description: 'Version in semantic versioning format (i.e. 1.0.2)'
         required: true
 jobs:
-  publish:
+  package_publishing:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
       id-token: write
     env:
+      ACTIONS_STEP_DEBUG: true
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +28,7 @@ jobs:
           scope: '@salemove'
 
       - name: Authenticate to GitHub Packages
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.PAT_TOKEN }}" > ~/.npmrc
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
 
       - name: Install dependencies
         run: npm install
