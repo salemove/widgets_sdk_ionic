@@ -48,5 +48,5 @@ window.showVisitorCodeViewController = () => {
 }
 
 window.startSecureConversation = () => {
-    GliaSdk.startSecureConversation({startScreen: SecureConversationStartScreen.welcome})
+    GliaSdk.startSecureConversation({startScreen: 'welcome'})
 }
