@@ -107,9 +107,9 @@ public class GliaSdk {
         call.resolve();
     }
     public void startSecureConversation(PluginCall call, Activity activity) {
-        String initialScreen = call.getString("initialScreen");
-        String companyName = call.getString("companyName");
-        JSArray queueIds = call.getArray("queueIds");
+        String initialScreen = call.getString("startScreen");
+        String companyName = call.getString("companyName", "");
+        JSArray queueIds = call.getArray("queueIds", new JSArray());
 
         if ("chatTranscript".equals(initialScreen)) {
             activity.startActivity(new Intent(activity, ChatActivity.class)
