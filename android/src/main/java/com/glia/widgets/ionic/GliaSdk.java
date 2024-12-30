@@ -176,7 +176,10 @@ public class GliaSdk {
             return;
         }
 
-        String accessToken = call.getString("accessToken");
+        String accessToken = call.getString("accessToken", null);
+        if (accessToken != null && accessToken.isEmpty()) {
+            accessToken = null;
+        }
         AuthenticationBehavior authBehavior = AuthenticationBehavior.valueOf(authRawBehaviorValue);
 
         authentication = GliaWidgets.getAuthentication(authBehavior.toSdkNativeType());
@@ -217,9 +220,12 @@ public class GliaSdk {
             call.reject("'idToken' is missing");
             return;
         }
+        if (accessToken != null && accessToken.isEmpty()) {
+            accessToken = null;
+        }
         authentication.refresh(jwtToken, accessToken, (response, exception) -> {
             if (exception != null) {
-                String message = exception != null ? exception.getMessage() : "refreshAuthentication failed";
+                String message = exception.getMessage();
                 call.reject(message);
             } else {
                 call.resolve();
