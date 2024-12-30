@@ -211,10 +211,10 @@ public class GliaSdk {
         }
     }
     public void refreshAuthentication(PluginCall call) {
-        String jwtToken = call.getString("jwtToken");
+        String jwtToken = call.getString("idToken");
         String accessToken = call.getString("accessToken");
         if (jwtToken == null) {
-            call.reject("'jwtToken' is missing");
+            call.reject("'idToken' is missing");
             return;
         }
         authentication.refresh(jwtToken, accessToken, (response, exception) -> {
