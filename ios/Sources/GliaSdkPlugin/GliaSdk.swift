@@ -99,17 +99,13 @@ import GliaWidgets
     @objc public func clearVisitorSession(_ call: CAPPluginCall) {
 
         DispatchQueue.main.async {
-            do {
-                try Glia.sharedInstance.clearVisitorSession { result in
-                    switch result {
-                    case .success:
-                        call.resolve()
-                    case .failure(let error):
-                        call.reject("Clear visitor session failed. Error='\(error)'.")
-                    }
+            Glia.sharedInstance.clearVisitorSession { result in
+                switch result {
+                case .success:
+                    call.resolve()
+                case .failure(let error):
+                    call.reject("Clear visitor session failed. Error='\(error)'.")
                 }
-            } catch {
-                call.reject("Clear visitor session failed. Error='\(error)'.")
             }
         }
     }
@@ -149,6 +145,8 @@ import GliaWidgets
             call.reject("'idToken' is missed or invalid.")
             return
         }
+        
+        let accessToken = call.getString("accessToken")?.trimmingCharacters(in: .whitespacesAndNewlines)
 
         DispatchQueue.main.async {
             do {
@@ -157,7 +155,7 @@ import GliaWidgets
                 )
                 self.authentication?.authenticate(
                     with: Glia.Authentication.IdToken(idToken),
-                    accessToken: call.getString("accessToken")
+                    accessToken: accessToken?.isEmpty == true ? nil : accessToken
                 ) { result in
                     switch result {
                     case .success:
@@ -241,10 +239,16 @@ import GliaWidgets
         let startScreen =
             startScreenRawValue == "chatTranscript"
             ? SecureConversations.InitialScreen.chatTranscript : .welcome
+        
+        let queueIds = call.getArray("queueIds") as? [String]
+        
         DispatchQueue.main.async {
-
             do {
-                try Glia.sharedInstance.startEngagement(of: .messaging(startScreen))
+                if let queueIds = queueIds, !queueIds.isEmpty {
+                    try Glia.sharedInstance.startEngagement(of: .messaging(startScreen), in: queueIds)
+                } else {
+                    try Glia.sharedInstance.startEngagement(of: .messaging(startScreen))
+                }
                 call.resolve()
             } catch {
                 call.reject("Can't start Secure Conversation flow. Error='\(error)'.")

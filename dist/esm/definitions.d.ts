@@ -53,6 +53,7 @@ export interface GliaSdkPlugin {
      */
     startSecureConversation(options: {
         startScreen: SecureConversationStartScreen;
+        queueIds?: string[];
     }): Promise<void>;
     /**
      * Recreates currently used visitor in SDK.

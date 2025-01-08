@@ -119,15 +119,15 @@ Starts a new video engagement for queue identifiers. If `queueIds` is null or em
 ### startSecureConversation(...)
 
 ```typescript
-startSecureConversation(options: { startScreen: SecureConversationStartScreen; }) => Promise<void>
+startSecureConversation(options: { startScreen: SecureConversationStartScreen; queueIds?: string[]; }) => Promise<void>
 ```
 
 Starts Secure Conversation flow with passed `start screen`.
 Secure Conversation requires authentication/IdToken.
 
-| Param         | Type                                                                                                      |
-| ------------- | --------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ startScreen: <a href="#secureconversationstartscreen">SecureConversationStartScreen</a>; }</code> |
+| Param         | Type                                                                                                                           |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **`options`** | <code>{ startScreen: <a href="#secureconversationstartscreen">SecureConversationStartScreen</a>; queueIds?: string[]; }</code> |
 
 --------------------
 
