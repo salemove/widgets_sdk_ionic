@@ -1,7 +1,7 @@
 import { GliaSdk } from 'glia-widgets-ionic';
 
 window.configure = () => {
-    GliaSdk.configure({ siteId: "", siteApiKey: { id: "", secret: "" }, region: "", companyName: "" });
+    GliaSdk.configure({ siteId: "", apiKey: { id: "", secret: "" }, region: "", companyName: "" });
 }
 
 window.startChat = () => {
@@ -48,5 +48,5 @@ window.showVisitorCodeViewController = () => {
 }
 
 window.startSecureConversation = () => {
-    GliaSdk.startSecureConversation({startScreen: 'welcome'})
+    GliaSdk.startSecureConversation({startScreen: 'welcome', queueIds: ["ac202385-56bb-4aad-8014-8d1591deefc7"]})
 }

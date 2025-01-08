@@ -74,12 +74,12 @@
       },
       {
         "name": "startSecureConversation",
-        "signature": "(options: { startScreen: SecureConversationStartScreen; }) => Promise<void>",
+        "signature": "(options: { startScreen: SecureConversationStartScreen; queueIds?: string[]; }) => Promise<void>",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ startScreen: SecureConversationStartScreen; }"
+            "type": "{ startScreen: SecureConversationStartScreen; queueIds?: string[] | undefined; }"
           }
         ],
         "returns": "Promise<void>",

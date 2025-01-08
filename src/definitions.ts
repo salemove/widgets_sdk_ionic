@@ -50,7 +50,7 @@ export interface GliaSdkPlugin {
    * Starts Secure Conversation flow with passed `start screen`.
    * Secure Conversation requires authentication/IdToken.
    */
-  startSecureConversation(options: { startScreen: SecureConversationStartScreen }): Promise<void>;
+  startSecureConversation(options: { startScreen: SecureConversationStartScreen; queueIds?: string[] }): Promise<void>;
 
   /**
    * Recreates currently used visitor in SDK.
