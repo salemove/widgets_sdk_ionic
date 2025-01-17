@@ -5,15 +5,15 @@ window.configure = () => {
 }
 
 window.startChat = () => {
-    GliaSdk.startChat();
+    GliaSdk.startChat({queueIds: ["queueId"]});
 }
 
 window.startAudio = () => {
-    GliaSdk.startAudio();
+    GliaSdk.startAudio({queueIds: ["queueId"]});
 }
 
 window.startVideo = () => {
-    GliaSdk.startVideo();
+    GliaSdk.startVideo({queueIds: ["queueId"]});
 }
 
 window.clearVisitorSession = () => {
@@ -48,5 +48,5 @@ window.showVisitorCodeViewController = () => {
 }
 
 window.startSecureConversation = () => {
-    GliaSdk.startSecureConversation({startScreen: 'welcome', queueIds: ["ac202385-56bb-4aad-8014-8d1591deefc7"]})
+    GliaSdk.startSecureConversation({startScreen: 'welcome', queueIds: ["queueId"]})
 }
