@@ -1,19 +1,20 @@
 import { GliaSdk } from 'glia-widgets-ionic';
+import { environment } from '../environments/environment';
 
 window.configure = () => {
-    GliaSdk.configure({ siteId: "", apiKey: { id: "", secret: "" }, region: "", companyName: "" });
+    GliaSdk.configure({ siteId: environment.IONIC_SITE_ID, apiKey: { id: environment.IONIC_API_KEY, secret: environment.IONIC_API_SECRET }, region: environment.IONIC_REGION, companyName: environment.IONIC_COMPANY_NAME });
 }
 
 window.startChat = () => {
-    GliaSdk.startChat({queueIds: ["queueId"]});
+    GliaSdk.startChat({queueIds: [process.env.IONIC_QUEUE_ID]});
 }
 
 window.startAudio = () => {
-    GliaSdk.startAudio({queueIds: ["queueId"]});
+    GliaSdk.startAudio({queueIds: [process.env.IONIC_QUEUE_ID]});
 }
 
 window.startVideo = () => {
-    GliaSdk.startVideo({queueIds: ["queueId"]});
+    GliaSdk.startVideo({queueIds: [process.env.IONIC_QUEUE_ID]});
 }
 
 window.clearVisitorSession = () => {
@@ -48,5 +49,5 @@ window.showVisitorCodeViewController = () => {
 }
 
 window.startSecureConversation = () => {
-    GliaSdk.startSecureConversation({startScreen: 'welcome', queueIds: ["queueId"]})
+    GliaSdk.startSecureConversation({startScreen: 'welcome', queueIds: [process.env.IONIC_QUEUE_ID]})
 }
