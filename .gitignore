@@ -1,6 +1,7 @@
 # node files
 dist
 node_modules
+environment.ts
 
 # iOS files
 Pods
