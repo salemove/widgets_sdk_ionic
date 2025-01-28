@@ -6,15 +6,15 @@ window.configure = () => {
 }
 
 window.startChat = () => {
-    GliaSdk.startChat({queueIds: [process.env.IONIC_QUEUE_ID]});
+    GliaSdk.startChat({queueIds: [environment.IONIC_QUEUE_ID]});
 }
 
 window.startAudio = () => {
-    GliaSdk.startAudio({queueIds: [process.env.IONIC_QUEUE_ID]});
+    GliaSdk.startAudio({queueIds: [environment.IONIC_QUEUE_ID]});
 }
 
 window.startVideo = () => {
-    GliaSdk.startVideo({queueIds: [process.env.IONIC_QUEUE_ID]});
+    GliaSdk.startVideo({queueIds: [environment.IONIC_QUEUE_ID]});
 }
 
 window.clearVisitorSession = () => {
@@ -49,5 +49,5 @@ window.showVisitorCodeViewController = () => {
 }
 
 window.startSecureConversation = () => {
-    GliaSdk.startSecureConversation({startScreen: 'welcome', queueIds: [process.env.IONIC_QUEUE_ID]})
+    GliaSdk.startSecureConversation({startScreen: 'welcome', queueIds: [environment.IONIC_QUEUE_ID]})
 }
