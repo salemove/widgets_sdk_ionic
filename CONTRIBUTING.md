@@ -9,15 +9,15 @@ This guide provides instructions for contributing to this Capacitor plugin.
 1. Fork and clone the repo.
 1. Install the dependencies.
 
-    ```shell
-    npm install
-    ```
+   ```shell
+   npm install
+   ```
 
 1. Install SwiftLint if you're on macOS.
 
-    ```shell
-    brew install swiftlint
-    ```
+   ```shell
+   brew install swiftlint
+   ```
 
 ### Scripts
 
@@ -50,3 +50,41 @@ npm publish
 ```
 
 > **Note**: The [`files`](https://docs.npmjs.com/cli/v7/configuring-npm/package-json#files) array in `package.json` specifies which files get published. If you rename files/directories or add files elsewhere, you may need to update it.
+
+# Environment Variables
+
+Since Ionic is built on top of Angular, in example porject used an embedded mechanism for managing environment variables. The official doc is [here](https://v17.angular.io/guide/build).
+
+## How to use environment variables?
+
+- create folder `environments` in `src` folder. Ex: `example-app/src/environments/environment.ts`
+- in `environment.ts` define all environments variables:
+
+```typescript
+export const environment = {
+  IONIC_API_KEY: 'site-api-key',
+  IONIC_API_SECRET: 'site-api-secret',
+  IONIC_SITE_ID: 'site-identifier',
+  IONIC_QUEUE_ID: 'queue-identifier',
+  IONIC_REGION: 'beta',
+  IONIC_COMPANY_NAME: 'IonicCompany',
+};
+```
+
+After environment variables are defined:
+
+- open `example-app` folder
+- run `npm run build`
+- run `npx cap sync`
+
+## Troubleshooting
+
+To be sure that environment variables applied correctly please open `public` folder and find `index-#{some_hash}.js` file. If variables applied correctly your should see something like this:
+![image](/image/406754853-aff92ca8-14e1-4ba3-a89c-c20569880d55.png)
+![image](/image/406755039-3cf54cb1-fb3c-4eab-a494-3c92cb13cbfa.png)
+
+## To run application:
+
+- open platform folder `ios` or `android`
+- open IDE
+- run project
