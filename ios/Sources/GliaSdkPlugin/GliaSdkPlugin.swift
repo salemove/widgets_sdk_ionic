@@ -32,6 +32,14 @@ public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
     @objc func startChat(_ call: CAPPluginCall) {
         implementation.startChat(call)
     }
+    
+    @objc func startAudio(_ call: CAPPluginCall) {
+        implementation.startAudio(call)
+    }
+    
+    @objc func startVideo(_ call: CAPPluginCall) {
+        implementation.startVideo(call)
+    }
 
     @objc func clearVisitorSession(_ call: CAPPluginCall) {
         implementation.clearVisitorSession(call)
