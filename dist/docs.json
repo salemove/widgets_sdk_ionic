@@ -7,12 +7,12 @@
     "methods": [
       {
         "name": "configure",
-        "signature": "(options: { siteId: string; apiKey: ApiKey; region: Region; companyName: string; overrideLocale?: string; }) => Promise<void>",
+        "signature": "(options: { siteId: string; queueIds?: string[]; apiKey: ApiKey; region: Region; companyName: string; overrideLocale?: string; }) => Promise<void>",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ siteId: string; apiKey: ApiKey; region: Region; companyName: string; overrideLocale?: string | undefined; }"
+            "type": "{ siteId: string; queueIds?: string[] | undefined; apiKey: ApiKey; region: Region; companyName: string; overrideLocale?: string | undefined; }"
           }
         ],
         "returns": "Promise<void>",
@@ -25,15 +25,19 @@
         "slug": "configure"
       },
       {
+        "name": "presentEntryWidget",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Presents Entry Widget.",
+        "complexTypes": [],
+        "slug": "presententrywidget"
+      },
+      {
         "name": "startChat",
-        "signature": "(options: { queueIds?: string[]; }) => Promise<void>",
-        "parameters": [
-          {
-            "name": "options",
-            "docs": "",
-            "type": "{ queueIds?: string[] | undefined; }"
-          }
-        ],
+        "signature": "() => Promise<void>",
+        "parameters": [],
         "returns": "Promise<void>",
         "tags": [],
         "docs": "Starts a new chat/text engagement with queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.",
@@ -42,14 +46,8 @@
       },
       {
         "name": "startAudio",
-        "signature": "(options: { queueIds?: string[]; }) => Promise<void>",
-        "parameters": [
-          {
-            "name": "options",
-            "docs": "",
-            "type": "{ queueIds?: string[] | undefined; }"
-          }
-        ],
+        "signature": "() => Promise<void>",
+        "parameters": [],
         "returns": "Promise<void>",
         "tags": [],
         "docs": "Starts a new audio engagement with queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.",
@@ -58,14 +56,8 @@
       },
       {
         "name": "startVideo",
-        "signature": "(options: { queueIds?: string[]; }) => Promise<void>",
-        "parameters": [
-          {
-            "name": "options",
-            "docs": "",
-            "type": "{ queueIds?: string[] | undefined; }"
-          }
-        ],
+        "signature": "() => Promise<void>",
+        "parameters": [],
         "returns": "Promise<void>",
         "tags": [],
         "docs": "Starts a new video engagement for queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.",
@@ -74,20 +66,12 @@
       },
       {
         "name": "startSecureConversation",
-        "signature": "(options: { startScreen: SecureConversationStartScreen; queueIds?: string[]; }) => Promise<void>",
-        "parameters": [
-          {
-            "name": "options",
-            "docs": "",
-            "type": "{ startScreen: SecureConversationStartScreen; queueIds?: string[] | undefined; }"
-          }
-        ],
+        "signature": "() => Promise<void>",
+        "parameters": [],
         "returns": "Promise<void>",
         "tags": [],
         "docs": "Starts Secure Conversation flow with passed `start screen`.\nSecure Conversation requires authentication/IdToken.",
-        "complexTypes": [
-          "SecureConversationStartScreen"
-        ],
+        "complexTypes": [],
         "slug": "startsecureconversation"
       },
       {
@@ -244,21 +228,6 @@
         },
         {
           "text": "'beta'",
-          "complexTypes": []
-        }
-      ]
-    },
-    {
-      "name": "SecureConversationStartScreen",
-      "slug": "secureconversationstartscreen",
-      "docs": "Start screen for Secure Conversation flow.",
-      "types": [
-        {
-          "text": "'welcome'",
-          "complexTypes": []
-        },
-        {
-          "text": "'chatTranscript'",
           "complexTypes": []
         }
       ]
