@@ -15,10 +15,6 @@ export type Region = 'us' | 'eu' | 'beta';
  */
 export type AuthenticationBehavior = 'forbiddenDuringEngagement' | 'allowedDuringEngagement';
 
-/**
- * Start screen for Secure Conversation flow.
- */
-export type SecureConversationStartScreen = 'welcome' | 'chatTranscript';
 export interface GliaSdkPlugin {
   /**
    * configures GliaWidgets SDK with credentials.
@@ -27,6 +23,7 @@ export interface GliaSdkPlugin {
    */
   configure(options: {
     siteId: string;
+    queueIds?: string[];
     apiKey: ApiKey;
     region: Region;
     companyName: string;
@@ -34,23 +31,28 @@ export interface GliaSdkPlugin {
   }): Promise<void>;
 
   /**
+   * Presents Entry Widget.
+   */
+  presentEntryWidget(): Promise<void>;
+
+  /**
    * Starts a new chat/text engagement with queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.
    */
-  startChat(options: { queueIds?: string[] }): Promise<void>;
+  startChat(): Promise<void>;
   /**
    * Starts a new audio engagement with queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.
    */
-  startAudio(options: { queueIds?: string[] }): Promise<void>;
+  startAudio(): Promise<void>;
   /**
    * Starts a new video engagement for queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.
    */
-  startVideo(options: { queueIds?: string[] }): Promise<void>;
+  startVideo(): Promise<void>;
 
   /**
    * Starts Secure Conversation flow with passed `start screen`.
    * Secure Conversation requires authentication/IdToken.
    */
-  startSecureConversation(options: { startScreen: SecureConversationStartScreen; queueIds?: string[] }): Promise<void>;
+  startSecureConversation(): Promise<void>;
 
   /**
    * Recreates currently used visitor in SDK.

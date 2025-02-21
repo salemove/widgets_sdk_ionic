@@ -25,6 +25,11 @@ public class GliaSdkPlugin extends Plugin {
         implementation.configure(call, getActivity());
     }
     @PluginMethod
+    public void presentEntryWidget(PluginCall call) {
+        implementation.presentEntryWidget(call, getActivity());
+    }
+
+    @PluginMethod
     public void startChat(PluginCall call) {
         implementation.startChat(call, getActivity());
     }

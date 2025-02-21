@@ -33,10 +33,11 @@ GliaSdk.startAudio();
 <docgen-index>
 
 * [`configure(...)`](#configure)
-* [`startChat(...)`](#startchat)
-* [`startAudio(...)`](#startaudio)
-* [`startVideo(...)`](#startvideo)
-* [`startSecureConversation(...)`](#startsecureconversation)
+* [`presentEntryWidget()`](#presententrywidget)
+* [`startChat()`](#startchat)
+* [`startAudio()`](#startaudio)
+* [`startVideo()`](#startvideo)
+* [`startSecureConversation()`](#startsecureconversation)
 * [`clearVisitorSession()`](#clearvisitorsession)
 * [`listQueues()`](#listqueues)
 * [`showVisitorCodeViewController()`](#showvisitorcodeviewcontroller)
@@ -57,77 +58,72 @@ GliaSdk.startAudio();
 ### configure(...)
 
 ```typescript
-configure(options: { siteId: string; apiKey: ApiKey; region: Region; companyName: string; overrideLocale?: string; }) => Promise<void>
+configure(options: { siteId: string; queueIds?: string[]; apiKey: ApiKey; region: Region; companyName: string; overrideLocale?: string; }) => Promise<void>
 ```
 
 configures GliaWidgets SDK with credentials.
 
 NB! To make plugin work properly, use `create-visitor` credentials for Site APIKey only.
 
-| Param         | Type                                                                                                                                                       |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ siteId: string; apiKey: <a href="#apikey">ApiKey</a>; region: <a href="#region">Region</a>; companyName: string; overrideLocale?: string; }</code> |
+| Param         | Type                                                                                                                                                                            |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ siteId: string; queueIds?: string[]; apiKey: <a href="#apikey">ApiKey</a>; region: <a href="#region">Region</a>; companyName: string; overrideLocale?: string; }</code> |
 
 --------------------
 
 
-### startChat(...)
+### presentEntryWidget()
 
 ```typescript
-startChat(options: { queueIds?: string[]; }) => Promise<void>
+presentEntryWidget() => Promise<void>
+```
+
+Presents Entry Widget.
+
+--------------------
+
+
+### startChat()
+
+```typescript
+startChat() => Promise<void>
 ```
 
 Starts a new chat/text engagement with queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.
 
-| Param         | Type                                  |
-| ------------- | ------------------------------------- |
-| **`options`** | <code>{ queueIds?: string[]; }</code> |
-
 --------------------
 
 
-### startAudio(...)
+### startAudio()
 
 ```typescript
-startAudio(options: { queueIds?: string[]; }) => Promise<void>
+startAudio() => Promise<void>
 ```
 
 Starts a new audio engagement with queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.
 
-| Param         | Type                                  |
-| ------------- | ------------------------------------- |
-| **`options`** | <code>{ queueIds?: string[]; }</code> |
-
 --------------------
 
 
-### startVideo(...)
+### startVideo()
 
 ```typescript
-startVideo(options: { queueIds?: string[]; }) => Promise<void>
+startVideo() => Promise<void>
 ```
 
 Starts a new video engagement for queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.
 
-| Param         | Type                                  |
-| ------------- | ------------------------------------- |
-| **`options`** | <code>{ queueIds?: string[]; }</code> |
-
 --------------------
 
 
-### startSecureConversation(...)
+### startSecureConversation()
 
 ```typescript
-startSecureConversation(options: { startScreen: SecureConversationStartScreen; queueIds?: string[]; }) => Promise<void>
+startSecureConversation() => Promise<void>
 ```
 
 Starts Secure Conversation flow with passed `start screen`.
 Secure Conversation requires authentication/IdToken.
-
-| Param         | Type                                                                                                                           |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| **`options`** | <code>{ startScreen: <a href="#secureconversationstartscreen">SecureConversationStartScreen</a>; queueIds?: string[]; }</code> |
 
 --------------------
 
@@ -260,13 +256,6 @@ Resumes ongoing LiveObservation session.
 Site's region.
 
 <code>'us' | 'eu' | 'beta'</code>
-
-
-#### SecureConversationStartScreen
-
-Start screen for Secure Conversation flow.
-
-<code>'welcome' | 'chatTranscript'</code>
 
 
 #### AuthenticationBehavior

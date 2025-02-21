@@ -9,6 +9,7 @@ public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
     public let jsName = "GliaSdk"
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "configure", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "presentEntryWidget", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startChat", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startAudio", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startVideo", returnType: CAPPluginReturnPromise),
@@ -28,7 +29,11 @@ public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
     @objc func configure(_ call: CAPPluginCall) {
         implementation.configure(call)
     }
-
+    
+    @objc func presentEntryWidget(_ call: CAPPluginCall) {
+        implementation.presentEntryWidget(call)
+    }
+    
     @objc func startChat(_ call: CAPPluginCall) {
         implementation.startChat(call)
     }
@@ -81,11 +86,3 @@ public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
         implementation.resumeLiveObservation(call)
     }
 }
-
-/*
-
- startChat(options: { queueIds?: string[] }): Promise<void>;
-   startAudio(options: { queueIds?: string[] }): Promise<void>;
-   startVideo(options: { queueIds?: string[] }): Promise<void>;
-
- */

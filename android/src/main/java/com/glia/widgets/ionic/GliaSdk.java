@@ -4,6 +4,7 @@ import static androidx.fragment.app.FragmentManager.TAG;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.util.Log;
 
@@ -17,10 +18,8 @@ import com.glia.androidsdk.SiteApiKey;
 import com.glia.androidsdk.visitor.Authentication;
 import com.glia.widgets.GliaWidgets;
 import com.glia.widgets.GliaWidgetsConfig;
-import com.glia.widgets.call.CallActivity;
-import com.glia.widgets.chat.ChatActivity;
-import com.glia.widgets.chat.ChatType;
-import com.glia.widgets.messagecenter.MessageCenterActivity;
+import com.glia.widgets.entrywidget.EntryWidget;
+import com.glia.widgets.launcher.EngagementLauncher;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +43,7 @@ public class GliaSdk {
         String siteId = call.getString("siteId");
         String region = call.getString("region");
         String companyName = call.getString("companyName");
+        JSArray queueIds = call.getArray("queueIds", new JSArray());
 
         if (siteApiKeyId == null) {
             call.reject("'siteApiKeyId' is missing.");
@@ -74,57 +74,54 @@ public class GliaSdk {
 
         GliaWidgets.init(gliaConfigBuilder.build());
 
+        engagementLauncher = GliaWidgets.getEngagementLauncher(jsArrayToArrayList(queueIds));
+        entryWidget = GliaWidgets.getEntryWidget(jsArrayToArrayList(queueIds));
+
         call.resolve();
     }
+
+    public void presentEntryWidget(PluginCall call, Activity activity) {
+        if (entryWidget == null) {
+            call.reject("SDK is not configured.");
+            return;
+        }
+        entryWidget.show(activity);
+    }
+
+    private SharedPreferences sharedPreferences;
+    private EngagementLauncher engagementLauncher;
+    private EntryWidget entryWidget;
+
     public void startChat(PluginCall call, Activity activity) {
-        JSArray queueIds = call.getArray("queueIds");
-
-        Intent intent = new Intent(activity, ChatActivity.class)
-                .putExtra(GliaWidgets.MEDIA_TYPE, EngagementKind.CHAT.toAndroidSdkMediaType())
-                .putExtra(GliaWidgets.QUEUE_IDS, jsArrayToArrayList(queueIds));
-
-        activity.startActivity(intent);
+        if (engagementLauncher == null) {
+            call.reject("SDK is not configured.");
+            return;
+        }
+        engagementLauncher.startChat(activity);
         call.resolve();
     }
     public void startAudio(PluginCall call, Activity activity) {
-        JSArray queueIds = call.getArray("queueIds");
-
-        Intent intent = new Intent(activity, CallActivity.class)
-                .putExtra(GliaWidgets.MEDIA_TYPE, EngagementKind.AUDIO.toAndroidSdkMediaType())
-                .putExtra(GliaWidgets.QUEUE_IDS, jsArrayToArrayList(queueIds));
-
-        activity.startActivity(intent);
+        if (engagementLauncher == null) {
+            call.reject("SDK is not configured.");
+            return;
+        }
+        engagementLauncher.startAudioCall(activity);
         call.resolve();
     }
     public void startVideo(PluginCall call, Activity activity) {
-        JSArray queueIds = call.getArray("queueIds");
-
-        Intent intent = new Intent(activity, CallActivity.class)
-                .putExtra(GliaWidgets.MEDIA_TYPE, EngagementKind.VIDEO.toAndroidSdkMediaType())
-                .putExtra(GliaWidgets.QUEUE_IDS, jsArrayToArrayList(queueIds));
-
-        activity.startActivity(intent);
+        if (engagementLauncher == null) {
+            call.reject("SDK is not configured.");
+            return;
+        }
+        engagementLauncher.startVideoCall(activity);
         call.resolve();
     }
     public void startSecureConversation(PluginCall call, Activity activity) {
-        String initialScreen = call.getString("startScreen");
-        String companyName = call.getString("companyName", "");
-        JSArray queueIds = call.getArray("queueIds", new JSArray());
-
-        if ("chatTranscript".equals(initialScreen)) {
-            activity.startActivity(new Intent(activity, ChatActivity.class)
-                    .putExtra(GliaWidgets.MEDIA_TYPE, Engagement.MediaType.TEXT)
-                    .putExtra(GliaWidgets.CHAT_TYPE, (Parcelable) ChatType.SECURE_MESSAGING)
-                    .putExtra(GliaWidgets.COMPANY_NAME, companyName == null ? "" : companyName)
-                    .putExtra(GliaWidgets.QUEUE_IDS, jsArrayToArrayList(queueIds))
-            );
-        } else {
-            activity.startActivity(new Intent(activity, MessageCenterActivity.class)
-                    .putExtra(GliaWidgets.COMPANY_NAME, companyName == null ? "" : companyName)
-                    .putExtra(GliaWidgets.QUEUE_IDS, jsArrayToArrayList(queueIds))
-            );
+        if (engagementLauncher == null) {
+            call.reject("SDK is not configured.");
+            return;
         }
-
+        engagementLauncher.startSecureMessaging(activity);
         call.resolve();
     }
     public void clearVisitorSession(PluginCall call) {

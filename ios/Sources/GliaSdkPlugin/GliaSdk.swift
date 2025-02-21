@@ -4,6 +4,9 @@ import GliaCoreSDK
 import GliaWidgets
 
 @objc public class GliaSdk: NSObject {
+    
+    private var entryWidget: EntryWidget?
+    private var launcher: EngagementLauncher?
 
     @objc public func configure(_ call: CAPPluginCall) {
 
@@ -31,6 +34,8 @@ import GliaWidgets
             call.reject("'region' is missed or invalid.")
             return
         }
+        
+        let queueIds = call.getArray("queueIds", []) as? [String]
 
         DispatchQueue.main.async {
             do {
@@ -42,11 +47,19 @@ import GliaWidgets
                         site: siteId
                     ),
                     theme: Theme()
-                ) { result in
+                ) { [weak self] result in
 
                     switch result {
+                    
                     case .success:
-                        call.resolve()
+                        do {
+                            self?.entryWidget = try Glia.sharedInstance.getEntryWidget(queueIds: queueIds ?? [])
+                            self?.launcher = try Glia.sharedInstance.getEngagementLauncher(queueIds: queueIds ?? [])
+                            call.resolve()
+                        } catch {
+                            call.reject("Error occured='\(error)'.")
+                        }
+                    
                     case .failure(let error):
                         call.reject("Error occured='\(error)'.")
                     }
@@ -56,13 +69,34 @@ import GliaWidgets
             }
         }
     }
+    
+    @objc public func presentEntryWidget(_ call: CAPPluginCall) {
+        
+        guard let entryWidget = self.entryWidget else {
+            call.reject("SDK not configured.")
+            return
+        }
+        
+        DispatchQueue.main.async { [weak entryWidget] in
+            guard let topViewController = UIApplication.topViewController() else {
+                call.reject("Can't find view contorller for presentation.")
+                return
+            }
+        
+            entryWidget?.show(in: topViewController)
+        }
+    }
 
     @objc public func startChat(_ call: CAPPluginCall) {
 
+        guard let launcher = self.launcher else {
+            call.reject("SDK not configured.")
+            return
+        }
+        
         DispatchQueue.main.async {
             do {
-                let queueIds = call.getArray("queueIds") as? [String]
-                try Glia.sharedInstance.startEngagement(of: .chat, in: queueIds ?? [])
+                try launcher.startChat()
                 call.resolve()
             } catch {
                 call.reject("Engagement has not been started. Error='\(error)'.")
@@ -72,10 +106,14 @@ import GliaWidgets
 
     @objc public func startAudio(_ call: CAPPluginCall) {
 
+        guard let launcher = self.launcher else {
+            call.reject("SDK not configured.")
+            return
+        }
+        
         DispatchQueue.main.async {
             do {
-                let queueIds = call.getArray("queueIds") as? [String]
-                try Glia.sharedInstance.startEngagement(of: .audioCall, in: queueIds ?? [])
+                try launcher.startAudioCall()
                 call.resolve()
             } catch {
                 call.reject("Engagement has not been started. Error='\(error)'.")
@@ -85,10 +123,14 @@ import GliaWidgets
 
     @objc public func startVideo(_ call: CAPPluginCall) {
 
+        guard let launcher = self.launcher else {
+            call.reject("SDK not configured.")
+            return
+        }
+        
         DispatchQueue.main.async {
             do {
-                let queueIds = call.getArray("queueIds") as? [String]
-                try Glia.sharedInstance.startEngagement(of: .videoCall, in: queueIds ?? [])
+                try launcher.startVideoCall()
                 call.resolve()
             } catch {
                 call.reject("Engagement has not been started. Error='\(error)'.")
@@ -231,24 +273,14 @@ import GliaWidgets
 
     @objc public func startSecureConversation(_ call: CAPPluginCall) {
 
-        guard let startScreenRawValue = call.getString("startScreen") else {
-            call.reject("'startScreen' not defined or invalid.")
+        guard let launcher = self.launcher else {
+            call.reject("SDK not configured.")
             return
         }
-
-        let startScreen =
-            startScreenRawValue == "chatTranscript"
-            ? SecureConversations.InitialScreen.chatTranscript : .welcome
-        
-        let queueIds = call.getArray("queueIds") as? [String]
         
         DispatchQueue.main.async {
             do {
-                if let queueIds = queueIds, !queueIds.isEmpty {
-                    try Glia.sharedInstance.startEngagement(of: .messaging(startScreen), in: queueIds)
-                } else {
-                    try Glia.sharedInstance.startEngagement(of: .messaging(startScreen))
-                }
+                try launcher.startSecureMessaging()
                 call.resolve()
             } catch {
                 call.reject("Can't start Secure Conversation flow. Error='\(error)'.")
