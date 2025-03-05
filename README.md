@@ -7,7 +7,7 @@ GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. 
 To install version 3.0.0 of this package use:
 
 ```text
-npm install github:salemove/widgets_sdk_ionic#3.0.0
+npm install github:salemove/widgets_sdk_ionic
 ```
 
 # How to use GliaSDK in Ionic environment
