@@ -7,13 +7,13 @@ GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. 
 To install the @salemove/widgets_sdk_ionic package use:
 
 ```text
-npm install @salemove/widgets_sdk_ionic
+npm install @salemove/widgets_sdk_ionic --legacy-peer-deps
 ```
 
 # How to use GliaSDK in Ionic environment
 
 ```js
-// Import `glia-widgets-ionic` plugin
+// Import `glia-widgets-ionic` SDK
 import { GliaSdk } from 'glia-widgets-ionic';
 
 // Configure SDK
@@ -24,8 +24,8 @@ GliaSdk.configure({
   companyName: 'Ionic Company',
 });
 
-// Start engagement
-GliaSdk.startAudio();
+// Show Entry Widget
+GliaSdk.presentEntryWidget();
 ```
 
 ## API
@@ -61,9 +61,9 @@ GliaSdk.startAudio();
 configure(options: { siteId: string; queueIds?: string[]; apiKey: ApiKey; region: Region; companyName: string; overrideLocale?: string; }) => Promise<void>
 ```
 
-configures GliaWidgets SDK with credentials.
+Configures GliaWidgets SDK with credentials.
 
-NB! To make plugin work properly, use `create-visitor` credentials for Site APIKey only.
+NB! Ensure the site API key used in Mobile SDK has the Create Visitor permission only.
 
 | Param         | Type                                                                                                                                                                            |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -122,7 +122,7 @@ Starts a new video engagement for queue identifiers. If `queueIds` is null or em
 startSecureConversation() => Promise<void>
 ```
 
-Starts Secure Conversation flow with passed `start screen`.
+Starts Secure Conversation flow.
 Secure Conversation requires authentication/IdToken.
 
 --------------------
@@ -146,8 +146,6 @@ listQueues() => Promise<any>
 ```
 
 Fetches all queues with its info for current site.
-
-**Returns:** <code>Promise&lt;any&gt;</code>
 
 --------------------
 
@@ -195,7 +193,7 @@ Deauthenticates visitor. Be aware that deauthentication process relies on <a hre
 isAuthenticated() => Promise<void>
 ```
 
-Provides current authentication state
+Provides current authentication state.
 
 --------------------
 
