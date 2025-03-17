@@ -13,7 +13,7 @@
     "ios/Sources",
     "ios/Tests",
     "Package.swift",
-    "GliaWidgetsIonic.podspec"
+    "SalemoveWidgetsSdkIonic.podspec"
   ],
   "author": "Glia",
   "license": "MIT",
