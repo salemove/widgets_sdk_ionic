@@ -7,20 +7,24 @@
     "methods": [
       {
         "name": "configure",
-        "signature": "(options: { siteId: string; queueIds?: string[]; apiKey: ApiKey; region: Region; companyName: string; overrideLocale?: string; }) => Promise<void>",
+        "signature": "(configuration: Configuration) => Promise<void>",
         "parameters": [
           {
-            "name": "options",
-            "docs": "",
-            "type": "{ siteId: string; queueIds?: string[] | undefined; apiKey: ApiKey; region: Region; companyName: string; overrideLocale?: string | undefined; }"
+            "name": "configuration",
+            "docs": "- {@link Configuration} options for the GliaWidgets SDK.",
+            "type": "Configuration"
           }
         ],
         "returns": "Promise<void>",
-        "tags": [],
-        "docs": "configures GliaWidgets SDK with credentials.\n\nNB! To make plugin work properly, use `create-visitor` credentials for Site APIKey only.",
+        "tags": [
+          {
+            "name": "param",
+            "text": "configuration - {@link Configuration} options for the GliaWidgets SDK."
+          }
+        ],
+        "docs": "Configures GliaWidgets SDK.\n\nNote that for the SDK to work properly, the site API key needs to have the 'Create Visitor' permission only.",
         "complexTypes": [
-          "ApiKey",
-          "Region"
+          "Configuration"
         ],
         "slug": "configure"
       },
@@ -29,38 +33,87 @@
         "signature": "() => Promise<void>",
         "parameters": [],
         "returns": "Promise<void>",
-        "tags": [],
-        "docs": "Presents Entry Widget.",
+        "tags": [
+          {
+            "name": "deprecated",
+            "text": "Use showEntryWidget() instead.\nShows Entry Widget."
+          }
+        ],
+        "docs": "",
         "complexTypes": [],
         "slug": "presententrywidget"
       },
       {
-        "name": "startChat",
+        "name": "showEntryWidget",
+        "signature": "(options: { queueIds?: string[]; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ queueIds?: string[] | undefined; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Shows Entry Widget.",
+        "complexTypes": [],
+        "slug": "showentrywidget"
+      },
+      {
+        "name": "hideEntryWidget",
         "signature": "() => Promise<void>",
         "parameters": [],
         "returns": "Promise<void>",
         "tags": [],
-        "docs": "Starts a new chat/text engagement with queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.",
+        "docs": "Hides Entry Widget.",
+        "complexTypes": [],
+        "slug": "hideentrywidget"
+      },
+      {
+        "name": "startChat",
+        "signature": "(options?: { queueIds?: string[] | undefined; } | undefined) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ queueIds?: string[] | undefined; } | undefined"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Starts a new chat engagement.",
         "complexTypes": [],
         "slug": "startchat"
       },
       {
         "name": "startAudio",
-        "signature": "() => Promise<void>",
-        "parameters": [],
+        "signature": "(options?: { queueIds?: string[] | undefined; } | undefined) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ queueIds?: string[] | undefined; } | undefined"
+          }
+        ],
         "returns": "Promise<void>",
         "tags": [],
-        "docs": "Starts a new audio engagement with queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.",
+        "docs": "Starts a new audio engagement.",
         "complexTypes": [],
         "slug": "startaudio"
       },
       {
         "name": "startVideo",
-        "signature": "() => Promise<void>",
-        "parameters": [],
+        "signature": "(options?: { queueIds?: string[] | undefined; } | undefined) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ queueIds?: string[] | undefined; } | undefined"
+          }
+        ],
         "returns": "Promise<void>",
         "tags": [],
-        "docs": "Starts a new video engagement for queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.",
+        "docs": "Starts a new video engagement.",
         "complexTypes": [],
         "slug": "startvideo"
       },
@@ -69,10 +122,31 @@
         "signature": "() => Promise<void>",
         "parameters": [],
         "returns": "Promise<void>",
-        "tags": [],
-        "docs": "Starts Secure Conversation flow with passed `start screen`.\nSecure Conversation requires authentication/IdToken.",
+        "tags": [
+          {
+            "name": "deprecated",
+            "text": "Use startSecureMessaging() instead.\nStarts a Secure Conversation flow.\nNote that Secure Conversation requires visitor authentication."
+          }
+        ],
+        "docs": "",
         "complexTypes": [],
         "slug": "startsecureconversation"
+      },
+      {
+        "name": "startSecureMessaging",
+        "signature": "(options: { queueIds?: string[]; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ queueIds?: string[] | undefined; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Starts a Secure Conversation flow.\nNote that Secure Conversation requires visitor authentication.",
+        "complexTypes": [],
+        "slug": "startsecuremessaging"
       },
       {
         "name": "clearVisitorSession",
@@ -80,7 +154,7 @@
         "parameters": [],
         "returns": "Promise<void>",
         "tags": [],
-        "docs": "Recreates currently used visitor in SDK.",
+        "docs": "Clears current Glia SDK session, and also resets the visitor ID and their local data.\nEnds ongoing engagement (if any).",
         "complexTypes": [],
         "slug": "clearvisitorsession"
       },
@@ -89,20 +163,57 @@
         "signature": "() => Promise<any>",
         "parameters": [],
         "returns": "Promise<any>",
-        "tags": [],
-        "docs": "Fetches all queues with its info for current site.",
+        "tags": [
+          {
+            "name": "deprecated",
+            "text": "Use getQueues() instead.\nFetches all queues with its info for current site."
+          }
+        ],
+        "docs": "",
         "complexTypes": [],
         "slug": "listqueues"
+      },
+      {
+        "name": "getQueues",
+        "signature": "() => Promise<Queues>",
+        "parameters": [],
+        "returns": "Promise<Queues>",
+        "tags": [
+          {
+            "name": "returns",
+            "text": "- A collection of queues where the key is the queue ID and the value is a `Queue` object that describes the queue's details."
+          }
+        ],
+        "docs": "Fetches all queues and their information for the current site.",
+        "complexTypes": [
+          "Queues"
+        ],
+        "slug": "getqueues"
       },
       {
         "name": "showVisitorCodeViewController",
         "signature": "() => Promise<void>",
         "parameters": [],
         "returns": "Promise<void>",
-        "tags": [],
-        "docs": "Presents GliaWidgets UI with visitor code for sharing with operator to start an engagement.",
+        "tags": [
+          {
+            "name": "deprecated",
+            "text": "Use showVisitorCode() instead.\nPresents GliaWidgets UI with a visitor code for sharing with operator to start an engagement."
+          }
+        ],
+        "docs": "",
         "complexTypes": [],
         "slug": "showvisitorcodeviewcontroller"
+      },
+      {
+        "name": "showVisitorCode",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Presents GliaWidgets UI with a visitor code for sharing with operator to start an engagement.",
+        "complexTypes": [],
+        "slug": "showvisitorcode"
       },
       {
         "name": "authenticate",
@@ -111,7 +222,7 @@
           {
             "name": "options",
             "docs": "- Provides options for authentication such as behavior, idToken, and accessToken.",
-            "type": "{ behavior: AuthenticationBehavior; idToken: string; accessToken?: string | undefined; }"
+            "type": "{ behavior: string; idToken: string; accessToken?: string | undefined; }"
           }
         ],
         "returns": "Promise<void>",
@@ -121,7 +232,7 @@
             "text": "options - Provides options for authentication such as behavior, idToken, and accessToken."
           }
         ],
-        "docs": "Authenticates visitor.",
+        "docs": "Authenticates the visitor.",
         "complexTypes": [
           "AuthenticationBehavior"
         ],
@@ -133,17 +244,17 @@
         "parameters": [],
         "returns": "Promise<void>",
         "tags": [],
-        "docs": "Deauthenticates visitor. Be aware that deauthentication process relies on `AuthenticationBehavior`",
+        "docs": "Deauthenticates the visitor. Be aware that deauthentication process relies on `AuthenticationBehavior`.",
         "complexTypes": [],
         "slug": "deauthenticate"
       },
       {
         "name": "isAuthenticated",
-        "signature": "() => Promise<void>",
+        "signature": "() => Promise<boolean>",
         "parameters": [],
-        "returns": "Promise<void>",
+        "returns": "Promise<boolean>",
         "tags": [],
-        "docs": "Provides current authentication state",
+        "docs": "Provides the current authentication state.",
         "complexTypes": [],
         "slug": "isauthenticated"
       },
@@ -159,7 +270,7 @@
         ],
         "returns": "Promise<void>",
         "tags": [],
-        "docs": "Refreshes authentication access properties.",
+        "docs": "Renews visitor authentication.",
         "complexTypes": [],
         "slug": "refreshauthentication"
       },
@@ -169,7 +280,7 @@
         "parameters": [],
         "returns": "Promise<void>",
         "tags": [],
-        "docs": "Makes a pause for ongoing LiveObservation session.",
+        "docs": "Pauses the ongoing LiveObservation session.",
         "complexTypes": [],
         "slug": "pauseliveobservation"
       },
@@ -179,34 +290,366 @@
         "parameters": [],
         "returns": "Promise<void>",
         "tags": [],
-        "docs": "Resumes ongoing LiveObservation session.",
+        "docs": "Resumes the paused LiveObservation session.",
         "complexTypes": [],
         "slug": "resumeliveobservation"
+      },
+      {
+        "name": "getVisitorInfo",
+        "signature": "() => Promise<VisitorInfo>",
+        "parameters": [],
+        "returns": "Promise<VisitorInfo>",
+        "tags": [
+          {
+            "name": "returns",
+            "text": "VisitorInfo - The information about a visitor."
+          }
+        ],
+        "docs": "Fetches the visitor information.",
+        "complexTypes": [
+          "VisitorInfo"
+        ],
+        "slug": "getvisitorinfo"
+      },
+      {
+        "name": "updateVisitorInfo",
+        "signature": "(visitorInfo: VisitorInfoUpdate) => Promise<void>",
+        "parameters": [
+          {
+            "name": "visitorInfo",
+            "docs": "",
+            "type": "VisitorInfoUpdate"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Updates the visitor information.",
+        "complexTypes": [
+          "VisitorInfoUpdate"
+        ],
+        "slug": "updatevisitorinfo"
+      },
+      {
+        "name": "endEngagement",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Ends the current engagement.",
+        "complexTypes": [],
+        "slug": "endengagement"
       }
     ],
     "properties": []
   },
   "interfaces": [
     {
+      "name": "Configuration",
+      "slug": "configuration",
+      "docs": "GliaWidgets SDK configuration.",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "siteId",
+          "tags": [],
+          "docs": "The Glia site ID.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "queueIds",
+          "tags": [
+            {
+              "text": "Use `queueIds` during startChat, startAudio, or startVideo instead.\nList of queue IDs to be used when requesting an engagement.\nIf `queueIds` is undefined or empty, the visitor is enqueued in the default queue(s).",
+              "name": "deprecated"
+            }
+          ],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string[] | undefined"
+        },
+        {
+          "name": "apiKey",
+          "tags": [
+            {
+              "text": "{",
+              "name": "see"
+            },
+            {
+              "text": "ApiKey} for more details.",
+              "name": "link"
+            }
+          ],
+          "docs": "The API key for the Glia site.",
+          "complexTypes": [
+            "ApiKey"
+          ],
+          "type": "ApiKey"
+        },
+        {
+          "name": "region",
+          "tags": [],
+          "docs": "The region of the site.\nPossible values are defined in the {@link Region}.",
+          "complexTypes": [
+            "Region"
+          ],
+          "type": "Region"
+        },
+        {
+          "name": "companyName",
+          "tags": [],
+          "docs": "The name of the company.\nThis is used as the company name shown in the UI while establishing a connection with an operator.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "overrideLocale",
+          "tags": [],
+          "docs": "The name of the locale to be used instead of the default locale of the site.\nIf not provided, the default locale will be used.\nThe default value is `undefined`.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "uiUnifiedConfig",
+          "tags": [],
+          "docs": "UI customization settings in a cross-platform format.\nThis can be a JSON object or a JSON string.\nThe default value is `undefined`.",
+          "complexTypes": [],
+          "type": "string | object | undefined"
+        },
+        {
+          "name": "visitorContextAssetId",
+          "tags": [],
+          "docs": "ID of the PDF asset containing additional visitor context for an operator.\nThe default value is `undefined`.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "enableBubbleOutsideApp",
+          "tags": [],
+          "docs": "A bubble shown outside the app during an engagement when the app is not in the foreground.\nAvailable only on Android when a visitor grants Screen Overlay permission.\nThe default value is `true`.",
+          "complexTypes": [],
+          "type": "boolean | undefined"
+        },
+        {
+          "name": "enableBubbleInsideApp",
+          "tags": [],
+          "docs": "A bubble shown within the app but outside the engagement view during an engagement.\nThe default value is `true`.",
+          "complexTypes": [],
+          "type": "boolean | undefined"
+        }
+      ]
+    },
+    {
       "name": "ApiKey",
       "slug": "apikey",
-      "docs": "",
+      "docs": "Used for configuring the Glia SDK with site API key ID and secret.\n\nNote that for the SDK to work properly, the site API key needs to have the 'Create Visitor' permission only.",
       "tags": [],
       "methods": [],
       "properties": [
         {
           "name": "id",
           "tags": [],
-          "docs": "",
+          "docs": "The ID of the site API key.",
           "complexTypes": [],
           "type": "string"
         },
         {
           "name": "secret",
           "tags": [],
-          "docs": "",
+          "docs": "The site API key secret.",
           "complexTypes": [],
           "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "Queue",
+      "slug": "queue",
+      "docs": "Queue information.",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "is_default",
+          "tags": [],
+          "docs": "Indicates if queue is default.",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "media",
+          "tags": [],
+          "docs": "Queue media types.",
+          "complexTypes": [
+            "MediaType"
+          ],
+          "type": "string[]"
+        },
+        {
+          "name": "name",
+          "tags": [],
+          "docs": "Queue name.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Queue"
+          ],
+          "type": "Queue.Status"
+        }
+      ]
+    },
+    {
+      "name": "VisitorInfo",
+      "slug": "visitorinfo",
+      "docs": "The information about a visitor.\nThis information is visible to operators and can be updated by the SDK or operators.",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "name",
+          "tags": [],
+          "docs": "Visitor's name.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "email",
+          "tags": [],
+          "docs": "Visitor's email address.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "phone",
+          "tags": [],
+          "docs": "Visitor's phone number.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "note",
+          "tags": [],
+          "docs": "Additional notes about the visitor.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "externalId",
+          "tags": [],
+          "docs": "External ID to be used in third-party integrations.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "customAttributes",
+          "tags": [],
+          "docs": "A dictionary with custom attributes.",
+          "complexTypes": [
+            "Record"
+          ],
+          "type": "Record<string, string>"
+        },
+        {
+          "name": "banned",
+          "tags": [],
+          "docs": "Indicates whether the visitor is blocked.",
+          "complexTypes": [],
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "name": "VisitorInfoUpdate",
+      "slug": "visitorinfoupdate",
+      "docs": "Used to update visitor information.\nIf some fields of visitor information are not set, they will not be updated on the server.",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "name",
+          "tags": [],
+          "docs": "Visitor's name.\nThe default value is `undefined`.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "email",
+          "tags": [],
+          "docs": "Visitor's email address.\nThe default value is `undefined`.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "phone",
+          "tags": [],
+          "docs": "Visitor's phone number.\nThe default value is `undefined`.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "note",
+          "tags": [],
+          "docs": "Additional notes about the visitor.\nThe default value is `undefined`.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "noteUpdateMethod",
+          "tags": [
+            {
+              "text": "{",
+              "name": "see"
+            },
+            {
+              "text": "VisitorInfoUpdate.NoteUpdateMethod} for more details.",
+              "name": "link"
+            }
+          ],
+          "docs": "The method for updating the notes about the visitor.\nThe default value is `undefined`.",
+          "complexTypes": [
+            "VisitorInfoUpdate"
+          ],
+          "type": "VisitorInfoUpdate.NoteUpdateMethod"
+        },
+        {
+          "name": "externalId",
+          "tags": [],
+          "docs": "External ID to be used in third-party integrations.\nThe default value is `undefined`.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "customAttributes",
+          "tags": [],
+          "docs": "A dictionary with custom attributes.\nThe default value is `undefined`.",
+          "complexTypes": [
+            "Record"
+          ],
+          "type": "Record<string, string>"
+        },
+        {
+          "name": "customAttributesUpdateMethod",
+          "tags": [
+            {
+              "text": "{",
+              "name": "see"
+            },
+            {
+              "text": "VisitorInfoUpdate.CustomAttributesUpdateMethod} for more details.",
+              "name": "link"
+            }
+          ],
+          "docs": "The method for updating custom attributes.\nThe default value is `undefined`.",
+          "complexTypes": [
+            "VisitorInfoUpdate"
+          ],
+          "type": "VisitorInfoUpdate.CustomAttributesUpdateMethod"
         }
       ]
     }
@@ -216,18 +659,49 @@
     {
       "name": "Region",
       "slug": "region",
-      "docs": "Site's region.",
+      "docs": "Site's region. Use `us` for US and other regions except Europe, use `eu` for Europe.",
       "types": [
         {
-          "text": "'us'",
+          "text": "(typeof Region)[keyof typeof Region]",
           "complexTypes": []
-        },
+        }
+      ]
+    },
+    {
+      "name": "Queues",
+      "slug": "queues",
+      "docs": "A collection of queues where:\n- The key is the queue ID.\n- The value is a `Queue` object that describes the queue's details.",
+      "types": [
         {
-          "text": "'eu'",
-          "complexTypes": []
-        },
+          "text": "Record<string, Queue>",
+          "complexTypes": [
+            "Record",
+            "Queue"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Record",
+      "slug": "record",
+      "docs": "Construct a type with a set of properties K of type T",
+      "types": [
         {
-          "text": "'beta'",
+          "text": "{\r\n    [P in K]: T;\r\n}",
+          "complexTypes": [
+            "K",
+            "T"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MediaType",
+      "slug": "mediatype",
+      "docs": "Queue media types.",
+      "types": [
+        {
+          "text": "(typeof MediaType)[keyof typeof MediaType]",
           "complexTypes": []
         }
       ]
@@ -235,14 +709,10 @@
     {
       "name": "AuthenticationBehavior",
       "slug": "authenticationbehavior",
-      "docs": "Authentication (IdToken) behavior.\nforbiddenDuringEngagement - Prevent creation a new engagement if ongoing engagement exists. Default behavior.\nallowedDuringEngagement - Allows creation a new engagement if ongoing engagement exists. During this behavior original engagement will be ended and a new engagement engagement will be restarted with the same operator after authentication is succeded.",
+      "docs": "Behavior for authentication and deauthentication.\nFORBIDDEN_DURING_ENGAGEMENT - Do not allow authentication and deauthentication during an ongoing engagement. Default behavior.\nALLOWED_DURING_ENGAGEMENT - Allow authentication and deauthentication during an ongoing engagement.",
       "types": [
         {
-          "text": "'forbiddenDuringEngagement'",
-          "complexTypes": []
-        },
-        {
-          "text": "'allowedDuringEngagement'",
+          "text": "(typeof AuthenticationBehavior)[keyof typeof AuthenticationBehavior]",
           "complexTypes": []
         }
       ]

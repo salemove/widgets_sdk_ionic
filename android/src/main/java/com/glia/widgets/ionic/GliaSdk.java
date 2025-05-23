@@ -1,34 +1,35 @@
 package com.glia.widgets.ionic;
 
-import static androidx.fragment.app.FragmentManager.TAG;
-
 import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Parcelable;
 import android.util.Log;
-
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.PluginCall;
-import com.getcapacitor.PluginMethod;
-import com.glia.androidsdk.Engagement;
 import com.glia.androidsdk.Glia;
-import com.glia.androidsdk.SiteApiKey;
-import com.glia.androidsdk.visitor.Authentication;
 import com.glia.widgets.GliaWidgets;
 import com.glia.widgets.GliaWidgetsConfig;
+import com.glia.widgets.SiteApiKey;
+import com.glia.widgets.authentication.Authentication;
+import com.glia.widgets.engagement.MediaType;
 import com.glia.widgets.entrywidget.EntryWidget;
 import com.glia.widgets.launcher.EngagementLauncher;
+import com.glia.widgets.queue.Queue;
+import com.glia.widgets.visitor.VisitorInfoUpdateRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class GliaSdk {
+    private List<String> configureQueueIds;
+
+    private EntryWidget entryWidget;
+
+    private Authentication authentication;
+
+    private String visitorContextAssetId;
 
     public String echo(String value) {
         Log.i("Echo", value);
@@ -44,6 +45,11 @@ public class GliaSdk {
         String region = call.getString("region");
         String companyName = call.getString("companyName");
         JSArray queueIds = call.getArray("queueIds", new JSArray());
+        String uiUnifiedConfig = call.getString("uiUnifiedConfig");
+        String overrideLocale = call.getString("overrideLocale");
+        visitorContextAssetId = call.getString("visitorContextAssetId");
+        Boolean enableBubbleOutsideApp = call.getBoolean("enableBubbleOutsideApp", true);
+        Boolean enableBubbleInsideApp = call.getBoolean("enableBubbleInsideApp", true);
 
         if (siteApiKeyId == null) {
             call.reject("'siteApiKeyId' is missing.");
@@ -70,64 +76,146 @@ public class GliaSdk {
                 .setSiteId(siteId)
                 .setRegion(region)
                 .setCompanyName(companyName == null ? "" : companyName)
+                .setUiJsonRemoteConfig(uiUnifiedConfig)
+                .setManualLocaleOverride(overrideLocale)
+                .enableBubbleOutsideApp(enableBubbleOutsideApp)
+                .enableBubbleInsideApp(enableBubbleInsideApp)
                 .setContext(activity.getApplicationContext());
 
-        GliaWidgets.init(gliaConfigBuilder.build());
+        GliaWidgets.init(
+                gliaConfigBuilder.build(),
+                () -> {
+                    configureQueueIds = jsArrayToArrayList(queueIds);
 
-        engagementLauncher = GliaWidgets.getEngagementLauncher(jsArrayToArrayList(queueIds));
-        entryWidget = GliaWidgets.getEntryWidget(jsArrayToArrayList(queueIds));
-
-        call.resolve();
+                    call.resolve();
+                },
+                exception -> {
+                    call.reject(exception.getMessage());
+                }
+        );
     }
 
+    @Deprecated
     public void presentEntryWidget(PluginCall call, Activity activity) {
-        if (entryWidget == null) {
+        if (configureQueueIds == null) {
             call.reject("SDK is not configured.");
             return;
         }
+        entryWidget = GliaWidgets.getEntryWidget(configureQueueIds);
         entryWidget.show(activity);
+        call.resolve();
     }
 
-    private SharedPreferences sharedPreferences;
-    private EngagementLauncher engagementLauncher;
-    private EntryWidget entryWidget;
+    public void showEntryWidget(PluginCall call, Activity activity) {
+        JSArray queueIds = call.getArray("queueIds", new JSArray());
+        entryWidget = GliaWidgets.getEntryWidget(jsArrayToArrayList(queueIds));
+        entryWidget.show(activity);
+        call.resolve();
+    }
+
+    public void hideEntryWidget(PluginCall call) {
+        entryWidget.hide();
+        call.resolve();
+    }
 
     public void startChat(PluginCall call, Activity activity) {
-        if (engagementLauncher == null) {
-            call.reject("SDK is not configured.");
-            return;
+        List<String> queueIds = this.configureQueueIds;
+        boolean useOptions = call.getBoolean("useOptions", false);
+        if (useOptions) {
+            queueIds = jsArrayToArrayList(call.getArray("queueIds", new JSArray()));
         }
-        engagementLauncher.startChat(activity);
-        call.resolve();
+        try {
+            EngagementLauncher engagementLauncher = GliaWidgets.getEngagementLauncher(queueIds);
+            String visitorContextAssetId = this.visitorContextAssetId;
+            if (visitorContextAssetId != null && !visitorContextAssetId.isEmpty()) {
+                engagementLauncher.startChat(activity, visitorContextAssetId);
+            } else {
+                engagementLauncher.startChat(activity);
+            }
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("Could not start chat engagement. Error='" + e.getMessage() + "'");
+        }
     }
+
     public void startAudio(PluginCall call, Activity activity) {
-        if (engagementLauncher == null) {
-            call.reject("SDK is not configured.");
-            return;
+        List<String> queueIds = this.configureQueueIds;
+        boolean useOptions = call.getBoolean("useOptions", false);
+        if (useOptions) {
+            queueIds = jsArrayToArrayList(call.getArray("queueIds", new JSArray()));
         }
-        engagementLauncher.startAudioCall(activity);
-        call.resolve();
+        try {
+            EngagementLauncher engagementLauncher = GliaWidgets.getEngagementLauncher(queueIds);
+            String visitorContextAssetId = this.visitorContextAssetId;
+            if (visitorContextAssetId != null && !visitorContextAssetId.isEmpty()) {
+                engagementLauncher.startAudioCall(activity, visitorContextAssetId);
+            } else {
+                engagementLauncher.startAudioCall(activity);
+            }
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("Could not start audio engagement. Error='" + e.getMessage() + "'");
+        }
     }
+
     public void startVideo(PluginCall call, Activity activity) {
-        if (engagementLauncher == null) {
-            call.reject("SDK is not configured.");
-            return;
+        List<String> queueIds = this.configureQueueIds;
+        boolean useOptions = call.getBoolean("useOptions", false);
+        if (useOptions) {
+            queueIds = jsArrayToArrayList(call.getArray("queueIds", new JSArray()));
         }
-        engagementLauncher.startVideoCall(activity);
-        call.resolve();
+        try {
+            EngagementLauncher engagementLauncher = GliaWidgets.getEngagementLauncher(queueIds);
+            String visitorContextAssetId = this.visitorContextAssetId;
+            if (visitorContextAssetId != null && !visitorContextAssetId.isEmpty()) {
+                engagementLauncher.startVideoCall(activity, visitorContextAssetId);
+            } else {
+                engagementLauncher.startVideoCall(activity);
+            }
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("Could not start video engagement. Error='" + e.getMessage() + "'");
+        }
     }
+
     public void startSecureConversation(PluginCall call, Activity activity) {
-        if (engagementLauncher == null) {
-            call.reject("SDK is not configured.");
-            return;
+        List<String> queueIds = this.configureQueueIds;
+        try {
+            EngagementLauncher engagementLauncher = GliaWidgets.getEngagementLauncher(queueIds);
+            String visitorContextAssetId = this.visitorContextAssetId;
+            if (visitorContextAssetId != null && !visitorContextAssetId.isEmpty()) {
+                engagementLauncher.startSecureMessaging(activity, visitorContextAssetId);
+            } else {
+                engagementLauncher.startSecureMessaging(activity);
+            }
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("Could not start secure conversation. Error='" + e.getMessage() + "'");
         }
-        engagementLauncher.startSecureMessaging(activity);
-        call.resolve();
     }
+
+    public void startSecureMessaging(PluginCall call, Activity activity) {
+        try {
+            List<String> queueIds = jsArrayToArrayList(call.getArray("queueIds", new JSArray()));
+            EngagementLauncher engagementLauncher = GliaWidgets.getEngagementLauncher(queueIds);
+            String visitorContextAssetId = this.visitorContextAssetId;
+            if (visitorContextAssetId != null && !visitorContextAssetId.isEmpty()) {
+                engagementLauncher.startSecureMessaging(activity, visitorContextAssetId);
+            } else {
+                engagementLauncher.startSecureMessaging(activity);
+            }
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("Could not start secure messaging. Error='" + e.getMessage() + "'");
+        }
+    }
+
     public void clearVisitorSession(PluginCall call) {
         GliaWidgets.clearVisitorSession();
         call.resolve();
     }
+
+    @Deprecated
     public void listQueues(PluginCall call) {
         Glia.getQueues((response, exception) -> {
             if (exception != null) {
@@ -154,12 +242,40 @@ public class GliaSdk {
             }
         });
     }
-    public void showVisitorCodeViewController(PluginCall call, Activity activity) {
+
+    public void getQueues(PluginCall call) {
+        GliaWidgets.getQueues( response -> {
+            if (response == null) {
+                call.resolve();
+            } else {
+                JSObject jsObject = new JSObject();
+                for (Queue queue : response) {
+                    JSObject child = new JSObject();
+                    child.put("name", queue.getName());
+                    child.put("is_default", queue.isDefault());
+                    child.put("status", serializedName(queue.getStatus()));
+
+                    JSONArray mediaTypes = new JSONArray();
+                    for (MediaType mediaType : queue.getMedia()) {
+                        mediaTypes.put(serializedName(mediaType));
+                    }
+                    child.put("media", mediaTypes);
+
+                    jsObject.put(queue.getId(), child);
+                }
+
+                call.resolve(jsObject);
+            }
+        }, exception -> {
+            call.reject(exception.getMessage());
+        });
+    }
+
+    public void showVisitorCode(PluginCall call) {
         GliaWidgets.getCallVisualizer().showVisitorCodeDialog();
         call.resolve();
     }
 
-    Authentication authentication;
     public void authenticate(PluginCall call) {
         String authRawBehaviorValue = call.getString("behavior");
         String jwtToken = call.getString("idToken");
@@ -180,36 +296,29 @@ public class GliaSdk {
         AuthenticationBehavior authBehavior = AuthenticationBehavior.valueOf(authRawBehaviorValue);
 
         authentication = GliaWidgets.getAuthentication(authBehavior.toSdkNativeType());
-        authentication.authenticate(jwtToken, accessToken, (response, exception) -> {
-            if (exception == null && authentication.isAuthenticated()) {
-                call.resolve();
-            } else {
-                String message = exception != null ? exception.getMessage() : "authentication failed";
-                call.reject(message);
-            }
-        });
+        authentication.authenticate(
+                jwtToken,
+                accessToken,
+                call::resolve,
+                exception -> call.reject(exception.getMessage())
+        );
     }
+
     public void deauthenticate(PluginCall call) {
         if (authentication == null) {
             call.resolve();
             return;
         }
-        authentication.deauthenticate((response, exception) -> {
-            if (exception != null) {
-                String message = exception != null ? exception.getMessage() : "unauthentication failed";
-                call.reject(message);
-            } else {
-                call.resolve();
-            }
-        });
+        authentication.deauthenticate(
+                call::resolve,
+                exception -> call.reject(exception.getMessage())
+        );
     }
+
     public void isAuthenticated(PluginCall call) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            call.resolve();
-        } else {
-            call.reject("not authenticated.");
-        }
+        call.resolve(new JSObject().put("isAuthenticated", authentication != null && authentication.isAuthenticated()));
     }
+
     public void refreshAuthentication(PluginCall call) {
         String jwtToken = call.getString("idToken");
         String accessToken = call.getString("accessToken");
@@ -220,22 +329,105 @@ public class GliaSdk {
         if (accessToken != null && accessToken.isEmpty()) {
             accessToken = null;
         }
-        authentication.refresh(jwtToken, accessToken, (response, exception) -> {
-            if (exception != null) {
-                String message = exception.getMessage();
-                call.reject(message);
-            } else {
-                call.resolve();
-            }
-        });
+        authentication.refresh(
+                jwtToken,
+                accessToken,
+                call::resolve,
+                exception -> call.reject(exception.getMessage())
+        );
     }
 
     public void pauseLiveObservation(PluginCall call) {
-        Glia.getLiveObservation().pause();
+        GliaWidgets.getLiveObservation().pause();
         call.resolve();
     }
+
     public void resumeLiveObservation(PluginCall call) {
-        Glia.getLiveObservation().resume();
+        GliaWidgets.getLiveObservation().resume();
+        call.resolve();
+    }
+
+    public void getVisitorInfo(PluginCall call) {
+        try {
+            GliaWidgets.getVisitorInfo(visitorInfo -> {
+                JSObject result = new JSObject();
+                result.put("name", visitorInfo.getName());
+                result.put("email", visitorInfo.getEmail());
+                result.put("phone", visitorInfo.getPhone());
+                result.put("note", visitorInfo.getNote());
+                result.put("externalId", visitorInfo.getExternalId());
+
+                JSObject customAttributes = new JSObject();
+                if (visitorInfo.getCustomAttributes() != null) {
+                    for (String key : visitorInfo.getCustomAttributes().keySet()) {
+                        customAttributes.put(key, visitorInfo.getCustomAttributes().get(key));
+                    }
+                }
+                result.put("customAttributes", customAttributes);
+                result.put("banned", visitorInfo.getBanned());
+
+                call.resolve(result);
+            }, exception -> {
+                String message = exception.getMessage() != null ? exception.getMessage() : "Could not fetch visitor info.";
+                call.reject(message);
+            });
+        } catch (Exception exception) {
+            String message = exception.getMessage() != null ? exception.getMessage() : "Could not fetch visitor info.";
+            call.reject(message);
+        }
+    }
+
+    public void updateVisitorInfo(PluginCall call) {
+        try {
+            String name = call.getString("name");
+            String email = call.getString("email");
+            String phone = call.getString("phone");
+            String note = call.getString("note");
+            String noteUpdateMethod = call.getString("noteUpdateMethod");
+            String externalId = call.getString("externalId");
+            String customAttrsUpdateMethod = call.getString("customAttributesUpdateMethod");
+
+            JSObject customAttributesObj = call.getObject("customAttributes");
+            java.util.Map<String, String> customAttributes = new java.util.HashMap<>();
+            if (customAttributesObj != null) {
+                Iterator<String> keys = customAttributesObj.keys();
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    Object value = customAttributesObj.get(key);
+                    if (value instanceof String) {
+                        customAttributes.put(key, (String) value);
+                    }
+                }
+            }
+
+            VisitorInfoUpdateRequest updateRequest = new VisitorInfoUpdateRequest();
+            updateRequest.setName(name);
+            updateRequest.setEmail(email);
+            updateRequest.setPhone(phone);
+            updateRequest.setNote(note);
+            if (noteUpdateMethod != null) {
+                updateRequest.setNoteUpdateMethod(toNoteUpdateMethod(noteUpdateMethod));
+            }
+            updateRequest.setExternalId(externalId);
+            updateRequest.setCustomAttributes(customAttributes);
+            if (customAttrsUpdateMethod != null) {
+                updateRequest.setCustomAttrsUpdateMethod(toCustomAttributesUpdateMethod(customAttrsUpdateMethod));
+            }
+
+            GliaWidgets.updateVisitorInfo(
+                    updateRequest,
+                    call::resolve,
+                    exception -> {
+                        call.reject(exception.getMessage());
+                    }
+            );
+        } catch (Exception exception) {
+            call.reject("Could not update visitor info. Error='" + exception.getMessage() + "'");
+        }
+    }
+
+    public void endEngagement(PluginCall call) {
+        GliaWidgets.endEngagement();
         call.resolve();
     }
 
@@ -255,5 +447,40 @@ public class GliaSdk {
         }
 
         return arrayList;
+    }
+
+    private String serializedName(Queue.Status status) {
+        return switch (status) {
+            case OPEN -> "opened";
+            case CLOSED -> "closed";
+            case FULL -> "full";
+            case UNSTAFFED -> "unstaffed";
+            default -> "unknown";
+        };
+    }
+
+    private String serializedName(MediaType mediaType) {
+        return switch (mediaType) {
+            case TEXT -> "text";
+            case AUDIO -> "audio";
+            case VIDEO -> "video";
+            case PHONE -> "phone";
+            case MESSAGING -> "messaging";
+            default -> "unknown";
+        };
+    }
+
+    private VisitorInfoUpdateRequest.NoteUpdateMethod toNoteUpdateMethod(String value) {
+        return switch (value.toLowerCase()) {
+            case "replace" -> VisitorInfoUpdateRequest.NoteUpdateMethod.REPLACE;
+            default -> VisitorInfoUpdateRequest.NoteUpdateMethod.APPEND;
+        };
+    }
+
+    private VisitorInfoUpdateRequest.CustomAttributesUpdateMethod toCustomAttributesUpdateMethod(String value) {
+        return switch (value.toLowerCase()) {
+            case "replace" -> VisitorInfoUpdateRequest.CustomAttributesUpdateMethod.REPLACE;
+            default -> VisitorInfoUpdateRequest.CustomAttributesUpdateMethod.MERGE;
+        };
     }
 }
