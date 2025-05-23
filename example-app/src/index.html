@@ -21,14 +21,25 @@
       </p>
       <p>
         <h3>Entry Widget</h3>
-        <button onclick="presentEntryWidget()">Present Entry Widget</button>
+        <button onclick="presentEntryWidget()">Present Entry Widget (deprecated)</button>
+        <button onclick="showEntryWidget()">Show Entry Widget</button>
       </p>
       <p>
-        <h3>Start Engagement</h3>
+        <h3>Start Engagement (deprecated)</h3>
         <button onclick="startChat()">Start Engagement</button>
         <button onclick="startAudio()">Start Audio</button>
         <button onclick="startVideo()">Start Video</button>
         <button onclick="startSecureConversation()">Start Secure Conversation</button>
+      </p>
+      <p>
+        <h3>Start Engagement (new methods)</h3>
+        <button onclick="startChatWithIds()">Start Engagement</button>
+        <button onclick="startAudioWithIds()">Start Audio</button>
+        <button onclick="startVideoWithIds()">Start Video</button>
+        <button onclick="startSecureMessaging()">Start Secure Messaging</button>
+      </p>
+      <p>
+        <button onclick="endEngagement()">End Engagement</button>
       </p>
       <p>
         <h3>Clear Visitor Session</h3>
@@ -37,6 +48,12 @@
       <p>
         <h3>List Queues</h3>
         <button onclick="listQueues()">List Queue</button>
+        <button onclick="getQueues()">Get Queues</button>
+      </p>
+      <p>
+        <h3>Visitor Info</h3>
+        <button onclick="getVisitorInfo()">Get visitor info</button>
+        <button onclick="updateVisitorInfo()">Update visitor info</button>
       </p>
       <p>
         <h3>Authentication / IdToken</h3>

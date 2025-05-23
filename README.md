@@ -14,7 +14,7 @@ npm install @salemove/widgets_sdk_ionic --legacy-peer-deps
 
 ```js
 // Import `glia-widgets-ionic` SDK
-import { GliaSdk } from 'glia-widgets-ionic';
+import { GliaSdk } from '@salemove/widgets_sdk_ionic';
 
 // Configure SDK
 GliaSdk.configure({
@@ -34,19 +34,27 @@ GliaSdk.presentEntryWidget();
 
 * [`configure(...)`](#configure)
 * [`presentEntryWidget()`](#presententrywidget)
-* [`startChat()`](#startchat)
-* [`startAudio()`](#startaudio)
-* [`startVideo()`](#startvideo)
+* [`showEntryWidget(...)`](#showentrywidget)
+* [`hideEntryWidget()`](#hideentrywidget)
+* [`startChat(...)`](#startchat)
+* [`startAudio(...)`](#startaudio)
+* [`startVideo(...)`](#startvideo)
 * [`startSecureConversation()`](#startsecureconversation)
+* [`startSecureMessaging(...)`](#startsecuremessaging)
 * [`clearVisitorSession()`](#clearvisitorsession)
 * [`listQueues()`](#listqueues)
+* [`getQueues()`](#getqueues)
 * [`showVisitorCodeViewController()`](#showvisitorcodeviewcontroller)
+* [`showVisitorCode()`](#showvisitorcode)
 * [`authenticate(...)`](#authenticate)
 * [`deauthenticate()`](#deauthenticate)
 * [`isAuthenticated()`](#isauthenticated)
 * [`refreshAuthentication(...)`](#refreshauthentication)
 * [`pauseLiveObservation()`](#pauseliveobservation)
 * [`resumeLiveObservation()`](#resumeliveobservation)
+* [`getVisitorInfo()`](#getvisitorinfo)
+* [`updateVisitorInfo(...)`](#updatevisitorinfo)
+* [`endEngagement()`](#endengagement)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 
@@ -58,16 +66,16 @@ GliaSdk.presentEntryWidget();
 ### configure(...)
 
 ```typescript
-configure(options: { siteId: string; queueIds?: string[]; apiKey: ApiKey; region: Region; companyName: string; overrideLocale?: string; }) => Promise<void>
+configure(configuration: Configuration) => Promise<void>
 ```
 
-Configures GliaWidgets SDK with credentials.
+Configures GliaWidgets SDK.
 
-NB! Ensure the site API key used in Mobile SDK has the Create Visitor permission only.
+Note that for the SDK to work properly, the site API key needs to have the 'Create Visitor' permission only.
 
-| Param         | Type                                                                                                                                                                            |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ siteId: string; queueIds?: string[]; apiKey: <a href="#apikey">ApiKey</a>; region: <a href="#region">Region</a>; companyName: string; overrideLocale?: string; }</code> |
+| Param               | Type                                                    | Description                                                                           |
+| ------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **`configuration`** | <code><a href="#configuration">Configuration</a></code> | - {@link <a href="#configuration">Configuration</a>} options for the GliaWidgets SDK. |
 
 --------------------
 
@@ -78,40 +86,76 @@ NB! Ensure the site API key used in Mobile SDK has the Create Visitor permission
 presentEntryWidget() => Promise<void>
 ```
 
-Presents Entry Widget.
+--------------------
+
+
+### showEntryWidget(...)
+
+```typescript
+showEntryWidget(options: { queueIds?: string[]; }) => Promise<void>
+```
+
+Shows Entry Widget.
+
+| Param         | Type                                  |
+| ------------- | ------------------------------------- |
+| **`options`** | <code>{ queueIds?: string[]; }</code> |
 
 --------------------
 
 
-### startChat()
+### hideEntryWidget()
 
 ```typescript
-startChat() => Promise<void>
+hideEntryWidget() => Promise<void>
 ```
 
-Starts a new chat/text engagement with queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.
+Hides Entry Widget.
 
 --------------------
 
 
-### startAudio()
+### startChat(...)
 
 ```typescript
-startAudio() => Promise<void>
+startChat(options?: { queueIds?: string[] | undefined; } | undefined) => Promise<void>
 ```
 
-Starts a new audio engagement with queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.
+Starts a new chat engagement.
+
+| Param         | Type                                  |
+| ------------- | ------------------------------------- |
+| **`options`** | <code>{ queueIds?: string[]; }</code> |
 
 --------------------
 
 
-### startVideo()
+### startAudio(...)
 
 ```typescript
-startVideo() => Promise<void>
+startAudio(options?: { queueIds?: string[] | undefined; } | undefined) => Promise<void>
 ```
 
-Starts a new video engagement for queue identifiers. If `queueIds` is null or empty, creates engagement for default queue.
+Starts a new audio engagement.
+
+| Param         | Type                                  |
+| ------------- | ------------------------------------- |
+| **`options`** | <code>{ queueIds?: string[]; }</code> |
+
+--------------------
+
+
+### startVideo(...)
+
+```typescript
+startVideo(options?: { queueIds?: string[] | undefined; } | undefined) => Promise<void>
+```
+
+Starts a new video engagement.
+
+| Param         | Type                                  |
+| ------------- | ------------------------------------- |
+| **`options`** | <code>{ queueIds?: string[]; }</code> |
 
 --------------------
 
@@ -122,8 +166,21 @@ Starts a new video engagement for queue identifiers. If `queueIds` is null or em
 startSecureConversation() => Promise<void>
 ```
 
-Starts Secure Conversation flow.
-Secure Conversation requires authentication/IdToken.
+--------------------
+
+
+### startSecureMessaging(...)
+
+```typescript
+startSecureMessaging(options: { queueIds?: string[]; }) => Promise<void>
+```
+
+Starts a Secure Conversation flow.
+Note that Secure Conversation requires visitor authentication.
+
+| Param         | Type                                  |
+| ------------- | ------------------------------------- |
+| **`options`** | <code>{ queueIds?: string[]; }</code> |
 
 --------------------
 
@@ -134,7 +191,8 @@ Secure Conversation requires authentication/IdToken.
 clearVisitorSession() => Promise<void>
 ```
 
-Recreates currently used visitor in SDK.
+Clears current Glia SDK session, and also resets the visitor ID and their local data.
+Ends ongoing engagement (if any).
 
 --------------------
 
@@ -145,7 +203,20 @@ Recreates currently used visitor in SDK.
 listQueues() => Promise<any>
 ```
 
-Fetches all queues with its info for current site.
+**Returns:** <code>Promise&lt;any&gt;</code>
+
+--------------------
+
+
+### getQueues()
+
+```typescript
+getQueues() => Promise<Queues>
+```
+
+Fetches all queues and their information for the current site.
+
+**Returns:** <code>Promise&lt;<a href="#queues">Queues</a>&gt;</code>
 
 --------------------
 
@@ -156,7 +227,16 @@ Fetches all queues with its info for current site.
 showVisitorCodeViewController() => Promise<void>
 ```
 
-Presents GliaWidgets UI with visitor code for sharing with operator to start an engagement.
+--------------------
+
+
+### showVisitorCode()
+
+```typescript
+showVisitorCode() => Promise<void>
+```
+
+Presents GliaWidgets UI with a visitor code for sharing with operator to start an engagement.
 
 --------------------
 
@@ -167,11 +247,11 @@ Presents GliaWidgets UI with visitor code for sharing with operator to start an 
 authenticate(options: { behavior: AuthenticationBehavior; idToken: string; accessToken?: string; }) => Promise<void>
 ```
 
-Authenticates visitor.
+Authenticates the visitor.
 
-| Param         | Type                                                                                                                            | Description                                                                       |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| **`options`** | <code>{ behavior: <a href="#authenticationbehavior">AuthenticationBehavior</a>; idToken: string; accessToken?: string; }</code> | - Provides options for authentication such as behavior, idToken, and accessToken. |
+| Param         | Type                                                                      | Description                                                                       |
+| ------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| **`options`** | <code>{ behavior: string; idToken: string; accessToken?: string; }</code> | - Provides options for authentication such as behavior, idToken, and accessToken. |
 
 --------------------
 
@@ -182,7 +262,7 @@ Authenticates visitor.
 deauthenticate() => Promise<void>
 ```
 
-Deauthenticates visitor. Be aware that deauthentication process relies on <a href="#authenticationbehavior">`AuthenticationBehavior`</a>
+Deauthenticates the visitor. Be aware that deauthentication process relies on <a href="#authenticationbehavior">`AuthenticationBehavior`</a>.
 
 --------------------
 
@@ -190,10 +270,12 @@ Deauthenticates visitor. Be aware that deauthentication process relies on <a hre
 ### isAuthenticated()
 
 ```typescript
-isAuthenticated() => Promise<void>
+isAuthenticated() => Promise<boolean>
 ```
 
-Provides current authentication state.
+Provides the current authentication state.
+
+**Returns:** <code>Promise&lt;boolean&gt;</code>
 
 --------------------
 
@@ -204,7 +286,7 @@ Provides current authentication state.
 refreshAuthentication(options: { idToken: string; accessToken?: string; }) => Promise<void>
 ```
 
-Refreshes authentication access properties.
+Renews visitor authentication.
 
 | Param         | Type                                                    |
 | ------------- | ------------------------------------------------------- |
@@ -219,7 +301,7 @@ Refreshes authentication access properties.
 pauseLiveObservation() => Promise<void>
 ```
 
-Makes a pause for ongoing LiveObservation session.
+Pauses the ongoing LiveObservation session.
 
 --------------------
 
@@ -230,7 +312,46 @@ Makes a pause for ongoing LiveObservation session.
 resumeLiveObservation() => Promise<void>
 ```
 
-Resumes ongoing LiveObservation session.
+Resumes the paused LiveObservation session.
+
+--------------------
+
+
+### getVisitorInfo()
+
+```typescript
+getVisitorInfo() => Promise<VisitorInfo>
+```
+
+Fetches the visitor information.
+
+**Returns:** <code>Promise&lt;<a href="#visitorinfo">VisitorInfo</a>&gt;</code>
+
+--------------------
+
+
+### updateVisitorInfo(...)
+
+```typescript
+updateVisitorInfo(visitorInfo: VisitorInfoUpdate) => Promise<void>
+```
+
+Updates the visitor information.
+
+| Param             | Type                                                            |
+| ----------------- | --------------------------------------------------------------- |
+| **`visitorInfo`** | <code><a href="#visitorinfoupdate">VisitorInfoUpdate</a></code> |
+
+--------------------
+
+
+### endEngagement()
+
+```typescript
+endEngagement() => Promise<void>
+```
+
+Ends the current engagement.
 
 --------------------
 
@@ -238,12 +359,79 @@ Resumes ongoing LiveObservation session.
 ### Interfaces
 
 
+#### Configuration
+
+GliaWidgets SDK configuration.
+
+| Prop                         | Type                                      | Description                                                                                                                                                                                        |
+| ---------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`siteId`**                 | <code>string</code>                       | The Glia site ID.                                                                                                                                                                                  |
+| **`queueIds`**               | <code>string[]</code>                     |                                                                                                                                                                                                    |
+| **`apiKey`**                 | <code><a href="#apikey">ApiKey</a></code> | The API key for the Glia site.                                                                                                                                                                     |
+| **`region`**                 | <code><a href="#region">Region</a></code> | The region of the site. Possible values are defined in the {@link <a href="#region">Region</a>}.                                                                                                   |
+| **`companyName`**            | <code>string</code>                       | The name of the company. This is used as the company name shown in the UI while establishing a connection with an operator.                                                                        |
+| **`overrideLocale`**         | <code>string</code>                       | The name of the locale to be used instead of the default locale of the site. If not provided, the default locale will be used. The default value is `undefined`.                                   |
+| **`uiUnifiedConfig`**        | <code>string \| object</code>             | UI customization settings in a cross-platform format. This can be a JSON object or a JSON string. The default value is `undefined`.                                                                |
+| **`visitorContextAssetId`**  | <code>string</code>                       | ID of the PDF asset containing additional visitor context for an operator. The default value is `undefined`.                                                                                       |
+| **`enableBubbleOutsideApp`** | <code>boolean</code>                      | A bubble shown outside the app during an engagement when the app is not in the foreground. Available only on Android when a visitor grants Screen Overlay permission. The default value is `true`. |
+| **`enableBubbleInsideApp`**  | <code>boolean</code>                      | A bubble shown within the app but outside the engagement view during an engagement. The default value is `true`.                                                                                   |
+
+
 #### ApiKey
 
-| Prop         | Type                |
-| ------------ | ------------------- |
-| **`id`**     | <code>string</code> |
-| **`secret`** | <code>string</code> |
+Used for configuring the Glia SDK with site API key ID and secret.
+
+Note that for the SDK to work properly, the site API key needs to have the 'Create Visitor' permission only.
+
+| Prop         | Type                | Description                 |
+| ------------ | ------------------- | --------------------------- |
+| **`id`**     | <code>string</code> | The ID of the site API key. |
+| **`secret`** | <code>string</code> | The site API key secret.    |
+
+
+#### Queue
+
+<a href="#queue">Queue</a> information.
+
+| Prop             | Type                                           | Description                             |
+| ---------------- | ---------------------------------------------- | --------------------------------------- |
+| **`is_default`** | <code>boolean</code>                           | Indicates if queue is default.          |
+| **`media`**      | <code>string[]</code>                          | <a href="#queue">Queue</a> media types. |
+| **`name`**       | <code>string</code>                            | <a href="#queue">Queue</a> name.        |
+| **`status`**     | <code><a href="#queue">Queue</a>.Status</code> |                                         |
+
+
+#### VisitorInfo
+
+The information about a visitor.
+This information is visible to operators and can be updated by the SDK or operators.
+
+| Prop                   | Type                                                            | Description                                         |
+| ---------------------- | --------------------------------------------------------------- | --------------------------------------------------- |
+| **`name`**             | <code>string</code>                                             | Visitor's name.                                     |
+| **`email`**            | <code>string</code>                                             | Visitor's email address.                            |
+| **`phone`**            | <code>string</code>                                             | Visitor's phone number.                             |
+| **`note`**             | <code>string</code>                                             | Additional notes about the visitor.                 |
+| **`externalId`**       | <code>string</code>                                             | External ID to be used in third-party integrations. |
+| **`customAttributes`** | <code><a href="#record">Record</a>&lt;string, string&gt;</code> | A dictionary with custom attributes.                |
+| **`banned`**           | <code>boolean</code>                                            | Indicates whether the visitor is blocked.           |
+
+
+#### VisitorInfoUpdate
+
+Used to update visitor information.
+If some fields of visitor information are not set, they will not be updated on the server.
+
+| Prop                               | Type                                                                                         | Description                                                                            |
+| ---------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| **`name`**                         | <code>string</code>                                                                          | Visitor's name. The default value is `undefined`.                                      |
+| **`email`**                        | <code>string</code>                                                                          | Visitor's email address. The default value is `undefined`.                             |
+| **`phone`**                        | <code>string</code>                                                                          | Visitor's phone number. The default value is `undefined`.                              |
+| **`note`**                         | <code>string</code>                                                                          | Additional notes about the visitor. The default value is `undefined`.                  |
+| **`noteUpdateMethod`**             | <code><a href="#visitorinfoupdate">VisitorInfoUpdate</a>.NoteUpdateMethod</code>             | The method for updating the notes about the visitor. The default value is `undefined`. |
+| **`externalId`**                   | <code>string</code>                                                                          | External ID to be used in third-party integrations. The default value is `undefined`.  |
+| **`customAttributes`**             | <code><a href="#record">Record</a>&lt;string, string&gt;</code>                              | A dictionary with custom attributes. The default value is `undefined`.                 |
+| **`customAttributesUpdateMethod`** | <code><a href="#visitorinfoupdate">VisitorInfoUpdate</a>.CustomAttributesUpdateMethod</code> | The method for updating custom attributes. The default value is `undefined`.           |
 
 
 ### Type Aliases
@@ -251,17 +439,40 @@ Resumes ongoing LiveObservation session.
 
 #### Region
 
-Site's region.
+Site's region. Use `us` for US and other regions except Europe, use `eu` for Europe.
 
-<code>'us' | 'eu' | 'beta'</code>
+<code>(typeof <a href="#region">Region</a>)[keyof typeof Region]</code>
+
+
+#### Queues
+
+A collection of queues where:
+- The key is the queue ID.
+- The value is a <a href="#queue">`Queue`</a> object that describes the queue's details.
+
+<code><a href="#record">Record</a>&lt;string, <a href="#queue">Queue</a>&gt;</code>
+
+
+#### Record
+
+Construct a type with a set of properties K of type T
+
+<code>{ [P in K]: T; }</code>
+
+
+#### MediaType
+
+<a href="#queue">Queue</a> media types.
+
+<code>(typeof <a href="#mediatype">MediaType</a>)[keyof typeof MediaType]</code>
 
 
 #### AuthenticationBehavior
 
-Authentication (IdToken) behavior.
-forbiddenDuringEngagement - Prevent creation a new engagement if ongoing engagement exists. Default behavior.
-allowedDuringEngagement - Allows creation a new engagement if ongoing engagement exists. During this behavior original engagement will be ended and a new engagement engagement will be restarted with the same operator after authentication is succeded.
+Behavior for authentication and deauthentication.
+FORBIDDEN_DURING_ENGAGEMENT - Do not allow authentication and deauthentication during an ongoing engagement. Default behavior.
+ALLOWED_DURING_ENGAGEMENT - Allow authentication and deauthentication during an ongoing engagement.
 
-<code>'forbiddenDuringEngagement' | 'allowedDuringEngagement'</code>
+<code>(typeof <a href="#authenticationbehavior">AuthenticationBehavior</a>)[keyof typeof AuthenticationBehavior]</code>
 
 </docgen-api>

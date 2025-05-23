@@ -1,10 +1,6 @@
-import { registerPlugin } from '@capacitor/core';
+import { GliaSdkImpl } from './glia-sdk';
 
-import type { GliaSdkPlugin } from './definitions';
-
-const GliaSdk = registerPlugin<GliaSdkPlugin>('GliaSdk', {
-  // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
-});
+const GliaSdk = new GliaSdkImpl();
 
 export * from './definitions';
 export { GliaSdk };
