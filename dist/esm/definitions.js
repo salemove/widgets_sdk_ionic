@@ -18,6 +18,7 @@ export const AuthenticationBehavior = Object.freeze({
     FORBIDDEN_DURING_ENGAGEMENT: 'forbiddenDuringEngagement',
     ALLOWED_DURING_ENGAGEMENT: 'allowedDuringEngagement',
 });
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export var Queue;
 (function (Queue) {
     /**
@@ -40,6 +41,7 @@ export const MediaType = Object.freeze({
     VIDEO: 'video',
     MESSAGING: 'messaging',
 });
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export var VisitorInfoUpdate;
 (function (VisitorInfoUpdate) {
     /**
