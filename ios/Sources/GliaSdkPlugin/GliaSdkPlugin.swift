@@ -10,17 +10,21 @@ public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "configure", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "presentEntryWidget", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "showEntryWidget", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startChat", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startAudio", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startVideo", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "clearVisitorSession", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "listQueues", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "getQueues", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "authenticate", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "deauthenticate", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "isAuthenticated", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "refreshAuthentication", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "showVisitorCodeViewController", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "showVisitorCode", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startSecureConversation", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "startSecureMessaging", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "pauseLiveObservation", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "resumeLiveObservation", returnType: CAPPluginReturnPromise)
     ]
@@ -31,7 +35,11 @@ public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
     }
     
     @objc func presentEntryWidget(_ call: CAPPluginCall) {
-        implementation.presentEntryWidget(call)
+        implementation.showEntryWidget(call)
+    }
+
+    @objc func showEntryWidget(_ call: CAPPluginCall) {
+        implementation.showEntryWidget(call)
     }
     
     @objc func startChat(_ call: CAPPluginCall) {
@@ -51,7 +59,11 @@ public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func listQueues(_ call: CAPPluginCall) {
-        implementation.listQueues(call)
+        implementation.getQueues(call)
+    }
+
+    @objc func getQueues(_ call: CAPPluginCall) {
+        implementation.getQueues(call)
     }
 
     @objc func authenticate(_ call: CAPPluginCall) {
@@ -71,11 +83,19 @@ public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func showVisitorCodeViewController(_ call: CAPPluginCall) {
-        implementation.showVisitorCodeViewController(call)
+        implementation.showVisitorCode(call)
+    }
+
+    @objc func showVisitorCode(_ call: CAPPluginCall) {
+        implementation.showVisitorCode(call)
     }
 
     @objc func startSecureConversation(_ call: CAPPluginCall) {
-        implementation.startSecureConversation(call)
+        implementation.startSecureMessaging(call)
+    }
+
+    @objc func startSecureMessaging(_ call: CAPPluginCall) {
+        implementation.startSecureMessaging(call)
     }
     
     @objc func pauseLiveObservation(_ call: CAPPluginCall) {

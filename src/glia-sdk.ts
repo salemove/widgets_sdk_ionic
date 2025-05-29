@@ -87,12 +87,18 @@ export class GliaSdkImpl implements GliaSdkPlugin {
         return GliaSdkIonicPlugin.showVisitorCode();
     }
 
-    async authenticate(options: { behavior: AuthenticationBehavior; idToken: string; accessToken?: string; }): Promise<void> {
+    async authenticate(options: { 
+        behavior: AuthenticationBehavior;
+         idToken: string; 
+         accessToken?: string;
+    }): Promise<void> {
         return GliaSdkIonicPlugin.authenticate(options);
     }
 
-    async deauthenticate(): Promise<void> {
-        return GliaSdkIonicPlugin.deauthenticate();
+    async deauthenticate(options?: {
+        stopPushNotifications?: boolean;
+    }): Promise<void> {
+        return GliaSdkIonicPlugin.deauthenticate(options);
     }
 
     async isAuthenticated(): Promise<boolean> {
@@ -100,16 +106,19 @@ export class GliaSdkImpl implements GliaSdkPlugin {
         return result.isAuthenticated;
     }
 
-    async refreshAuthentication(options: { idToken: string; accessToken?: string; }): Promise<void> {
+    async refreshAuthentication(options: { 
+        idToken: string;
+         accessToken?: string; 
+    }): Promise<void> {
         return GliaSdkIonicPlugin.refreshAuthentication(options);
     }
 
     async pauseLiveObservation(): Promise<void> {
-        throw new Error('Method not implemented.');
+        return GliaSdkIonicPlugin.pauseLiveObservation();
     }
 
     async resumeLiveObservation(): Promise<void> {
-        throw new Error('Method not implemented.');
+        return GliaSdkIonicPlugin.resumeLiveObservation();
     }
 
     async getVisitorInfo(): Promise<VisitorInfo> {
