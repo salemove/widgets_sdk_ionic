@@ -83,10 +83,10 @@ class GliaSdkImpl {
         return GliaSdkIonicPlugin.refreshAuthentication(options);
     }
     async pauseLiveObservation() {
-        throw new Error('Method not implemented.');
+        return GliaSdkIonicPlugin.pauseLiveObservation();
     }
     async resumeLiveObservation() {
-        throw new Error('Method not implemented.');
+        return GliaSdkIonicPlugin.resumeLiveObservation();
     }
     async getVisitorInfo() {
         return GliaSdkIonicPlugin.getVisitorInfo();
@@ -119,6 +119,7 @@ const AuthenticationBehavior = Object.freeze({
     FORBIDDEN_DURING_ENGAGEMENT: 'forbiddenDuringEngagement',
     ALLOWED_DURING_ENGAGEMENT: 'allowedDuringEngagement',
 });
+// eslint-disable-next-line @typescript-eslint/no-namespace
 exports.Queue = void 0;
 (function (Queue) {
     /**
@@ -141,6 +142,7 @@ const MediaType = Object.freeze({
     VIDEO: 'video',
     MESSAGING: 'messaging',
 });
+// eslint-disable-next-line @typescript-eslint/no-namespace
 exports.VisitorInfoUpdate = void 0;
 (function (VisitorInfoUpdate) {
     /**
