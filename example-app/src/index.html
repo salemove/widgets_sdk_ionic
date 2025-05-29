@@ -8,6 +8,24 @@
       content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <meta name="format-detection" content="telephone=no" />
+    <style>
+      body {
+        margin-top: 20px;
+      }
+      button {
+        padding: 12px 24px;
+        font-size: 16px;
+        margin: 5px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      input[type="text"] {
+        padding: 10px;
+        font-size: 16px;
+        margin: 5px;
+        border-radius: 4px;
+      }
+    </style>
   </head>
   <body>
     <main>
@@ -29,6 +47,7 @@
         <h3>Entry Widget</h3>
         <button onclick="presentEntryWidget()">Present Entry Widget (deprecated)</button>
         <button onclick="showEntryWidget()">Show Entry Widget</button>
+        <button onclick="hideEntryWidget()">Hide Entry Widget</button>
       </p>
       <p>
         <h3>Start Engagement (deprecated)</h3>
@@ -44,6 +63,10 @@
         <button onclick="startVideoWithIds()">Start Video</button>
         <button onclick="startSecureMessaging()">Start Secure Messaging</button>
       </p>
+    <p>
+      <h3>Visitor Code</h3>
+      <button onclick="showVisitorCodeViewController()">Show Visitor Code</button>
+    </p>
       <p>
         <button onclick="endEngagement()">End Engagement</button>
       </p>
@@ -71,13 +94,12 @@
         <button onclick="deauthenticate(false)">Deauthenticate</button>
         <button onclick="deauthenticate(true)">Deauthenticate (Stop Push Notifications)</button>
     </p>
-
     <p>
-      <h3>Visitor Code</h3>
-      <button onclick="showVisitorCodeViewController()">Show Visitor Code</button>
+      <h3>Live Observation</h3>
+      <button onclick="resumeLiveObservation()">Resume Live Observation</button>
+      <button onclick="pauseLiveObservation()">Pause Live Observation</button>
     </p>
     </main>
-
     <script src="./js/example.js" type="module"></script>
   </body>
 </html>

@@ -1,16 +1,24 @@
 import { registerPlugin } from '@capacitor/core';
 
-import type { AuthenticationBehavior, Configuration, GliaSdk, Queues, VisitorInfo, VisitorInfoUpdate, PushNotificationType } from './definitions';
+import type {
+    AuthenticationBehavior,
+    Configuration,
+    GliaSdkPlugin,
+    Queues,
+    VisitorInfo,
+    VisitorInfoUpdate,
+    PushNotificationType
+} from './definitions';
 
 const GliaSdkIonicPlugin = registerPlugin<GliaSdkPluginInternal>('GliaSdk', {
-  // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
+    // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
 });
 
-interface GliaSdkPluginInternal extends GliaSdk {
+interface GliaSdkPluginInternal extends GliaSdkPlugin {
     isAuthenticatedInternal(): Promise<{ isAuthenticated: boolean }>;
 }
 
-export class GliaSdkImpl implements GliaSdk {
+export class GliaSdkImpl implements GliaSdkPlugin {
     async configure(configuration: Configuration): Promise<void> {
         let uiUnifiedConfig: string | undefined;
         if (configuration.uiUnifiedConfig) {
@@ -36,7 +44,7 @@ export class GliaSdkImpl implements GliaSdk {
         return GliaSdkIonicPlugin.presentEntryWidget();
     }
 
-    async showEntryWidget(options: { queueIds?: string[]; }): Promise<void> {
+    async showEntryWidget(options: { queueIds?: string[] }): Promise<void> {
         return GliaSdkIonicPlugin.showEntryWidget(options);
     }
 
@@ -44,21 +52,21 @@ export class GliaSdkImpl implements GliaSdk {
         return GliaSdkIonicPlugin.hideEntryWidget();
     }
 
-    async startChat(options?: { queueIds?: string[], useOptions?: boolean }): Promise<void> {
+    async startChat(options?: { queueIds?: string[]; useOptions?: boolean }): Promise<void> {
         if (options) {
             options.useOptions = true;
         }
         return GliaSdkIonicPlugin.startChat(options);
     }
 
-    async startAudio(options?: { queueIds?: string[], useOptions?: boolean }): Promise<void> {
+    async startAudio(options?: { queueIds?: string[]; useOptions?: boolean }): Promise<void> {
         if (options) {
             options.useOptions = true;
         }
         return GliaSdkIonicPlugin.startAudio();
     }
 
-    async startVideo(options?: { queueIds?: string[], useOptions?: boolean }): Promise<void> {
+    async startVideo(options?: { queueIds?: string[]; useOptions?: boolean }): Promise<void> {
         if (options) {
             options.useOptions = true;
         }
@@ -69,7 +77,7 @@ export class GliaSdkImpl implements GliaSdk {
         return GliaSdkIonicPlugin.startSecureConversation();
     }
 
-    async startSecureMessaging(options: { queueIds?: string[]; }): Promise<void> {
+    async startSecureMessaging(options: { queueIds?: string[] }): Promise<void> {
         return GliaSdkIonicPlugin.startSecureMessaging(options);
     }
 
@@ -93,7 +101,11 @@ export class GliaSdkImpl implements GliaSdk {
         return GliaSdkIonicPlugin.showVisitorCode();
     }
 
-    async authenticate(options: { behavior: AuthenticationBehavior; idToken: string; accessToken?: string; }): Promise<void> {
+    async authenticate(options: {
+        behavior: AuthenticationBehavior;
+        idToken: string;
+        accessToken?: string;
+    }): Promise<void> {
         return GliaSdkIonicPlugin.authenticate(options);
     }
 
@@ -108,16 +120,16 @@ export class GliaSdkImpl implements GliaSdk {
         return result.isAuthenticated;
     }
 
-    async refreshAuthentication(options: { idToken: string; accessToken?: string; }): Promise<void> {
+    async refreshAuthentication(options: { idToken: string; accessToken?: string }): Promise<void> {
         return GliaSdkIonicPlugin.refreshAuthentication(options);
     }
 
     async pauseLiveObservation(): Promise<void> {
-        throw new Error('Method not implemented.');
+        return GliaSdkIonicPlugin.pauseLiveObservation();
     }
 
     async resumeLiveObservation(): Promise<void> {
-        throw new Error('Method not implemented.');
+        return GliaSdkIonicPlugin.resumeLiveObservation();
     }
 
     async getVisitorInfo(): Promise<VisitorInfo> {
