@@ -23,6 +23,10 @@ window.showEntryWidget = () => {
     });
 }
 
+window.hideEntryWidget = () => {
+    GliaSdk.hideEntryWidget();
+}
+
 window.startChat = () => {
     GliaSdk.startChat();
 }
