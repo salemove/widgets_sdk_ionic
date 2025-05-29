@@ -12,7 +12,6 @@ export interface Configuration {
    */
   siteId: string;
 
-
   /**
    * @deprecated Use `queueIds` during startChat, startAudio, or startVideo instead.
    * List of queue IDs to be used when requesting an engagement.
@@ -37,7 +36,7 @@ export interface Configuration {
    * The name of the company.
    * This is used as the company name shown in the UI while establishing a connection with an operator.
    */
-  companyName: string;
+  companyName?: string;
 
   /**
    * The name of the locale to be used instead of the default locale of the site.
@@ -60,6 +59,13 @@ export interface Configuration {
   visitorContextAssetId?: string;
 
   /**
+   * Push notifications environment to use.
+   * NOTE: Only for iOS.
+   * The default value is `PushNotificationsIOS.DISABLED`.
+   */
+  pushNotifications?: PushNotificationsIOS;
+
+  /**
    * A bubble shown outside the app during an engagement when the app is not in the foreground.
    * Available only on Android when a visitor grants Screen Overlay permission.
    * The default value is `true`.
@@ -71,6 +77,11 @@ export interface Configuration {
    * The default value is `true`.
    */
   enableBubbleInsideApp?: boolean;
+
+  /**
+   * Whether to suppress push notification permission request during authentication.
+   */
+  suppressPushNotificationsPermissionRequestDuringAuthentication?: boolean;
 }
 
 /**
@@ -108,8 +119,7 @@ export const AuthenticationBehavior = Object.freeze({
   FORBIDDEN_DURING_ENGAGEMENT: 'forbiddenDuringEngagement',
   ALLOWED_DURING_ENGAGEMENT: 'allowedDuringEngagement',
 });
-export type AuthenticationBehavior =
-  (typeof AuthenticationBehavior)[keyof typeof AuthenticationBehavior];
+export type AuthenticationBehavior = (typeof AuthenticationBehavior)[keyof typeof AuthenticationBehavior];
 
 /**
  * Queue information.
@@ -133,6 +143,7 @@ export interface Queue {
   status: Queue.Status;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Queue {
   /**
    * Queue status.
@@ -264,6 +275,7 @@ export interface VisitorInfoUpdate {
   customAttributesUpdateMethod?: VisitorInfoUpdate.CustomAttributesUpdateMethod;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace VisitorInfoUpdate {
   /**
    * Specifies a method for updating the visitor's notes.
@@ -274,8 +286,7 @@ export namespace VisitorInfoUpdate {
     REPLACE: 'replace',
     APPEND: 'append',
   });
-  export type NoteUpdateMethod =
-    (typeof NoteUpdateMethod)[keyof typeof NoteUpdateMethod];
+  export type NoteUpdateMethod = (typeof NoteUpdateMethod)[keyof typeof NoteUpdateMethod];
 
   /**
    * Specifies a method for updating the visitor's custom attributes.
@@ -290,6 +301,57 @@ export namespace VisitorInfoUpdate {
     (typeof CustomAttributesUpdateMethod)[keyof typeof CustomAttributesUpdateMethod];
 }
 
+/**
+ * Available push notifications types.
+ */
+export const PushNotificationType = Object.freeze({
+  /**
+   * The SDK will subscribe to push notifications for when the engagement starts.
+   */
+  START: 'start',
+
+  /**
+   * The SDK will subscribe to push notifications for when the engagement ends.
+   */
+  END: 'end',
+
+  /**
+   * The SDK will subscribe to push notifications for when the engagement fails.
+   */
+  FAILED: 'failed',
+
+  /**
+   * The SDK will subscribe to push notifications for when a new message is received.
+   */
+  MESSAGE: 'message',
+
+  /**
+   * The SDK will subscribe to push notifications for when the engagement is transferred to another operator.
+   */
+  TRANSFER: 'transfer',
+});
+export type PushNotificationType = (typeof PushNotificationType)[keyof typeof PushNotificationType];
+
+/**
+ * Push notifications environment for iOS.
+ */
+export const PushNotificationsIOS = Object.freeze({
+  /**
+   * Push notifications are disabled.
+   */
+  DISABLED: 'disabled',
+  /**
+   * Push notifications are configured for sandbox environment. Suitable for testing.
+   */
+  SANDBOX: 'sandbox',
+  /**
+   * Push notifications are configured for production environment.
+   */
+  PRODUCTION: 'production',
+});
+
+export type PushNotificationsIOS = (typeof PushNotificationsIOS)[keyof typeof PushNotificationsIOS];
+
 export interface GliaSdkPlugin {
   /**
    * Configures GliaWidgets SDK.
@@ -299,6 +361,17 @@ export interface GliaSdkPlugin {
    * @param configuration - {@link Configuration} options for the GliaWidgets SDK.
    */
   configure(configuration: Configuration): Promise<void>;
+
+  /**
+   * Subscribe to specific push notification types.
+   */
+  subscribeToPushNotificationTypes(options: {
+    /**
+     * An array of push notification types to subscribe to.
+     * @see {@link PushNotificationType} for more details.
+     */
+    types: PushNotificationType[];
+  }): Promise<void>;
 
   /**
    * @deprecated Use showEntryWidget() instead.
@@ -426,7 +499,12 @@ export interface GliaSdkPlugin {
   /**
    * Deauthenticates the visitor. Be aware that deauthentication process relies on `AuthenticationBehavior`.
    */
-  deauthenticate(): Promise<void>;
+  deauthenticate(options?: {
+    /**
+     * Whether to unsubscribe the visitor from receiving push notifications on deauthentication.
+     */
+    stopPushNotifications?: boolean;
+  }): Promise<void>;
 
   /**
    * Provides the current authentication state.

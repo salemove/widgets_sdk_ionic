@@ -1,126 +1,142 @@
 import { registerPlugin } from '@capacitor/core';
 
-import type { AuthenticationBehavior, Configuration, GliaSdkPlugin, Queues, VisitorInfo, VisitorInfoUpdate } from './definitions';
+import type {
+  AuthenticationBehavior,
+  Configuration,
+  GliaSdkPlugin,
+  Queues,
+  VisitorInfo,
+  VisitorInfoUpdate,
+  PushNotificationType,
+} from './definitions';
 
 const GliaSdkIonicPlugin = registerPlugin<GliaSdkPluginInternal>('GliaSdk', {
   // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
 });
 
 interface GliaSdkPluginInternal extends GliaSdkPlugin {
-    isAuthenticatedInternal(): Promise<{ isAuthenticated: boolean }>;
+  isAuthenticatedInternal(): Promise<{ isAuthenticated: boolean }>;
 }
 
 export class GliaSdkImpl implements GliaSdkPlugin {
-    async configure(configuration: Configuration): Promise<void> {
-        let uiUnifiedConfig: string | undefined;
-        if (configuration.uiUnifiedConfig) {
-            if (typeof configuration.uiUnifiedConfig === 'object') {
-                uiUnifiedConfig = JSON.stringify(configuration.uiUnifiedConfig);
-            } else if (typeof configuration.uiUnifiedConfig === 'string') {
-                uiUnifiedConfig = configuration.uiUnifiedConfig;
-            }
-        }
-        return GliaSdkIonicPlugin.configure({
-            ...configuration,
-            uiUnifiedConfig: uiUnifiedConfig,
-        });
+  async configure(configuration: Configuration): Promise<void> {
+    let uiUnifiedConfig: string | undefined;
+    if (configuration.uiUnifiedConfig) {
+      if (typeof configuration.uiUnifiedConfig === 'object') {
+        uiUnifiedConfig = JSON.stringify(configuration.uiUnifiedConfig);
+      } else if (typeof configuration.uiUnifiedConfig === 'string') {
+        uiUnifiedConfig = configuration.uiUnifiedConfig;
+      }
     }
+    return GliaSdkIonicPlugin.configure({
+      ...configuration,
+      uiUnifiedConfig: uiUnifiedConfig,
+    });
+  }
 
-    async presentEntryWidget(): Promise<void> {
-        return GliaSdkIonicPlugin.presentEntryWidget();
-    }
+  async subscribeToPushNotificationTypes(options: { types: PushNotificationType[] }): Promise<void> {
+    return GliaSdkIonicPlugin.subscribeToPushNotificationTypes(options);
+  }
 
-    async showEntryWidget(options: { queueIds?: string[]; }): Promise<void> {
-        return GliaSdkIonicPlugin.showEntryWidget(options);
-    }
+  async presentEntryWidget(): Promise<void> {
+    return GliaSdkIonicPlugin.presentEntryWidget();
+  }
 
-    async hideEntryWidget(): Promise<void> {
-        return GliaSdkIonicPlugin.hideEntryWidget();
-    }
+  async showEntryWidget(options: { queueIds?: string[] }): Promise<void> {
+    return GliaSdkIonicPlugin.showEntryWidget(options);
+  }
 
-    async startChat(options?: { queueIds?: string[], useOptions?: boolean }): Promise<void> {
-        if (options) {
-            options.useOptions = true;
-        }
-        return GliaSdkIonicPlugin.startChat(options);
-    }
+  async hideEntryWidget(): Promise<void> {
+    return GliaSdkIonicPlugin.hideEntryWidget();
+  }
 
-    async startAudio(options?: { queueIds?: string[], useOptions?: boolean }): Promise<void> {
-        if (options) {
-            options.useOptions = true;
-        }
-        return GliaSdkIonicPlugin.startAudio();
+  async startChat(options?: { queueIds?: string[]; useOptions?: boolean }): Promise<void> {
+    if (options) {
+      options.useOptions = true;
     }
+    return GliaSdkIonicPlugin.startChat(options);
+  }
 
-    async startVideo(options?: { queueIds?: string[], useOptions?: boolean }): Promise<void> {
-        if (options) {
-            options.useOptions = true;
-        }
-        return GliaSdkIonicPlugin.startVideo();
+  async startAudio(options?: { queueIds?: string[]; useOptions?: boolean }): Promise<void> {
+    if (options) {
+      options.useOptions = true;
     }
+    return GliaSdkIonicPlugin.startAudio();
+  }
 
-    async startSecureConversation(): Promise<void> {
-        return GliaSdkIonicPlugin.startSecureConversation();
+  async startVideo(options?: { queueIds?: string[]; useOptions?: boolean }): Promise<void> {
+    if (options) {
+      options.useOptions = true;
     }
+    return GliaSdkIonicPlugin.startVideo();
+  }
 
-    async startSecureMessaging(options: { queueIds?: string[]; }): Promise<void> {
-        return GliaSdkIonicPlugin.startSecureMessaging(options);
-    }
+  async startSecureConversation(): Promise<void> {
+    return GliaSdkIonicPlugin.startSecureConversation();
+  }
 
-    async clearVisitorSession(): Promise<void> {
-        return GliaSdkIonicPlugin.clearVisitorSession();
-    }
+  async startSecureMessaging(options: { queueIds?: string[] }): Promise<void> {
+    return GliaSdkIonicPlugin.startSecureMessaging(options);
+  }
 
-    async listQueues(): Promise<any> {
-        return GliaSdkIonicPlugin.listQueues();
-    }
+  async clearVisitorSession(): Promise<void> {
+    return GliaSdkIonicPlugin.clearVisitorSession();
+  }
 
-    async getQueues(): Promise<Queues> {
-        return GliaSdkIonicPlugin.getQueues();
-    }
+  async listQueues(): Promise<any> {
+    return GliaSdkIonicPlugin.listQueues();
+  }
 
-    async showVisitorCodeViewController(): Promise<void> {
-        return GliaSdkIonicPlugin.showVisitorCodeViewController();
-    }
+  async getQueues(): Promise<Queues> {
+    return GliaSdkIonicPlugin.getQueues();
+  }
 
-    async showVisitorCode(): Promise<void> {
-        return GliaSdkIonicPlugin.showVisitorCode();
-    }
+  async showVisitorCodeViewController(): Promise<void> {
+    return GliaSdkIonicPlugin.showVisitorCodeViewController();
+  }
 
-    async authenticate(options: { behavior: AuthenticationBehavior; idToken: string; accessToken?: string; }): Promise<void> {
-        return GliaSdkIonicPlugin.authenticate(options);
-    }
+  async showVisitorCode(): Promise<void> {
+    return GliaSdkIonicPlugin.showVisitorCode();
+  }
 
-    async deauthenticate(): Promise<void> {
-        return GliaSdkIonicPlugin.deauthenticate();
-    }
+  async authenticate(options: {
+    behavior: AuthenticationBehavior;
+    idToken: string;
+    accessToken?: string;
+  }): Promise<void> {
+    return GliaSdkIonicPlugin.authenticate(options);
+  }
 
-    async isAuthenticated(): Promise<boolean> {
-        const result = await GliaSdkIonicPlugin.isAuthenticatedInternal();
-        return result.isAuthenticated;
-    }
+  async deauthenticate(options?: { stopPushNotifications?: boolean }): Promise<void> {
+    return GliaSdkIonicPlugin.deauthenticate(options);
+  }
 
-    async refreshAuthentication(options: { idToken: string; accessToken?: string; }): Promise<void> {
-        return GliaSdkIonicPlugin.refreshAuthentication(options);
-    }
+  async isAuthenticated(): Promise<boolean> {
+    const result = await GliaSdkIonicPlugin.isAuthenticatedInternal();
+    return result.isAuthenticated;
+  }
 
-    async pauseLiveObservation(): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
+  async refreshAuthentication(options: { idToken: string; accessToken?: string }): Promise<void> {
+    return GliaSdkIonicPlugin.refreshAuthentication(options);
+  }
 
-    async resumeLiveObservation(): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
+  async pauseLiveObservation(): Promise<void> {
+    return GliaSdkIonicPlugin.pauseLiveObservation();
+  }
 
-    async getVisitorInfo(): Promise<VisitorInfo> {
-        return GliaSdkIonicPlugin.getVisitorInfo();
-    }
+  async resumeLiveObservation(): Promise<void> {
+    return GliaSdkIonicPlugin.resumeLiveObservation();
+  }
 
-    async updateVisitorInfo(visitorInfo: VisitorInfoUpdate): Promise<void> {
-        return GliaSdkIonicPlugin.updateVisitorInfo(visitorInfo);
-    }
+  async getVisitorInfo(): Promise<VisitorInfo> {
+    return GliaSdkIonicPlugin.getVisitorInfo();
+  }
 
-    async endEngagement(): Promise<void> {
-        return GliaSdkIonicPlugin.endEngagement();
-    }
+  async updateVisitorInfo(visitorInfo: VisitorInfoUpdate): Promise<void> {
+    return GliaSdkIonicPlugin.updateVisitorInfo(visitorInfo);
+  }
+
+  async endEngagement(): Promise<void> {
+    return GliaSdkIonicPlugin.endEngagement();
+  }
 }

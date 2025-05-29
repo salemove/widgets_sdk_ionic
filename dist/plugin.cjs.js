@@ -69,8 +69,8 @@ class GliaSdkImpl {
     async authenticate(options) {
         return GliaSdkIonicPlugin.authenticate(options);
     }
-    async deauthenticate() {
-        return GliaSdkIonicPlugin.deauthenticate();
+    async deauthenticate(options) {
+        return GliaSdkIonicPlugin.deauthenticate(options);
     }
     async isAuthenticated() {
         const result = await GliaSdkIonicPlugin.isAuthenticatedInternal();
@@ -80,10 +80,10 @@ class GliaSdkImpl {
         return GliaSdkIonicPlugin.refreshAuthentication(options);
     }
     async pauseLiveObservation() {
-        throw new Error('Method not implemented.');
+        return GliaSdkIonicPlugin.pauseLiveObservation();
     }
     async resumeLiveObservation() {
-        throw new Error('Method not implemented.');
+        return GliaSdkIonicPlugin.resumeLiveObservation();
     }
     async getVisitorInfo() {
         return GliaSdkIonicPlugin.getVisitorInfo();

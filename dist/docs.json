@@ -240,8 +240,14 @@
       },
       {
         "name": "deauthenticate",
-        "signature": "() => Promise<void>",
-        "parameters": [],
+        "signature": "(options?: { stopPushNotifications?: boolean | undefined; } | undefined) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ stopPushNotifications?: boolean | undefined; } | undefined"
+          }
+        ],
         "returns": "Promise<void>",
         "tags": [],
         "docs": "Deauthenticates the visitor. Be aware that deauthentication process relies on `AuthenticationBehavior`.",
@@ -435,6 +441,13 @@
           "name": "enableBubbleInsideApp",
           "tags": [],
           "docs": "A bubble shown within the app but outside the engagement view during an engagement.\nThe default value is `true`.",
+          "complexTypes": [],
+          "type": "boolean | undefined"
+        },
+        {
+          "name": "suppressPushNotificationsPermissionRequestDuringAuthentication",
+          "tags": [],
+          "docs": "Whether to suppress push notification permission request during authentication.",
           "complexTypes": [],
           "type": "boolean | undefined"
         }
