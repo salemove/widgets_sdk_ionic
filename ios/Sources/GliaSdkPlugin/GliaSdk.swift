@@ -95,7 +95,6 @@ import GliaWidgets
                         } catch {
                             call.reject("Error occured='\(error)'.")
                         }
-                        
                     case .failure(let error):
                         call.reject("Error occured='\(error)'.")
                     }
@@ -108,16 +107,19 @@ import GliaWidgets
     
     @objc public func showEntryWidget(_ call: CAPPluginCall) {
         let queueIds = call.getArray("queueIds") as? [String]
-        entryWidget = try Glia.sharedInstance.getEntryWidget(queueIds: queueIds ?? [])
         
-        DispatchQueue.main.async { [weak entryWidget] in
-            guard let topViewController = UIApplication.topViewController() else {
-                call.reject("Could not find view controller for presentatio.")
-                return
+        DispatchQueue.main.async { [weak self] in
+            do {
+                self?.entryWidget = try Glia.sharedInstance.getEntryWidget(queueIds: queueIds ?? [])
+                guard let topViewController = UIApplication.topViewController() else {
+                    call.reject("Could not find view controller for presentatio.")
+                    return
+                }
+                self?.entryWidget?.show(in: topViewController)
+                call.resolve()
+            } catch {
+                call.reject("Could not start video engagement. Error='\(error.localizedDescription)'.")
             }
-            
-            entryWidget?.show(in: topViewController)
-            call.resolve()
         }
     }
     
