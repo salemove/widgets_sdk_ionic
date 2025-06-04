@@ -1,7 +1,13 @@
 package com.glia.widgets.ionic;
 
+import static java.util.Locale.filter;
+
 import android.app.Activity;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.PluginCall;
@@ -12,6 +18,7 @@ import com.glia.widgets.SiteApiKey;
 import com.glia.widgets.authentication.Authentication;
 import com.glia.widgets.engagement.MediaType;
 import com.glia.widgets.entrywidget.EntryWidget;
+import com.glia.widgets.fcm.PushNotificationType;
 import com.glia.widgets.launcher.EngagementLauncher;
 import com.glia.widgets.queue.Queue;
 import com.glia.widgets.visitor.VisitorInfoUpdateRequest;
@@ -21,6 +28,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GliaSdk {
     private List<String> configureQueueIds;
@@ -50,6 +58,8 @@ public class GliaSdk {
         visitorContextAssetId = call.getString("visitorContextAssetId");
         Boolean enableBubbleOutsideApp = call.getBoolean("enableBubbleOutsideApp", true);
         Boolean enableBubbleInsideApp = call.getBoolean("enableBubbleInsideApp", true);
+        Boolean suppressPushNotificationsPermissionRequestDuringAuthentication =
+                call.getBoolean("suppressPushNotificationsPermissionRequestDuringAuthentication", false);
 
         if (siteApiKeyId == null) {
             call.reject("'siteApiKeyId' is missing.");
@@ -75,11 +85,12 @@ public class GliaSdk {
                 .setSiteApiKey(new SiteApiKey(siteApiKeyId, siteApiKeySecret))
                 .setSiteId(siteId)
                 .setRegion(region)
-                .setCompanyName(companyName == null ? "" : companyName)
+                .setCompanyName(companyName)
                 .setUiJsonRemoteConfig(uiUnifiedConfig)
                 .setManualLocaleOverride(overrideLocale)
                 .enableBubbleOutsideApp(enableBubbleOutsideApp)
                 .enableBubbleInsideApp(enableBubbleInsideApp)
+                .setSuppressPushNotificationsPermissionRequestDuringAuthentication(suppressPushNotificationsPermissionRequestDuringAuthentication)
                 .setContext(activity.getApplicationContext());
 
         GliaWidgets.init(
@@ -309,7 +320,9 @@ public class GliaSdk {
             call.resolve();
             return;
         }
+        boolean stopPushNotifications = call.getBoolean("stopPushNotifications", false);
         authentication.deauthenticate(
+                stopPushNotifications,
                 call::resolve,
                 exception -> call.reject(exception.getMessage())
         );
@@ -431,6 +444,16 @@ public class GliaSdk {
         call.resolve();
     }
 
+    public void subscribeToPushNotificationTypes(PluginCall call, Activity activity) {
+        JSArray pushNotificationTypes = call.getArray("types", new JSArray());
+        List<PushNotificationType> types = jsArrayToArrayList(pushNotificationTypes).stream()
+                .map(this::toPushNotificationType)
+                .filter(java.util.Objects::nonNull)
+                .collect(Collectors.toList());
+        GliaWidgets.getPushNotifications().subscribeTo(activity, types);
+        call.resolve();
+    }
+
     public ArrayList<String> jsArrayToArrayList(JSArray jsArray) {
         if (jsArray == null) {
             return new ArrayList<>();
@@ -449,6 +472,7 @@ public class GliaSdk {
         return arrayList;
     }
 
+    @NonNull
     private String serializedName(Queue.Status status) {
         return switch (status) {
             case OPEN -> "opened";
@@ -459,6 +483,7 @@ public class GliaSdk {
         };
     }
 
+    @NonNull
     private String serializedName(MediaType mediaType) {
         return switch (mediaType) {
             case TEXT -> "text";
@@ -470,6 +495,7 @@ public class GliaSdk {
         };
     }
 
+    @NonNull
     private VisitorInfoUpdateRequest.NoteUpdateMethod toNoteUpdateMethod(String value) {
         return switch (value.toLowerCase()) {
             case "replace" -> VisitorInfoUpdateRequest.NoteUpdateMethod.REPLACE;
@@ -477,10 +503,23 @@ public class GliaSdk {
         };
     }
 
+    @NonNull
     private VisitorInfoUpdateRequest.CustomAttributesUpdateMethod toCustomAttributesUpdateMethod(String value) {
         return switch (value.toLowerCase()) {
             case "replace" -> VisitorInfoUpdateRequest.CustomAttributesUpdateMethod.REPLACE;
             default -> VisitorInfoUpdateRequest.CustomAttributesUpdateMethod.MERGE;
+        };
+    }
+
+    @Nullable
+    private PushNotificationType toPushNotificationType(String value) {
+        return switch (value.toLowerCase()) {
+            case "start" -> PushNotificationType.START;
+            case "end" -> PushNotificationType.END;
+            case "failed" -> PushNotificationType.FAILED;
+            case "message" -> PushNotificationType.MESSAGE;
+            case "transfer" -> PushNotificationType.TRANSFER;
+            default -> null;
         };
     }
 }
