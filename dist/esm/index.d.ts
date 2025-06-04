@@ -1,4 +1,4 @@
-import { GliaSdkImpl } from './glia-sdk';
-declare const GliaSdk: GliaSdkImpl;
+import { GliaSdk } from './definitions';
+declare const GliaSdk: GliaSdk;
 export * from './definitions';
 export { GliaSdk };

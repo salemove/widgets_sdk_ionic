@@ -1,7 +1,7 @@
 {
   "api": {
-    "name": "GliaSdkPlugin",
-    "slug": "gliasdkplugin",
+    "name": "GliaSdk",
+    "slug": "gliasdk",
     "docs": "",
     "tags": [],
     "methods": [
@@ -27,6 +27,24 @@
           "Configuration"
         ],
         "slug": "configure"
+      },
+      {
+        "name": "subscribeToPushNotificationTypes",
+        "signature": "(options: { types: PushNotificationType[]; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ types: string[]; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Subscribe to specific push notification types.",
+        "complexTypes": [
+          "PushNotificationType"
+        ],
+        "slug": "subscribetopushnotificationtypes"
       },
       {
         "name": "presentEntryWidget",
@@ -125,7 +143,7 @@
         "tags": [
           {
             "name": "deprecated",
-            "text": "Use startSecureMessaging() instead.\nStarts a Secure Conversation flow.\nNote that Secure Conversation requires visitor authentication."
+            "text": "Use `startSecureMessaging` instead.\nStarts a Secure Conversation flow.\nNote that Secure Conversation requires visitor authentication."
           }
         ],
         "docs": "",
@@ -240,10 +258,21 @@
       },
       {
         "name": "deauthenticate",
-        "signature": "() => Promise<void>",
-        "parameters": [],
+        "signature": "(options?: { stopPushNotifications: boolean; } | undefined) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "- Provides options to stop push notifications on deauthentication.",
+            "type": "{ stopPushNotifications: boolean; } | undefined"
+          }
+        ],
         "returns": "Promise<void>",
-        "tags": [],
+        "tags": [
+          {
+            "name": "param",
+            "text": "options - Provides options to stop push notifications on deauthentication."
+          }
+        ],
         "docs": "Deauthenticates the visitor. Be aware that deauthentication process relies on `AuthenticationBehavior`.",
         "complexTypes": [],
         "slug": "deauthenticate"
@@ -399,9 +428,9 @@
         {
           "name": "companyName",
           "tags": [],
-          "docs": "The name of the company.\nThis is used as the company name shown in the UI while establishing a connection with an operator.",
+          "docs": "The name of the company.\nThis is used as the company name shown in the UI while establishing a connection with an operator.\nThe default value is `undefined`.",
           "complexTypes": [],
-          "type": "string"
+          "type": "string | undefined"
         },
         {
           "name": "overrideLocale",
@@ -425,6 +454,15 @@
           "type": "string | undefined"
         },
         {
+          "name": "pushNotifications",
+          "tags": [],
+          "docs": "Push notifications environment to use.\nNOTE: Only for iOS.\nThe default value is `PushNotificationsIOS.DISABLED`.",
+          "complexTypes": [
+            "PushNotificationsIOS"
+          ],
+          "type": "PushNotificationsIOS"
+        },
+        {
           "name": "enableBubbleOutsideApp",
           "tags": [],
           "docs": "A bubble shown outside the app during an engagement when the app is not in the foreground.\nAvailable only on Android when a visitor grants Screen Overlay permission.\nThe default value is `true`.",
@@ -435,6 +473,13 @@
           "name": "enableBubbleInsideApp",
           "tags": [],
           "docs": "A bubble shown within the app but outside the engagement view during an engagement.\nThe default value is `true`.",
+          "complexTypes": [],
+          "type": "boolean | undefined"
+        },
+        {
+          "name": "suppressPushNotificationsPermissionRequestDuringAuthentication",
+          "tags": [],
+          "docs": "Whether to suppress push notification permission request during authentication.\nThe default value is `false`.",
           "complexTypes": [],
           "type": "boolean | undefined"
         }
@@ -663,6 +708,28 @@
       "types": [
         {
           "text": "(typeof Region)[keyof typeof Region]",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "PushNotificationsIOS",
+      "slug": "pushnotificationsios",
+      "docs": "Push notifications environment for iOS.",
+      "types": [
+        {
+          "text": "(typeof PushNotificationsIOS)[keyof typeof PushNotificationsIOS]",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "PushNotificationType",
+      "slug": "pushnotificationtype",
+      "docs": "Available push notifications types.",
+      "types": [
+        {
+          "text": "(typeof PushNotificationType)[keyof typeof PushNotificationType]",
           "complexTypes": []
         }
       ]
