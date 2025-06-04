@@ -138,4 +138,9 @@ public class GliaSdkPlugin extends Plugin {
     public void endEngagement(PluginCall call) {
         implementation.endEngagement(call);
     }
+
+    @PluginMethod
+    public void subscribeToPushNotificationTypes(PluginCall call) {
+        implementation.subscribeToPushNotificationTypes(call, getActivity());
+    }
 }
