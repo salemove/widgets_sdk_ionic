@@ -1,16 +1,16 @@
 import { registerPlugin } from '@capacitor/core';
 
-import type { AuthenticationBehavior, Configuration, GliaSdkPlugin, Queues, VisitorInfo, VisitorInfoUpdate } from './definitions';
+import type { AuthenticationBehavior, Configuration, GliaSdk, Queues, VisitorInfo, VisitorInfoUpdate, PushNotificationType } from './definitions';
 
 const GliaSdkIonicPlugin = registerPlugin<GliaSdkPluginInternal>('GliaSdk', {
   // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
 });
 
-interface GliaSdkPluginInternal extends GliaSdkPlugin {
+interface GliaSdkPluginInternal extends GliaSdk {
     isAuthenticatedInternal(): Promise<{ isAuthenticated: boolean }>;
 }
 
-export class GliaSdkImpl implements GliaSdkPlugin {
+export class GliaSdkImpl implements GliaSdk {
     async configure(configuration: Configuration): Promise<void> {
         let uiUnifiedConfig: string | undefined;
         if (configuration.uiUnifiedConfig) {
@@ -24,6 +24,12 @@ export class GliaSdkImpl implements GliaSdkPlugin {
             ...configuration,
             uiUnifiedConfig: uiUnifiedConfig,
         });
+    }
+
+    async subscribeToPushNotificationTypes(options: {
+        types: PushNotificationType[];
+    }): Promise<void> {
+        return GliaSdkIonicPlugin.subscribeToPushNotificationTypes(options);
     }
 
     async presentEntryWidget(): Promise<void> {
@@ -91,8 +97,10 @@ export class GliaSdkImpl implements GliaSdkPlugin {
         return GliaSdkIonicPlugin.authenticate(options);
     }
 
-    async deauthenticate(): Promise<void> {
-        return GliaSdkIonicPlugin.deauthenticate();
+    async deauthenticate(options?: {
+        stopPushNotifications: boolean;
+    }): Promise<void> {
+        return GliaSdkIonicPlugin.deauthenticate(options);
     }
 
     async isAuthenticated(): Promise<boolean> {

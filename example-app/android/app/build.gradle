@@ -4,7 +4,7 @@ android {
     namespace "com.example.plugin"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.example.plugin"
+        applicationId "com.glia.ionic.exampleapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -16,11 +16,41 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
+    File propsFile = project.rootProject.file('local.properties')
+    if (propsFile.exists()) {
+        Properties p = new Properties()
+        new FileInputStream(propsFile).withCloseable { is -> p.load(is) }
+        p.each { name, value -> ext[name] = value }
+    }
+    initEnvProperty('FIREBASE_PROJECT_ID')
+    initEnvProperty('FIREBASE_API_KEY')
+    initEnvProperty('FIREBASE_APP_ID', "")
+
     buildTypes {
+        configureEach {
+            resValue("string", "firebase_proj_id", FIREBASE_PROJECT_ID)
+            resValue("string", "firebase_api_key", FIREBASE_API_KEY)
+            resValue("string", "firebase_app_id", FIREBASE_APP_ID)
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+}
+
+def initEnvProperty(String propertyName, String defaultValue = "UNDEFINED") {
+    if (!project.hasProperty(propertyName)) {
+        ext[propertyName] = System.getenv(propertyName) as String ?: defaultValue
     }
 }
 
@@ -41,6 +71,8 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
 
+    implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
+    implementation("com.google.firebase:firebase-messaging")
 }
 
 apply from: 'capacitor.build.gradle'

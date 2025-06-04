@@ -17,7 +17,13 @@
       </p>
       <p>
         <h3>SDK Configuration</h3>
-        <button onclick="configure()">Configure SDK</button>
+        <button onclick="configure(false)">Configure SDK</button>
+        <button onclick="configure(true)">Configure SDK (Suppress Push Notifications Request)</button>
+      </p>
+      <p>
+        <h3>Push Notifications</h3>
+        <button onclick="subscribeToPushNotificationTypes()">Subscribe to Push Notifications</button>
+        <button onclick="unsubscribeFromPushNotifications()">Unsubscribe from Push Notifications</button>
       </p>
       <p>
         <h3>Entry Widget</h3>
@@ -61,8 +67,9 @@
         <input type="text" id="accessTokenInput" name="accessTokenInput" value="" />
         <button onclick="authenticate()">Authenticate</button>
         <button onclick="isAuthenticated()">isAuthenticated</button>
-        <button onclick="deauthenticate()">Deauthenticate</button>
         <button onclick="refreshAuthentication()">Refresh Authentication</button>
+        <button onclick="deauthenticate(false)">Deauthenticate</button>
+        <button onclick="deauthenticate(true)">Deauthenticate (Stop Push Notifications)</button>
     </p>
 
     <p>

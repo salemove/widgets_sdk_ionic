@@ -1,8 +1,8 @@
-import { GliaSdk } from 'glia-widgets-ionic';
+import { GliaSdk, PushNotificationType } from 'glia-widgets-ionic';
 import { environment } from '../environments/environment';
 import uiThemeConfig from '../config/unified_config.json';
 
-window.configure = () => {
+window.configure = (suppressPushNotificationsPermissionRequest) => {
     GliaSdk.configure({ 
         siteId: environment.IONIC_SITE_ID, 
         apiKey: { id: environment.IONIC_API_KEY, secret: environment.IONIC_API_SECRET }, 
@@ -10,6 +10,29 @@ window.configure = () => {
         queueIds: [environment.IONIC_QUEUE_ID], 
         companyName: environment.IONIC_COMPANY_NAME,
         uiUnifiedConfig: uiThemeConfig,
+        suppressPushNotificationsPermissionRequestDuringAuthentication: suppressPushNotificationsPermissionRequest,
+    });
+}
+
+window.subscribeToPushNotificationTypes = () => {
+    GliaSdk.subscribeToPushNotificationTypes({
+        types: [
+            PushNotificationType.START,
+            PushNotificationType.END,
+            PushNotificationType.FAILED,
+        ],
+    })
+    .then(() => {
+        console.log('Subscribed to Push Notifications');
+    });
+}
+
+window.unsubscribeFromPushNotifications = () => {
+    GliaSdk.subscribeToPushNotificationTypes({
+        types: [],
+    })
+    .then(() => {
+        console.log('Unsubscribed from Push Notifications');
     });
 }
 
@@ -118,8 +141,10 @@ window.authenticate = () => {
     GliaSdk.authenticate({behavior: 'forbiddenDuringEngagement', idToken: idTokenInputValue, accessToken: accessTokenInpuValue});
 }
 
-window.deauthenticate = () => {
-    GliaSdk.deauthenticate()
+window.deauthenticate = (stopPushNotifications) => {
+    GliaSdk.deauthenticate({
+        stopPushNotifications: stopPushNotifications
+    })
 }
 
 window.isAuthenticated = () => {

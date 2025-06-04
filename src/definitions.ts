@@ -36,8 +36,9 @@ export interface Configuration {
   /**
    * The name of the company.
    * This is used as the company name shown in the UI while establishing a connection with an operator.
+   * The default value is `undefined`.
    */
-  companyName: string;
+  companyName?: string;
 
   /**
    * The name of the locale to be used instead of the default locale of the site.
@@ -60,6 +61,13 @@ export interface Configuration {
   visitorContextAssetId?: string;
 
   /**
+   * Push notifications environment to use.
+   * NOTE: Only for iOS.
+   * The default value is `PushNotificationsIOS.DISABLED`.
+   */
+  pushNotifications?: PushNotificationsIOS;
+
+  /**
    * A bubble shown outside the app during an engagement when the app is not in the foreground.
    * Available only on Android when a visitor grants Screen Overlay permission.
    * The default value is `true`.
@@ -71,6 +79,12 @@ export interface Configuration {
    * The default value is `true`.
    */
   enableBubbleInsideApp?: boolean;
+
+  /**
+   * Whether to suppress push notification permission request during authentication.
+   * The default value is `false`.
+   */
+  suppressPushNotificationsPermissionRequestDuringAuthentication?: boolean;
 }
 
 /**
@@ -290,7 +304,60 @@ export namespace VisitorInfoUpdate {
     (typeof CustomAttributesUpdateMethod)[keyof typeof CustomAttributesUpdateMethod];
 }
 
-export interface GliaSdkPlugin {
+/**
+ * Available push notifications types.
+ */
+export const PushNotificationType = Object.freeze({
+  /**
+   * The SDK will subscribe to push notifications for when the engagement starts.
+   */
+  START: 'start',
+
+  /**
+   * The SDK will subscribe to push notifications for when the engagement ends.
+   */
+  END: 'end',
+
+  /**
+   * The SDK will subscribe to push notifications for when the engagement fails.
+   */
+  FAILED: 'failed',
+
+  /**
+   * The SDK will subscribe to push notifications for when a new message is received.
+   */
+  MESSAGE: 'message',
+
+  /**
+   * The SDK will subscribe to push notifications for when the engagement is transferred to another operator.
+   */
+  TRANSFER: 'transfer',
+});
+export type PushNotificationType =
+  (typeof PushNotificationType)[keyof typeof PushNotificationType];
+
+/**
+ * Push notifications environment for iOS.
+ */
+export const PushNotificationsIOS = Object.freeze({
+  /**
+   * Push notifications are disabled.
+   */
+  DISABLED: 'disabled',
+  /**
+   * Push notifications are configured for sandbox environment. Suitable for testing.
+   */
+  SANDBOX: 'sandbox',
+  /**
+   * Push notifications are configured for production environment.
+   */
+  PRODUCTION: 'production',
+});
+
+export type PushNotificationsIOS =
+  (typeof PushNotificationsIOS)[keyof typeof PushNotificationsIOS];
+
+export interface GliaSdk {
   /**
    * Configures GliaWidgets SDK.
    *
@@ -299,6 +366,17 @@ export interface GliaSdkPlugin {
    * @param configuration - {@link Configuration} options for the GliaWidgets SDK.
    */
   configure(configuration: Configuration): Promise<void>;
+
+  /**
+   * Subscribe to specific push notification types.
+   */
+  subscribeToPushNotificationTypes(options: {
+    /**
+     * An array of push notification types to subscribe to.
+     * @see {@link PushNotificationType} for more details.
+     */
+    types: PushNotificationType[];
+  }): Promise<void>;
 
   /**
    * @deprecated Use showEntryWidget() instead.
@@ -354,7 +432,7 @@ export interface GliaSdkPlugin {
   }): Promise<void>;
 
   /**
-   * @deprecated Use startSecureMessaging() instead.
+   * @deprecated Use `startSecureMessaging` instead.
    * Starts a Secure Conversation flow.
    * Note that Secure Conversation requires visitor authentication.
    */
@@ -425,8 +503,14 @@ export interface GliaSdkPlugin {
 
   /**
    * Deauthenticates the visitor. Be aware that deauthentication process relies on `AuthenticationBehavior`.
+   * @param options - Provides options to stop push notifications on deauthentication.
    */
-  deauthenticate(): Promise<void>;
+  deauthenticate(options?: {
+    /**
+     * Whether to unsubscribe the visitor from receiving push notifications on deauthentication.
+     */
+    stopPushNotifications: boolean;
+  }): Promise<void>;
 
   /**
    * Provides the current authentication state.

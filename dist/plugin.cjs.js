@@ -18,6 +18,9 @@ class GliaSdkImpl {
         }
         return GliaSdkIonicPlugin.configure(Object.assign(Object.assign({}, configuration), { uiUnifiedConfig: uiUnifiedConfig }));
     }
+    async subscribeToPushNotificationTypes(options) {
+        return GliaSdkIonicPlugin.subscribeToPushNotificationTypes(options);
+    }
     async presentEntryWidget() {
         return GliaSdkIonicPlugin.presentEntryWidget();
     }
@@ -69,8 +72,8 @@ class GliaSdkImpl {
     async authenticate(options) {
         return GliaSdkIonicPlugin.authenticate(options);
     }
-    async deauthenticate() {
-        return GliaSdkIonicPlugin.deauthenticate();
+    async deauthenticate(options) {
+        return GliaSdkIonicPlugin.deauthenticate(options);
     }
     async isAuthenticated() {
         const result = await GliaSdkIonicPlugin.isAuthenticatedInternal();
@@ -159,11 +162,55 @@ exports.VisitorInfoUpdate = void 0;
         MERGE: 'merge',
     });
 })(exports.VisitorInfoUpdate || (exports.VisitorInfoUpdate = {}));
+/**
+ * Available push notifications types.
+ */
+const PushNotificationType = Object.freeze({
+    /**
+     * The SDK will subscribe to push notifications for when the engagement starts.
+     */
+    START: 'start',
+    /**
+     * The SDK will subscribe to push notifications for when the engagement ends.
+     */
+    END: 'end',
+    /**
+     * The SDK will subscribe to push notifications for when the engagement fails.
+     */
+    FAILED: 'failed',
+    /**
+     * The SDK will subscribe to push notifications for when a new message is received.
+     */
+    MESSAGE: 'message',
+    /**
+     * The SDK will subscribe to push notifications for when the engagement is transferred to another operator.
+     */
+    TRANSFER: 'transfer',
+});
+/**
+ * Push notifications environment for iOS.
+ */
+const PushNotificationsIOS = Object.freeze({
+    /**
+     * Push notifications are disabled.
+     */
+    DISABLED: 'disabled',
+    /**
+     * Push notifications are configured for sandbox environment. Suitable for testing.
+     */
+    SANDBOX: 'sandbox',
+    /**
+     * Push notifications are configured for production environment.
+     */
+    PRODUCTION: 'production',
+});
 
 const GliaSdk = new GliaSdkImpl();
 
 exports.AuthenticationBehavior = AuthenticationBehavior;
 exports.GliaSdk = GliaSdk;
 exports.MediaType = MediaType;
+exports.PushNotificationType = PushNotificationType;
+exports.PushNotificationsIOS = PushNotificationsIOS;
 exports.Region = Region;
 //# sourceMappingURL=plugin.cjs.js.map

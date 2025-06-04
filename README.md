@@ -33,6 +33,7 @@ GliaSdk.presentEntryWidget();
 <docgen-index>
 
 * [`configure(...)`](#configure)
+* [`subscribeToPushNotificationTypes(...)`](#subscribetopushnotificationtypes)
 * [`presentEntryWidget()`](#presententrywidget)
 * [`showEntryWidget(...)`](#showentrywidget)
 * [`hideEntryWidget()`](#hideentrywidget)
@@ -47,7 +48,7 @@ GliaSdk.presentEntryWidget();
 * [`showVisitorCodeViewController()`](#showvisitorcodeviewcontroller)
 * [`showVisitorCode()`](#showvisitorcode)
 * [`authenticate(...)`](#authenticate)
-* [`deauthenticate()`](#deauthenticate)
+* [`deauthenticate(...)`](#deauthenticate)
 * [`isAuthenticated()`](#isauthenticated)
 * [`refreshAuthentication(...)`](#refreshauthentication)
 * [`pauseLiveObservation()`](#pauseliveobservation)
@@ -76,6 +77,21 @@ Note that for the SDK to work properly, the site API key needs to have the 'Crea
 | Param               | Type                                                    | Description                                                                           |
 | ------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | **`configuration`** | <code><a href="#configuration">Configuration</a></code> | - {@link <a href="#configuration">Configuration</a>} options for the GliaWidgets SDK. |
+
+--------------------
+
+
+### subscribeToPushNotificationTypes(...)
+
+```typescript
+subscribeToPushNotificationTypes(options: { types: PushNotificationType[]; }) => Promise<void>
+```
+
+Subscribe to specific push notification types.
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ types: string[]; }</code> |
 
 --------------------
 
@@ -256,13 +272,17 @@ Authenticates the visitor.
 --------------------
 
 
-### deauthenticate()
+### deauthenticate(...)
 
 ```typescript
-deauthenticate() => Promise<void>
+deauthenticate(options?: { stopPushNotifications: boolean; } | undefined) => Promise<void>
 ```
 
 Deauthenticates the visitor. Be aware that deauthentication process relies on <a href="#authenticationbehavior">`AuthenticationBehavior`</a>.
+
+| Param         | Type                                             | Description                                                        |
+| ------------- | ------------------------------------------------ | ------------------------------------------------------------------ |
+| **`options`** | <code>{ stopPushNotifications: boolean; }</code> | - Provides options to stop push notifications on deauthentication. |
 
 --------------------
 
@@ -363,18 +383,20 @@ Ends the current engagement.
 
 GliaWidgets SDK configuration.
 
-| Prop                         | Type                                      | Description                                                                                                                                                                                        |
-| ---------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`siteId`**                 | <code>string</code>                       | The Glia site ID.                                                                                                                                                                                  |
-| **`queueIds`**               | <code>string[]</code>                     |                                                                                                                                                                                                    |
-| **`apiKey`**                 | <code><a href="#apikey">ApiKey</a></code> | The API key for the Glia site.                                                                                                                                                                     |
-| **`region`**                 | <code><a href="#region">Region</a></code> | The region of the site. Possible values are defined in the {@link <a href="#region">Region</a>}.                                                                                                   |
-| **`companyName`**            | <code>string</code>                       | The name of the company. This is used as the company name shown in the UI while establishing a connection with an operator.                                                                        |
-| **`overrideLocale`**         | <code>string</code>                       | The name of the locale to be used instead of the default locale of the site. If not provided, the default locale will be used. The default value is `undefined`.                                   |
-| **`uiUnifiedConfig`**        | <code>string \| object</code>             | UI customization settings in a cross-platform format. This can be a JSON object or a JSON string. The default value is `undefined`.                                                                |
-| **`visitorContextAssetId`**  | <code>string</code>                       | ID of the PDF asset containing additional visitor context for an operator. The default value is `undefined`.                                                                                       |
-| **`enableBubbleOutsideApp`** | <code>boolean</code>                      | A bubble shown outside the app during an engagement when the app is not in the foreground. Available only on Android when a visitor grants Screen Overlay permission. The default value is `true`. |
-| **`enableBubbleInsideApp`**  | <code>boolean</code>                      | A bubble shown within the app but outside the engagement view during an engagement. The default value is `true`.                                                                                   |
+| Prop                                                                 | Type                                                                  | Description                                                                                                                                                                                        |
+| -------------------------------------------------------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`siteId`**                                                         | <code>string</code>                                                   | The Glia site ID.                                                                                                                                                                                  |
+| **`queueIds`**                                                       | <code>string[]</code>                                                 |                                                                                                                                                                                                    |
+| **`apiKey`**                                                         | <code><a href="#apikey">ApiKey</a></code>                             | The API key for the Glia site.                                                                                                                                                                     |
+| **`region`**                                                         | <code><a href="#region">Region</a></code>                             | The region of the site. Possible values are defined in the {@link <a href="#region">Region</a>}.                                                                                                   |
+| **`companyName`**                                                    | <code>string</code>                                                   | The name of the company. This is used as the company name shown in the UI while establishing a connection with an operator. The default value is `undefined`.                                      |
+| **`overrideLocale`**                                                 | <code>string</code>                                                   | The name of the locale to be used instead of the default locale of the site. If not provided, the default locale will be used. The default value is `undefined`.                                   |
+| **`uiUnifiedConfig`**                                                | <code>string \| object</code>                                         | UI customization settings in a cross-platform format. This can be a JSON object or a JSON string. The default value is `undefined`.                                                                |
+| **`visitorContextAssetId`**                                          | <code>string</code>                                                   | ID of the PDF asset containing additional visitor context for an operator. The default value is `undefined`.                                                                                       |
+| **`pushNotifications`**                                              | <code><a href="#pushnotificationsios">PushNotificationsIOS</a></code> | Push notifications environment to use. NOTE: Only for iOS. The default value is <a href="#pushnotificationsios">`PushNotificationsIOS</a>.DISABLED`.                                               |
+| **`enableBubbleOutsideApp`**                                         | <code>boolean</code>                                                  | A bubble shown outside the app during an engagement when the app is not in the foreground. Available only on Android when a visitor grants Screen Overlay permission. The default value is `true`. |
+| **`enableBubbleInsideApp`**                                          | <code>boolean</code>                                                  | A bubble shown within the app but outside the engagement view during an engagement. The default value is `true`.                                                                                   |
+| **`suppressPushNotificationsPermissionRequestDuringAuthentication`** | <code>boolean</code>                                                  | Whether to suppress push notification permission request during authentication. The default value is `false`.                                                                                      |
 
 
 #### ApiKey
@@ -442,6 +464,20 @@ If some fields of visitor information are not set, they will not be updated on t
 Site's region. Use `us` for US and other regions except Europe, use `eu` for Europe.
 
 <code>(typeof <a href="#region">Region</a>)[keyof typeof Region]</code>
+
+
+#### PushNotificationsIOS
+
+Push notifications environment for iOS.
+
+<code>(typeof <a href="#pushnotificationsios">PushNotificationsIOS</a>)[keyof typeof PushNotificationsIOS]</code>
+
+
+#### PushNotificationType
+
+Available push notifications types.
+
+<code>(typeof <a href="#pushnotificationtype">PushNotificationType</a>)[keyof typeof PushNotificationType]</code>
 
 
 #### Queues

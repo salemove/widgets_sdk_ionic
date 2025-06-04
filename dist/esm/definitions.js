@@ -61,4 +61,46 @@ export var VisitorInfoUpdate;
         MERGE: 'merge',
     });
 })(VisitorInfoUpdate || (VisitorInfoUpdate = {}));
+/**
+ * Available push notifications types.
+ */
+export const PushNotificationType = Object.freeze({
+    /**
+     * The SDK will subscribe to push notifications for when the engagement starts.
+     */
+    START: 'start',
+    /**
+     * The SDK will subscribe to push notifications for when the engagement ends.
+     */
+    END: 'end',
+    /**
+     * The SDK will subscribe to push notifications for when the engagement fails.
+     */
+    FAILED: 'failed',
+    /**
+     * The SDK will subscribe to push notifications for when a new message is received.
+     */
+    MESSAGE: 'message',
+    /**
+     * The SDK will subscribe to push notifications for when the engagement is transferred to another operator.
+     */
+    TRANSFER: 'transfer',
+});
+/**
+ * Push notifications environment for iOS.
+ */
+export const PushNotificationsIOS = Object.freeze({
+    /**
+     * Push notifications are disabled.
+     */
+    DISABLED: 'disabled',
+    /**
+     * Push notifications are configured for sandbox environment. Suitable for testing.
+     */
+    SANDBOX: 'sandbox',
+    /**
+     * Push notifications are configured for production environment.
+     */
+    PRODUCTION: 'production',
+});
 //# sourceMappingURL=definitions.js.map
