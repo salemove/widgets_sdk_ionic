@@ -1,5 +1,7 @@
 # glia-widgets-ionic
 
+
+
 GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. It provides all the necessary UI components to quickly integrate GliaSDK into your project.
 
 ## Installation
@@ -457,7 +459,9 @@ A collection of queues where:
 
 Construct a type with a set of properties K of type T
 
-<code>{ [P in K]: T; }</code>
+<code>{
+ [P in K]: T;
+ }</code>
 
 
 #### MediaType
