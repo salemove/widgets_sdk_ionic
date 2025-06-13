@@ -1,43 +1,43 @@
 {
-  "name": "capacitor-app",
-  "version": "3.0.0",
-  "description": "An Amazing Capacitor App",
-  "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    }
-  },
-  "files": [
-    "dist"
-  ],
-  "keywords": [
-    "capacitor",
-    "mobile"
-  ],
-  "scripts": {
-    "ios" :"npx cap run ios",
-    "android": "npx cap run android",
-    "start": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@capacitor/android": "^6.2.1",
-    "@capacitor/camera": "latest",
-    "@capacitor/core": "latest",
-    "@capacitor/ios": "^6.2.1",
-    "@capacitor/splash-screen": "latest",
-    "glia-widgets-ionic": "file:.."
-  },
-  "devDependencies": {
-    "@capacitor/cli": "latest",
-    "vite": "^6.2.2"
-  },
-  "author": "",
-  "license": "MIT"
+    "name": "capacitor-app",
+    "version": "3.0.0",
+    "description": "An Amazing Capacitor App",
+    "type": "module",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "keywords": [
+        "capacitor",
+        "mobile"
+    ],
+    "scripts": {
+        "ios": "npx cap run ios",
+        "android": "npx cap run android",
+        "start": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@capacitor/android": "^6.2.1",
+        "@capacitor/camera": "latest",
+        "@capacitor/core": "latest",
+        "@capacitor/ios": "^6.2.1",
+        "@capacitor/splash-screen": "latest",
+        "glia-widgets-ionic": "file:.."
+    },
+    "devDependencies": {
+        "@capacitor/cli": "latest",
+        "vite": "^6.2.2"
+    },
+    "author": "",
+    "license": "MIT"
 }
