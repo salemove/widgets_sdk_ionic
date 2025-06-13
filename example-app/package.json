@@ -29,7 +29,7 @@
     "dependencies": {
         "@capacitor/android": "^6.2.1",
         "@capacitor/camera": "^6.1.2",
-        "@capacitor/core": "latest",
+        "@capacitor/core": "6.2.1",
         "@capacitor/ios": "^6.2.1",
         "@capacitor/splash-screen": "^6.0.3",
         "glia-widgets-ionic": "file:.."
