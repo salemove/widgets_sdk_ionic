@@ -60,10 +60,6 @@ export interface Configuration {
      * The default value is `true`.
      */
     enableBubbleInsideApp?: boolean;
-    /**
-     * Whether to suppress push notification permission request during authentication.
-     */
-    suppressPushNotificationsPermissionRequestDuringAuthentication?: boolean;
 }
 /**
  * Used for configuring the Glia SDK with site API key ID and secret.
@@ -371,12 +367,7 @@ export interface GliaSdkPlugin {
     /**
      * Deauthenticates the visitor. Be aware that deauthentication process relies on `AuthenticationBehavior`.
      */
-    deauthenticate(options?: {
-        /**
-         * Whether to unsubscribe the visitor from receiving push notifications on deauthentication.
-         */
-        stopPushNotifications?: boolean;
-    }): Promise<void>;
+    deauthenticate(): Promise<void>;
     /**
      * Provides the current authentication state.
      */

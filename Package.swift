@@ -3,21 +3,19 @@ import PackageDescription
 
 let package = Package(
     name: "GliaWidgetsIonic",
-    platforms: [.iOS(.v14)],
+    platforms: [.iOS(.v13)],
     products: [
         .library(
             name: "GliaWidgetsIonic",
             targets: ["GliaSdkPlugin"])
     ],
     dependencies: [
-        .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", branch: "main"),
-        .package(url: "https://github.com/salemove/ios-sdk-widgets", exact: "3.1.1")
+        .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", branch: "main")
     ],
     targets: [
         .target(
             name: "GliaSdkPlugin",
             dependencies: [
-                .product(name: "GliaWidgets", package: "ios-sdk-widgets"),
                 .product(name: "Capacitor", package: "capacitor-swift-pm"),
                 .product(name: "Cordova", package: "capacitor-swift-pm")
             ],

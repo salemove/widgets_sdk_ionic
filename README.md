@@ -47,7 +47,7 @@ GliaSdk.presentEntryWidget();
 * [`showVisitorCodeViewController()`](#showvisitorcodeviewcontroller)
 * [`showVisitorCode()`](#showvisitorcode)
 * [`authenticate(...)`](#authenticate)
-* [`deauthenticate(...)`](#deauthenticate)
+* [`deauthenticate()`](#deauthenticate)
 * [`isAuthenticated()`](#isauthenticated)
 * [`refreshAuthentication(...)`](#refreshauthentication)
 * [`pauseLiveObservation()`](#pauseliveobservation)
@@ -256,17 +256,13 @@ Authenticates the visitor.
 --------------------
 
 
-### deauthenticate(...)
+### deauthenticate()
 
 ```typescript
-deauthenticate(options?: { stopPushNotifications?: boolean | undefined; } | undefined) => Promise<void>
+deauthenticate() => Promise<void>
 ```
 
 Deauthenticates the visitor. Be aware that deauthentication process relies on <a href="#authenticationbehavior">`AuthenticationBehavior`</a>.
-
-| Param         | Type                                              |
-| ------------- | ------------------------------------------------- |
-| **`options`** | <code>{ stopPushNotifications?: boolean; }</code> |
 
 --------------------
 
@@ -367,19 +363,18 @@ Ends the current engagement.
 
 GliaWidgets SDK configuration.
 
-| Prop                                                                 | Type                                      | Description                                                                                                                                                                                        |
-| -------------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`siteId`**                                                         | <code>string</code>                       | The Glia site ID.                                                                                                                                                                                  |
-| **`queueIds`**                                                       | <code>string[]</code>                     |                                                                                                                                                                                                    |
-| **`apiKey`**                                                         | <code><a href="#apikey">ApiKey</a></code> | The API key for the Glia site.                                                                                                                                                                     |
-| **`region`**                                                         | <code><a href="#region">Region</a></code> | The region of the site. Possible values are defined in the {@link <a href="#region">Region</a>}.                                                                                                   |
-| **`companyName`**                                                    | <code>string</code>                       | The name of the company. This is used as the company name shown in the UI while establishing a connection with an operator.                                                                        |
-| **`overrideLocale`**                                                 | <code>string</code>                       | The name of the locale to be used instead of the default locale of the site. If not provided, the default locale will be used. The default value is `undefined`.                                   |
-| **`uiUnifiedConfig`**                                                | <code>string \| object</code>             | UI customization settings in a cross-platform format. This can be a JSON object or a JSON string. The default value is `undefined`.                                                                |
-| **`visitorContextAssetId`**                                          | <code>string</code>                       | ID of the PDF asset containing additional visitor context for an operator. The default value is `undefined`.                                                                                       |
-| **`enableBubbleOutsideApp`**                                         | <code>boolean</code>                      | A bubble shown outside the app during an engagement when the app is not in the foreground. Available only on Android when a visitor grants Screen Overlay permission. The default value is `true`. |
-| **`enableBubbleInsideApp`**                                          | <code>boolean</code>                      | A bubble shown within the app but outside the engagement view during an engagement. The default value is `true`.                                                                                   |
-| **`suppressPushNotificationsPermissionRequestDuringAuthentication`** | <code>boolean</code>                      | Whether to suppress push notification permission request during authentication.                                                                                                                    |
+| Prop                         | Type                                      | Description                                                                                                                                                                                        |
+| ---------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`siteId`**                 | <code>string</code>                       | The Glia site ID.                                                                                                                                                                                  |
+| **`queueIds`**               | <code>string[]</code>                     |                                                                                                                                                                                                    |
+| **`apiKey`**                 | <code><a href="#apikey">ApiKey</a></code> | The API key for the Glia site.                                                                                                                                                                     |
+| **`region`**                 | <code><a href="#region">Region</a></code> | The region of the site. Possible values are defined in the {@link <a href="#region">Region</a>}.                                                                                                   |
+| **`companyName`**            | <code>string</code>                       | The name of the company. This is used as the company name shown in the UI while establishing a connection with an operator.                                                                        |
+| **`overrideLocale`**         | <code>string</code>                       | The name of the locale to be used instead of the default locale of the site. If not provided, the default locale will be used. The default value is `undefined`.                                   |
+| **`uiUnifiedConfig`**        | <code>string \| object</code>             | UI customization settings in a cross-platform format. This can be a JSON object or a JSON string. The default value is `undefined`.                                                                |
+| **`visitorContextAssetId`**  | <code>string</code>                       | ID of the PDF asset containing additional visitor context for an operator. The default value is `undefined`.                                                                                       |
+| **`enableBubbleOutsideApp`** | <code>boolean</code>                      | A bubble shown outside the app during an engagement when the app is not in the foreground. Available only on Android when a visitor grants Screen Overlay permission. The default value is `true`. |
+| **`enableBubbleInsideApp`**  | <code>boolean</code>                      | A bubble shown within the app but outside the engagement view during an engagement. The default value is `true`.                                                                                   |
 
 
 #### ApiKey
