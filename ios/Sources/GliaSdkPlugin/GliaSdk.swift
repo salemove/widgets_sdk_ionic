@@ -1,12 +1,12 @@
 import Capacitor
 import Foundation
+import GliaCoreSDK
 import GliaWidgets
 
 @objc public class GliaSdk: NSObject {
-
+    
     private var entryWidget: EntryWidget?
-    private var authentication: Glia.Authentication?
-    private var configureQueueIds: [String]?
+    private var launcher: EngagementLauncher?
 
     @objc public func configure(_ call: CAPPluginCall) {
 
@@ -34,50 +34,8 @@ import GliaWidgets
             call.reject("'region' is missed or invalid.")
             return
         }
-
+        
         let queueIds = call.getArray("queueIds", []) as? [String]
-        configureQueueIds = queueIds
-
-        let companyName = call.getString("companyName") ?? ""
-
-        let overrideLocale = call.getString("overrideLocale")
-
-        let rawUiConfig = call.getString("uiUnifiedConfig")
-
-        var uiConfig: RemoteConfiguration?
-        if let jsonData = rawUiConfig?.data(using: .utf8) {
-            do {
-                uiConfig = try JSONDecoder().decode(RemoteConfiguration.self, from: jsonData)
-            } catch {
-                debugPrint("Serialization failed with error='\(error)'.")
-            }
-        }
-
-        var visitorContext: Configuration.VisitorContext?
-        if let visitorContextAssetId = call.getString("visitorContextAssetId") {
-            if let assetId = UUID(uuidString: visitorContextAssetId) {
-                visitorContext = .init(assetId: assetId)
-            } else {
-                call.reject("'visitorContextAssetId' is invalid.")
-            }
-        }
-
-        var features: Features = .all
-        if let enableBubbleInsideApp = call.getBool("enableBubbleInsideApp"),
-            !enableBubbleInsideApp
-        {
-            features.remove(.bubbleView)
-        }
-
-        let isWhiteLabelApp = call.getBool("isWhiteLabelApp") ?? false
-
-        var pushNotifications: Configuration.PushNotifications?
-        if let pushNotificationsRaw = config["pushNotifications"] as? String {
-            pushNotifications = Configuration.PushNotifications(rawValue: pushNotificationsRaw)
-        }
-
-        let suppressPushNotificationsPermissionRequestDuringAuthentication =
-            call.getBool("suppressPushNotificationsPermissionRequestDuringAuthentication") ?? false
 
         DispatchQueue.main.async {
             do {
@@ -86,26 +44,22 @@ import GliaWidgets
                         authorizationMethod: .siteApiKey(
                             id: siteApiKeyId, secret: siteApiKeySecret),
                         environment: region,
-                        site: siteId,
-                        visitorContext: visitorContext,
-                        isWhiteLabelApp: isWhiteLabelApp,
-                        companyName: companyName,
-                        manualLocaleOverride: overrideLocale,
-                        suppressPushNotificationsPermissionRequestDuringAuthentication:
-                            suppressPushNotificationsPermissionRequestDuringAuthentication
+                        site: siteId
                     ),
-                    uiConfig: uiConfig,
-                    features: features
-                ) { [weak self] (result: Result<Void, Error>) in
+                    theme: Theme()
+                ) { [weak self] result in
+
                     switch result {
+                    
                     case .success:
                         do {
-                            self?.entryWidget = try Glia.sharedInstance.getEntryWidget(
-                                queueIds: queueIds ?? [])
+                            self?.entryWidget = try Glia.sharedInstance.getEntryWidget(queueIds: queueIds ?? [])
+                            self?.launcher = try Glia.sharedInstance.getEngagementLauncher(queueIds: queueIds ?? [])
                             call.resolve()
                         } catch {
                             call.reject("Error occured='\(error)'.")
                         }
+                    
                     case .failure(let error):
                         call.reject("Error occured='\(error)'.")
                     }
@@ -115,122 +69,115 @@ import GliaWidgets
             }
         }
     }
-
-    @objc public func showEntryWidget(_ call: CAPPluginCall) {
-        var queueIds = configureQueueIds
-        let useOptions = call.getBool("useOptions", false)
-        if useOptions {
-            queueIds = call.getArray("queueIds", []) as? [String]
+    
+    @objc public func presentEntryWidget(_ call: CAPPluginCall) {
+        
+        guard let entryWidget = self.entryWidget else {
+            call.reject("SDK not configured.")
+            return
         }
-
-        DispatchQueue.main.async { [weak self] in
-            do {
-                self?.entryWidget = try Glia.sharedInstance.getEntryWidget(queueIds: queueIds ?? [])
-                guard let topViewController = UIApplication.topViewController() else {
-                    call.reject("Could not find view controller for presentatio.")
-                    return
-                }
-                self?.entryWidget?.show(in: topViewController)
-                call.resolve()
-            } catch {
-                call.reject(
-                    "Could not show entry widget. Error='\(error.localizedDescription)'.")
+        
+        DispatchQueue.main.async { [weak entryWidget] in
+            guard let topViewController = UIApplication.topViewController() else {
+                call.reject("Can't find view contorller for presentation.")
+                return
             }
+        
+            entryWidget?.show(in: topViewController)
         }
     }
 
     @objc public func startChat(_ call: CAPPluginCall) {
-        var queueIds = configureQueueIds
-        let useOptions = call.getBool("useOptions", false)
-        if useOptions {
-            queueIds = call.getArray("queueIds", []) as? [String]
-        }
 
+        guard let launcher = self.launcher else {
+            call.reject("SDK not configured.")
+            return
+        }
+        
         DispatchQueue.main.async {
             do {
-                let launcher = try Glia.sharedInstance.getEngagementLauncher(
-                    queueIds: queueIds ?? [])
                 try launcher.startChat()
                 call.resolve()
             } catch {
-                call.reject("Could not start chat engagement. Error='\(error)'.")
+                call.reject("Engagement has not been started. Error='\(error)'.")
             }
         }
     }
 
     @objc public func startAudio(_ call: CAPPluginCall) {
-        var queueIds = configureQueueIds
-        let useOptions = call.getBool("useOptions", false)
-        if useOptions {
-            queueIds = call.getArray("queueIds", []) as? [String]
-        }
 
+        guard let launcher = self.launcher else {
+            call.reject("SDK not configured.")
+            return
+        }
+        
         DispatchQueue.main.async {
             do {
-                let launcher = try Glia.sharedInstance.getEngagementLauncher(
-                    queueIds: queueIds ?? [])
                 try launcher.startAudioCall()
                 call.resolve()
             } catch {
-                call.reject("Could not start audio engagement. Error='\(error)'.")
+                call.reject("Engagement has not been started. Error='\(error)'.")
             }
         }
     }
 
     @objc public func startVideo(_ call: CAPPluginCall) {
-        var queueIds = configureQueueIds
-        let useOptions = call.getBool("useOptions", false)
-        if useOptions {
-            queueIds = call.getArray("queueIds", []) as? [String]
-        }
 
+        guard let launcher = self.launcher else {
+            call.reject("SDK not configured.")
+            return
+        }
+        
         DispatchQueue.main.async {
             do {
-                let launcher = try Glia.sharedInstance.getEngagementLauncher(
-                    queueIds: queueIds ?? [])
                 try launcher.startVideoCall()
                 call.resolve()
             } catch {
-                call.reject("Could not start video engagement. Error'\(error)'.")
+                call.reject("Engagement has not been started. Error='\(error)'.")
             }
         }
     }
 
     @objc public func clearVisitorSession(_ call: CAPPluginCall) {
+
         DispatchQueue.main.async {
-            Glia.sharedInstance.clearVisitorSession({ [call] (result: Result<Void, Error>) in
+            Glia.sharedInstance.clearVisitorSession { result in
                 switch result {
                 case .success:
                     call.resolve()
                 case .failure(let error):
-                    call.reject("Could not clear visitor session. Error='\(error)'.")
+                    call.reject("Clear visitor session failed. Error='\(error)'.")
                 }
-            })
+            }
         }
     }
 
-    @objc public func getQueues(_ call: CAPPluginCall) {
-        Glia.sharedInstance.getQueues { [call] (result: Result<[Queue], Error>) in
-            switch result {
-            case .success(let queues):
-                call.resolve(
-                    queues.reduce(into: [String: Any]()) { _result, queue in
-                        _result[queue.id] = [
-                            "name": queue.name,
-                            "is_default": queue.isDefault,
-                            "status": queue.status.stringValue,
-                            "media": queue.media.map { $0.rawValue },
-                        ]
-                    }
-                )
+    @objc public func listQueues(_ call: CAPPluginCall) {
 
-            case .failure(let error):
-                call.reject("Could not get queues. Error='\(error)'.")
+        DispatchQueue.main.async {
+            Glia.sharedInstance.listQueues { result in
+                switch result {
+                case .success(let queues):
+                    call.resolve(
+                        queues.reduce(into: [String: Any]()) { _result, queue in
+                            _result[queue.id] = [
+                                "name": queue.name,
+                                "is_default": queue.isDefault,
+                                "status": queue.state.status.rawValue,
+                                "media": queue.state.media.map { $0.rawValue },
+                            ]
+                        }
+                    )
+
+                case .failure(let error):
+                    call.reject("List queue failed. Error='\(error)'.")
+                }
             }
         }
     }
 
     @objc public func authenticate(_ call: CAPPluginCall) {
+
         guard let behavior = call.getString("behavior") else {
             call.reject("'behavior' is missed or invalid.")
             return
@@ -240,9 +187,8 @@ import GliaWidgets
             call.reject("'idToken' is missed or invalid.")
             return
         }
-
-        let accessToken = call.getString("accessToken")?.trimmingCharacters(
-            in: .whitespacesAndNewlines)
+        
+        let accessToken = call.getString("accessToken")?.trimmingCharacters(in: .whitespacesAndNewlines)
 
         DispatchQueue.main.async {
             do {
@@ -257,23 +203,23 @@ import GliaWidgets
                     case .success:
                         call.resolve()
                     case .failure(let error):
-                        call.reject("Could not authenticate. Error='\(error)'.")
+                        call.reject("Error='\(error)'.")
                     }
                 }
             } catch {
-                call.reject("Could not authenticate. Error='\(error)'.")
+                call.reject("Error='\(error)'.")
             }
         }
     }
 
     @objc public func isAuthenticated(_ call: CAPPluginCall) {
+
         DispatchQueue.main.async {
             call.resolve(["isAuthenticated": self.authentication?.isAuthenticated ?? false])
         }
     }
 
     @objc public func deauthenticate(_ call: CAPPluginCall) {
-        let stopPushNotifications = call.getBool("stopPushNotifications") ?? false
 
         guard let authentication else {
             call.resolve()
@@ -281,13 +227,12 @@ import GliaWidgets
         }
 
         DispatchQueue.main.async {
-            authentication.deauthenticate(shouldStopPushNotifications: stopPushNotifications) {
-                result in
+            authentication.deauthenticate { result in
                 switch result {
                 case .success:
                     call.resolve()
                 case .failure(let error):
-                    call.reject("Could not deauthenticate. Error='\(error)'.")
+                    call.reject("Error='\(error)'.")
                 }
             }
         }
@@ -308,16 +253,17 @@ import GliaWidgets
                 case .success:
                     call.resolve()
                 case .failure(let error):
-                    call.reject("Could not refresh authentication. Error='\(error)'.")
+                    call.reject("Error='\(error)'.")
                 }
             }
         }
     }
 
-    @objc public func showVisitorCode(_ call: CAPPluginCall) {
+    @objc public func showVisitorCodeViewController(_ call: CAPPluginCall) {
+
         DispatchQueue.main.async {
             guard let viewController = UIApplication.topViewController() else {
-                call.reject("Could not find view controller for presentation.")
+                call.reject("Can't present visitor Code.")
                 return
             }
             Glia.sharedInstance.callVisualizer.showVisitorCodeViewController(from: viewController)
@@ -325,144 +271,83 @@ import GliaWidgets
         }
     }
 
-    @objc public func startSecureMessaging(_ call: CAPPluginCall) {
-        var queueIds = configureQueueIds
-        let useOptions = call.getBool("useOptions", false)
-        if useOptions {
-            queueIds = call.getArray("queueIds", []) as? [String]
-        }
+    @objc public func startSecureConversation(_ call: CAPPluginCall) {
 
+        guard let launcher = self.launcher else {
+            call.reject("SDK not configured.")
+            return
+        }
+        
         DispatchQueue.main.async {
             do {
-                let launcher = try Glia.sharedInstance.getEngagementLauncher(
-                    queueIds: queueIds ?? [])
                 try launcher.startSecureMessaging()
                 call.resolve()
             } catch {
-                call.reject("Could not start a Secure Messaging flow. Error='\(error)'.")
+                call.reject("Can't start Secure Conversation flow. Error='\(error)'.")
             }
         }
     }
-
+    
     @objc public func pauseLiveObservation(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
-            Glia.sharedInstance.liveObservation.pause()
+            GliaCore.sharedInstance.liveObservation.pause()
             call.resolve()
         }
     }
-
+    
     @objc public func resumeLiveObservation(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
-            Glia.sharedInstance.liveObservation.resume()
+            GliaCore.sharedInstance.liveObservation.resume()
             call.resolve()
         }
     }
 
-    func hideEntryWidget(_ call: CAPPluginCall) {
-        guard let entryWidget else {
-            call.reject("Entry Widget is not shown.")
-            return
-        }
+    private var authentication: Glia.Authentication?
+}
 
-        DispatchQueue.main.async { [weak entryWidget] in
-            entryWidget?.hide()
-            call.resolve()
+extension Environment {
+
+    init?(rawValue: String) {
+
+        switch rawValue.lowercased() {
+        case "eu":
+            self = .europe
+        case "us":
+            self = .usa
+        case "beta":
+            self = .beta
+        default:
+            return nil
         }
     }
+}
 
-    func subscribeToPushNotificationTypes(_ call: CAPPluginCall) {
-        var pushNotificationsTypes = [PushNotificationsType]()
-        if let pushNotificationTypes = call.getArray("types", []) as? [String] {
-            pushNotificationTypes.forEach {
-                if let type = PushNotificationsType(stringValue: $0) {
-                    pushNotificationsTypes.append(type)
-                }
+extension Glia.Authentication.Behavior {
+    init(rawValue: String) {
+        switch rawValue.lowercased() {
+        case "allowedDuringEngagement":
+            self = .allowedDuringEngagement
+        default:
+            self = .forbiddenDuringEngagement
+        }
+    }
+}
+
+extension UIApplication {
+    class func topViewController(
+        _ viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController
+    ) -> UIViewController? {
+        if let nav = viewController as? UINavigationController {
+            return topViewController(nav.visibleViewController)
+        }
+        if let tab = viewController as? UITabBarController {
+            if let selected = tab.selectedViewController {
+                return topViewController(selected)
             }
         }
-        DispatchQueue.main.async {
-            Glia.sharedInstance.pushNotifications.subscribeTo(pushNotificationsTypes)
-            call.resolve()
+        if let presented = viewController?.presentedViewController {
+            return topViewController(presented)
         }
+        return viewController
     }
-
-    func getVisitorInfo(_ call: CAPPluginCall) {
-        Glia.sharedInstance.getVisitorInfo { result in
-            switch result {
-            case .success(let visitorInfo):
-                var visitorInfoDict: [String: Any?] = [
-                    "name": visitorInfo.name,
-                    "email": visitorInfo.email,
-                    "phone": visitorInfo.phone,
-                    "note": visitorInfo.note,
-                    "banned": visitorInfo.banned,
-                ]
-
-                let customAttributes = visitorInfo.customAttributes?.reduce(
-                    into: [String: String]()
-                ) { result, entry in
-                    if entry.key == "external_id" {
-                        visitorInfoDict["externalId"] = entry.value
-                    }
-                    result[entry.key] = entry.value
-                }
-                visitorInfoDict["customAttributes"] = customAttributes
-
-                call.resolve(visitorInfoDict as PluginCallResultData)
-            case .failure(let error):
-                call.reject("Could not fetch visitor info. Error='\(error.localizedDescription)'.")
-            }
-        }
-    }
-
-    func updateVisitorInfo(_ call: CAPPluginCall) {
-        var visitorInfoUpdate = VisitorInfoUpdate()
-
-        if let name = call.getString("name") {
-            visitorInfoUpdate.name = name
-        }
-
-        if let email = call.getString("email") {
-            visitorInfoUpdate.email = email
-        }
-
-        if let phone = call.getString("phone") {
-            visitorInfoUpdate.phone = phone
-        }
-
-        if let note = call.getString("note") {
-            visitorInfoUpdate.note = note
-        }
-
-        if let noteUpdateMethodString = call.getString("noteUpdateMethod"),
-            let noteUpdateMethod = VisitorInfoUpdate.NoteUpdateMethod(
-                rawValue: noteUpdateMethodString.lowercased())
-        {
-            visitorInfoUpdate.noteUpdateMethod = noteUpdateMethod
-        }
-
-        if let customAttributes = call.getObject("customAttributes") as? [String: String] {
-            visitorInfoUpdate.customAttributes = customAttributes
-        }
-
-        if let customAttributesUpdateMethodString = call.getString("customAttributesUpdateMethod"),
-            let customAttributesUpdateMethod = VisitorInfoUpdate.CustomAttributesUpdateMethod(
-                rawValue: customAttributesUpdateMethodString.lowercased())
-        {
-            visitorInfoUpdate.customAttributesUpdateMethod = customAttributesUpdateMethod
-        }
-
-        if let externalID = call.getString("externalId") {
-            visitorInfoUpdate.externalID = externalID
-        }
-
-        Glia.sharedInstance.updateVisitorInfo(visitorInfoUpdate) { result in
-            switch result {
-            case .success:
-                call.resolve()
-            case .failure(let error):
-                call.reject("Could not update visitor info. Error='\(error.localizedDescription)'.")
-            }
-        }
-    }
-
 }

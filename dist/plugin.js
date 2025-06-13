@@ -68,8 +68,8 @@ var capacitorGliaSdk = (function (exports, core) {
         async authenticate(options) {
             return GliaSdkIonicPlugin.authenticate(options);
         }
-        async deauthenticate(options) {
-            return GliaSdkIonicPlugin.deauthenticate(options);
+        async deauthenticate() {
+            return GliaSdkIonicPlugin.deauthenticate();
         }
         async isAuthenticated() {
             const result = await GliaSdkIonicPlugin.isAuthenticatedInternal();
@@ -79,10 +79,10 @@ var capacitorGliaSdk = (function (exports, core) {
             return GliaSdkIonicPlugin.refreshAuthentication(options);
         }
         async pauseLiveObservation() {
-            return GliaSdkIonicPlugin.pauseLiveObservation();
+            throw new Error('Method not implemented.');
         }
         async resumeLiveObservation() {
-            return GliaSdkIonicPlugin.resumeLiveObservation();
+            throw new Error('Method not implemented.');
         }
         async getVisitorInfo() {
             return GliaSdkIonicPlugin.getVisitorInfo();
