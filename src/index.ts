@@ -1,7 +1,7 @@
-import type { GliaSdkPlugin } from './definitions';
+import type { GliaSdk } from './definitions';
 import { GliaSdkImpl } from './glia-sdk';
 
-const GliaSdk: GliaSdkPlugin = new GliaSdkImpl();
+const gliaSdk: GliaSdk = new GliaSdkImpl();
 
 export * from './definitions';
-export { GliaSdk };
+export { gliaSdk as GliaSdk };
