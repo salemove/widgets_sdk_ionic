@@ -9,7 +9,6 @@ import GliaWidgets
     private var configureQueueIds: [String]?
 
     @objc public func configure(_ call: CAPPluginCall) {
-
         guard
             let siteId = call.getString("siteId"),
             siteId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false

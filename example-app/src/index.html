@@ -34,6 +34,7 @@
         This project can be used to test out the functionality of GliaWidgets plugin.
       </p>
       <p>
+        <input type="text" placeholder="QueueID" id="queueIdInput" name="queueIdInput" value="" />
         <h3>SDK Configuration</h3>
         <button onclick="configure(false)">Configure SDK</button>
         <button onclick="configure(true)">Configure SDK (Suppress Push Notifications Request)</button>
@@ -51,14 +52,14 @@
       </p>
       <p>
         <h3>Start Engagement (deprecated)</h3>
-        <button onclick="startChat()">Start Engagement</button>
+        <button onclick="startChat()">Start Chat</button>
         <button onclick="startAudio()">Start Audio</button>
         <button onclick="startVideo()">Start Video</button>
-        <button onclick="startSecureConversation()">Start Secure Conversation</button>
+        <button onclick="startSecureConversation()">Start Secure Conversation (deprecated)</button>
       </p>
       <p>
         <h3>Start Engagement (new methods)</h3>
-        <button onclick="startChatWithIds()">Start Engagement</button>
+        <button onclick="startChatWithIds()">Start Chat</button>
         <button onclick="startAudioWithIds()">Start Audio</button>
         <button onclick="startVideoWithIds()">Start Video</button>
         <button onclick="startSecureMessaging()">Start Secure Messaging</button>
@@ -86,8 +87,8 @@
       </p>
       <p>
         <h3>Authentication / IdToken</h3>
-        <input type="text" id="idTokenInput" name="idTokenInput" value="" />
-        <input type="text" id="accessTokenInput" name="accessTokenInput" value="" />
+        <input type="text" placeholder="Id Token" id="idTokenInput" name="idTokenInput" value="" />
+        <input type="text" placeholder="Access Token" id="accessTokenInput" name="accessTokenInput" value="" />
         <button onclick="authenticate()">Authenticate</button>
         <button onclick="isAuthenticated()">isAuthenticated</button>
         <button onclick="refreshAuthentication()">Refresh Authentication</button>
