@@ -28,7 +28,6 @@ window.subscribeToPushNotificationTypes = () => {
         types: [
             PushNotificationType.START,
             PushNotificationType.END,
-            PushNotificationType.FAILED,
         ],
     })
         .then(() => {

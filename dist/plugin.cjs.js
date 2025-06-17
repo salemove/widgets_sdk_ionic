@@ -207,10 +207,10 @@ const PushNotificationsIOS = Object.freeze({
     PRODUCTION: 'production',
 });
 
-const GliaSdk = new GliaSdkImpl();
+const gliaSdk = new GliaSdkImpl();
 
 exports.AuthenticationBehavior = AuthenticationBehavior;
-exports.GliaSdk = GliaSdk;
+exports.GliaSdk = gliaSdk;
 exports.MediaType = MediaType;
 exports.PushNotificationType = PushNotificationType;
 exports.PushNotificationsIOS = PushNotificationsIOS;

@@ -3,7 +3,7 @@ import { registerPlugin } from '@capacitor/core';
 import type {
     AuthenticationBehavior,
     Configuration,
-    GliaSdkPlugin,
+    GliaSdk,
     Queues,
     VisitorInfo,
     VisitorInfoUpdate,
@@ -14,11 +14,11 @@ const GliaSdkIonicPlugin = registerPlugin<GliaSdkPluginInternal>('GliaSdk', {
     // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
 });
 
-interface GliaSdkPluginInternal extends GliaSdkPlugin {
+interface GliaSdkPluginInternal extends GliaSdk {
     isAuthenticatedInternal(): Promise<{ isAuthenticated: boolean }>;
 }
 
-export class GliaSdkImpl implements GliaSdkPlugin {
+export class GliaSdkImpl implements GliaSdk {
     async configure(configuration: Configuration): Promise<void> {
         let uiUnifiedConfig: string | undefined;
         if (configuration.uiUnifiedConfig) {
