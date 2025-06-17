@@ -3,13 +3,15 @@ import { environment } from '../environments/environment.ts'
 import uiThemeConfig from '../config/unified_config.json';
 
 window.configure = (suppressPushNotificationsPermissionRequest) => {
+    const queueIdInputValue = document.getElementById("queueIdInput").value;
     GliaSdk.configure({
         siteId: environment.IONIC_SITE_ID,
         apiKey: { id: environment.IONIC_API_KEY, secret: environment.IONIC_API_SECRET },
         region: environment.IONIC_REGION,
-        queueIds: [environment.IONIC_QUEUE_ID],
+        queueIds: [queueIdInputValue],
         pushNotifications: PushNotificationsIOS.SANDBOX,
         companyName: environment.IONIC_COMPANY_NAME,
+        overrideLocale: environment.IONIC_LOCALE,
         uiUnifiedConfig: uiThemeConfig,
         suppressPushNotificationsPermissionRequestDuringAuthentication: suppressPushNotificationsPermissionRequest,
     })
@@ -59,8 +61,9 @@ window.presentEntryWidget = () => {
 }
 
 window.showEntryWidget = () => {
+    const queueIdInputValue = document.getElementById("queueIdInput").value;
     GliaSdk.showEntryWidget({
-        queueIds: [environment.IONIC_QUEUE_ID],
+        queueIds: [queueIdInputValue],
     });
 }
 
@@ -73,8 +76,9 @@ window.startChat = () => {
 }
 
 window.startChatWithIds = () => {
+    const queueIdInputValue = document.getElementById("queueIdInput").value;
     GliaSdk.startChat({
-        queueIds: [environment.IONIC_QUEUE_ID],
+        queueIds: [queueIdInputValue],
     });
 }
 
@@ -83,8 +87,9 @@ window.startAudio = () => {
 }
 
 window.startAudioWithIds = () => {
+    const queueIdInputValue = document.getElementById("queueIdInput").value;
     GliaSdk.startAudio({
-        queueIds: [environment.IONIC_QUEUE_ID],
+        queueIds: [queueIdInputValue],
     });
 }
 
@@ -93,9 +98,17 @@ window.startVideo = () => {
 }
 
 window.startVideoWithIds = () => {
+    const queueIdInputValue = document.getElementById("queueIdInput").value;
     GliaSdk.startVideo({
-        queueIds: [environment.IONIC_QUEUE_ID],
+        queueIds: [queueIdInputValue],
     });
+}
+
+window.startSecureMessaging = () => {
+    const queueIdInputValue = document.getElementById("queueIdInput").value;
+    GliaSdk.startSecureMessaging({
+        queueIds: [queueIdInputValue],
+    })
 }
 
 window.endEngagement = () => {
@@ -233,12 +246,6 @@ window.showVisitorCodeViewController = () => {
 
 window.startSecureConversation = () => {
     GliaSdk.startSecureConversation()
-}
-
-window.startSecureMessaging = () => {
-    GliaSdk.startSecureMessaging({
-        queueIds: [environment.IONIC_QUEUE_ID],
-    })
 }
 
 window.resumeLiveObservation = () => {

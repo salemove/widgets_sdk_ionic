@@ -5,7 +5,7 @@ import Foundation
 /// here: https://capacitorjs.com/docs/plugins/ios
 @objc(GliaSdkPlugin)
 public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
-    public let identifier = "GliaSdkPlugin"
+    public let identifier = "GliaSdk"
     public let jsName = "GliaSdk"
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "configure", returnType: CAPPluginReturnPromise),
