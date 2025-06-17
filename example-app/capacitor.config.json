@@ -1,10 +1,10 @@
 {
-  "appId": "com.example.plugin",
-  "appName": "example-app",
-  "webDir": "dist",
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 0
+    "appId": "com.glia.sdk.widgets-example",
+    "appName": "example-app",
+    "webDir": "dist",
+    "plugins": {
+        "SplashScreen": {
+            "launchShowDuration": 0
+        }
     }
-  }
 }
