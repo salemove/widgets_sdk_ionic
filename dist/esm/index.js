@@ -1,5 +1,5 @@
 import { GliaSdkImpl } from './glia-sdk';
-const GliaSdk = new GliaSdkImpl();
+const gliaSdk = new GliaSdkImpl();
 export * from './definitions';
-export { GliaSdk };
+export { gliaSdk as GliaSdk };
 //# sourceMappingURL=index.js.map
