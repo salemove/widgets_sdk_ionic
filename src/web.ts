@@ -1,8 +1,8 @@
 import { WebPlugin } from '@capacitor/core';
 
-import type { GliaSdkPlugin, ApiKey, Region, Queues, PushNotificationType, AuthenticationBehavior, VisitorInfo, VisitorInfoUpdate } from './definitions';
+import type { GliaSdk, ApiKey, Region, Queues, PushNotificationType, AuthenticationBehavior, VisitorInfo, VisitorInfoUpdate } from './definitions';
 
-export class GliaSdkWeb extends WebPlugin implements GliaSdkPlugin {
+export class GliaSdkWeb extends WebPlugin implements GliaSdk {
 
     async configure(options: {
         siteId: string;

@@ -356,7 +356,7 @@ export const PushNotificationsIOS = Object.freeze({
 export type PushNotificationsIOS =
     (typeof PushNotificationsIOS)[keyof typeof PushNotificationsIOS];
 
-export interface GliaSdkPlugin {
+export interface GliaSdk {
     /**
      * Configures GliaWidgets SDK.
      *
