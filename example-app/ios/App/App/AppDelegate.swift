@@ -67,8 +67,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         debugPrint(
             "✅ Registered for remote notifications. Token='\(deviceToken.map { String(format: "%02.2hhx", $0) }.joined())'."
         )
+        
+        NotificationCenter.default.post(name: .capacitorDidRegisterForRemoteNotifications, object: deviceToken)
         Glia.sharedInstance.pushNotifications
             .applicationDidRegisterForRemoteNotificationsWithDeviceToken(
                 application: application, deviceToken: deviceToken)
+    }
+    
+
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        debugPrint("❌ Did fail to Registered for remote notifications! Error: \(error.localizedDescription)")
+        NotificationCenter.default.post(name: .capacitorDidFailToRegisterForRemoteNotifications, object: error)
+        Glia.sharedInstance.pushNotifications.applicationDidFailToRegisterForRemoteNotificationsWithError(application: application, error: error)
     }
 }
