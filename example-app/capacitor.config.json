@@ -1,6 +1,6 @@
 {
     "appId": "com.glia.sdk.widgets-example",
-    "appName": "example-app",
+    "appName": "Glia Ionic Example",
     "webDir": "dist",
     "plugins": {
         "SplashScreen": {
