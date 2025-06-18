@@ -13,7 +13,6 @@
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
             android:name=".MainActivity"
-            android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBarLaunch"
             android:launchMode="singleTask"
             android:exported="true">
@@ -36,9 +35,10 @@
         </provider>
 
         <service
-            android:name="com.glia.widgets.fcm.GliaFcmService"
+            android:name=".IonicFcmService"
             android:exported="false">
-            <intent-filter>
+            <intent-filter
+                android:priority="1000">
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
