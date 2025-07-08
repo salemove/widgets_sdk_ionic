@@ -1,0 +1,16 @@
+name: Change Snyk bot PRs target branch to development
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  call_snyk_pr_rebase:
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    uses: salemove/mobile-workflows/.github/workflows/auto-set-snyk-bot-pr-target.yml@master
+    with:
+      pr-number: ${{ github.event.pull_request.number }}
+      pr-author: ${{ github.event.pull_request.user.login }}
+      current-base-branch: ${{ github.event.pull_request.base.ref }}
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
