@@ -11,7 +11,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.6.0'
+        classpath 'com.android.tools.build:gradle:8.11.1'
     }
 }
 
@@ -57,4 +57,14 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
 
     api("com.glia:android-widgets:3.1.0")
+}
+
+allprojects {
+    configurations.configureEach {
+        resolutionStrategy {
+            force 'com.google.protobuf:protobuf-java:3.25.5'
+            force 'com.google.protobuf:protobuf-java-util:3.25.5'
+            force 'io.netty:netty-codec-http2:4.1.118.Final'
+        }
+    }
 }
