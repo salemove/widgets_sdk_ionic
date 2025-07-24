@@ -1,514 +1,66 @@
-# glia-widgets-ionic
+# Glia Widgets Ionic
 
 GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. It provides all the necessary UI components to quickly integrate GliaSDK into your project.
 
-## Installation
+## Changelog
 
-To install the @salemove/widgets_sdk_ionic package use:
+### 3.2.0
 
-```text
-npm install @salemove/widgets_sdk_ionic --legacy-peer-deps
-```
+Updated underlying SDKs:
+- Android Widgets SDK v3.2.0
+- iOS Widgets SDK v3.2.0.
 
-# How to use GliaSDK in Ionic environment
+#### Android Widgets SDK
+##### Changed
+- The Add Attachment and Send Message buttons are now enabled and disabled instead of appearing or disappearing.
+- All screen sharing functionality has been completely removed from both the Widget SDK and Core SDK.
 
-```js
-// Import `glia-widgets-ionic` SDK
-import { GliaSdk } from '@salemove/widgets_sdk_ionic';
+##### Fixed
+- Unified several design differences between iOS and Android, including dialog element sizing, confirmation dialog padding, avatar size and placeholder padding, and various survey elements.
+- Fixed an issue with visitor deauthentication where the engagement would end when the authentication behavior was configured as `FORBIDDEN_DURING_ENGAGEMENT`.
 
-// Configure SDK
-GliaSdk.configure({
-  siteId: 'site-id',
-  apiKey: { id: 'api-key-id', secret: 'api-key-secret' },
-  region: 'us',
-  companyName: 'Ionic Company',
-});
+#### iOS Widgets SDK
+##### Changed
+- All screen sharing functionality has been completely removed from both the Widget SDK and Core SDK.
 
-// Show Entry Widget
-GliaSdk.presentEntryWidget();
-```
+##### Fixed
+- Unified several design differences between iOS and Android, including snackbar background color on Chat and Call screens, avatar size and placeholder padding, and various survey elements.
+- Fixed freezing during push notification setup when an APNs token was not passed to the SDK.
+- The visitor survey now opens correctly after ending a chat.
+- The default selected option can now be deselected for single-choice questions in surveys.
+- Fixed an issue where the End button briefly appeared when the visitor closed Chat screen while being enqueued.
+- The unread messages bubble now correctly disappears from the Chat screen after messages are read.
+- Fixed a bug in SDK versions 3.1.0 and 3.1.1 where the bubble did not appear after visitor authentication during an ongoing engagement.
 
-## API
+### 3.1.1
 
-<docgen-index>
+#### Added
+- Added support for push notifications.
+- Several new methods are now available: `showEntryWidget()`, `hideEntryWidget()`, `startSecureMessaging()`, `getQueues()`, `showVisitorCode()`, `getVisitorInfo()`, `updateVisitorInfo()`, `endEngagement()`, `subscribeToPushNotificationTypes()`.
 
-* [`configure(...)`](#configure)
-* [`subscribeToPushNotificationTypes(...)`](#subscribetopushnotificationtypes)
-* [`presentEntryWidget()`](#presententrywidget)
-* [`showEntryWidget(...)`](#showentrywidget)
-* [`hideEntryWidget()`](#hideentrywidget)
-* [`startChat(...)`](#startchat)
-* [`startAudio(...)`](#startaudio)
-* [`startVideo(...)`](#startvideo)
-* [`startSecureConversation()`](#startsecureconversation)
-* [`startSecureMessaging(...)`](#startsecuremessaging)
-* [`clearVisitorSession()`](#clearvisitorsession)
-* [`listQueues()`](#listqueues)
-* [`getQueues()`](#getqueues)
-* [`showVisitorCodeViewController()`](#showvisitorcodeviewcontroller)
-* [`showVisitorCode()`](#showvisitorcode)
-* [`authenticate(...)`](#authenticate)
-* [`deauthenticate(...)`](#deauthenticate)
-* [`isAuthenticated()`](#isauthenticated)
-* [`refreshAuthentication(...)`](#refreshauthentication)
-* [`pauseLiveObservation()`](#pauseliveobservation)
-* [`resumeLiveObservation()`](#resumeliveobservation)
-* [`getVisitorInfo()`](#getvisitorinfo)
-* [`updateVisitorInfo(...)`](#updatevisitorinfo)
-* [`endEngagement()`](#endengagement)
-* [Interfaces](#interfaces)
-* [Type Aliases](#type-aliases)
+#### Changed
+- The `configure` method now includes several new parameters.
+- The `startChat()`, `startAudio()`, and `startVideo()` methods have a new optional `queueIds` parameter.
+- The `deauthenticate()` method now includes a new `stopPushNotifications` parameter.
+- The following methods are now deprecated:
+  - `presentEntryWidget()` - Please use `showEntryWidget()` instead.
+  - `startSecureConversation()` - Please use `startSecureMessaging()` instead.
+  - `listQueues()` - Please use `getQueues()` instead.
+  - `showVisitorCodeViewController()` - Please use `showVisitorCode()` instead.
 
-</docgen-index>
+### 3.0.0
 
-<docgen-api>
-<!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+Glia Widgets Ionic SDK introduced.
 
-### configure(...)
+#### Added
+- Entry Widget
+- Secure Conversations v2
 
-```typescript
-configure(configuration: Configuration) => Promise<void>
-```
 
-Configures GliaWidgets SDK.
+## Documentation
 
-Note that for the SDK to work properly, the site API key needs to have the 'Create Visitor' permission only.
+For detailed documentation and API reference, please visit [Glia Knowledge Base](https://docs.glia.com/glia-mobile).
 
-| Param               | Type                                                    | Description                                                                           |
-| ------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| **`configuration`** | <code><a href="#configuration">Configuration</a></code> | - {@link <a href="#configuration">Configuration</a>} options for the GliaWidgets SDK. |
+## Support
 
---------------------
-
-
-### subscribeToPushNotificationTypes(...)
-
-```typescript
-subscribeToPushNotificationTypes(options: { types: PushNotificationType[]; }) => Promise<void>
-```
-
-Subscribe to specific push notification types.
-
-| Param         | Type                              |
-| ------------- | --------------------------------- |
-| **`options`** | <code>{ types: string[]; }</code> |
-
---------------------
-
-
-### presentEntryWidget()
-
-```typescript
-presentEntryWidget() => Promise<void>
-```
-
---------------------
-
-
-### showEntryWidget(...)
-
-```typescript
-showEntryWidget(options: { queueIds?: string[]; }) => Promise<void>
-```
-
-Shows Entry Widget.
-
-| Param         | Type                                  |
-| ------------- | ------------------------------------- |
-| **`options`** | <code>{ queueIds?: string[]; }</code> |
-
---------------------
-
-
-### hideEntryWidget()
-
-```typescript
-hideEntryWidget() => Promise<void>
-```
-
-Hides Entry Widget.
-
---------------------
-
-
-### startChat(...)
-
-```typescript
-startChat(options?: { queueIds?: string[] | undefined; } | undefined) => Promise<void>
-```
-
-Starts a new chat engagement.
-
-| Param         | Type                                  |
-| ------------- | ------------------------------------- |
-| **`options`** | <code>{ queueIds?: string[]; }</code> |
-
---------------------
-
-
-### startAudio(...)
-
-```typescript
-startAudio(options?: { queueIds?: string[] | undefined; } | undefined) => Promise<void>
-```
-
-Starts a new audio engagement.
-
-| Param         | Type                                  |
-| ------------- | ------------------------------------- |
-| **`options`** | <code>{ queueIds?: string[]; }</code> |
-
---------------------
-
-
-### startVideo(...)
-
-```typescript
-startVideo(options?: { queueIds?: string[] | undefined; } | undefined) => Promise<void>
-```
-
-Starts a new video engagement.
-
-| Param         | Type                                  |
-| ------------- | ------------------------------------- |
-| **`options`** | <code>{ queueIds?: string[]; }</code> |
-
---------------------
-
-
-### startSecureConversation()
-
-```typescript
-startSecureConversation() => Promise<void>
-```
-
---------------------
-
-
-### startSecureMessaging(...)
-
-```typescript
-startSecureMessaging(options: { queueIds?: string[]; }) => Promise<void>
-```
-
-Starts a Secure Conversation flow.
-Note that Secure Conversation requires visitor authentication.
-
-| Param         | Type                                  |
-| ------------- | ------------------------------------- |
-| **`options`** | <code>{ queueIds?: string[]; }</code> |
-
---------------------
-
-
-### clearVisitorSession()
-
-```typescript
-clearVisitorSession() => Promise<void>
-```
-
-Clears current Glia SDK session, and also resets the visitor ID and their local data.
-Ends ongoing engagement (if any).
-
---------------------
-
-
-### listQueues()
-
-```typescript
-listQueues() => Promise<any>
-```
-
-**Returns:** <code>Promise&lt;any&gt;</code>
-
---------------------
-
-
-### getQueues()
-
-```typescript
-getQueues() => Promise<Queues>
-```
-
-Fetches all queues and their information for the current site.
-
-**Returns:** <code>Promise&lt;<a href="#queues">Queues</a>&gt;</code>
-
---------------------
-
-
-### showVisitorCodeViewController()
-
-```typescript
-showVisitorCodeViewController() => Promise<void>
-```
-
---------------------
-
-
-### showVisitorCode()
-
-```typescript
-showVisitorCode() => Promise<void>
-```
-
-Presents GliaWidgets UI with a visitor code for sharing with operator to start an engagement.
-
---------------------
-
-
-### authenticate(...)
-
-```typescript
-authenticate(options: { behavior: AuthenticationBehavior; idToken: string; accessToken?: string; }) => Promise<void>
-```
-
-Authenticates the visitor.
-
-| Param         | Type                                                                      | Description                                                                       |
-| ------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| **`options`** | <code>{ behavior: string; idToken: string; accessToken?: string; }</code> | - Provides options for authentication such as behavior, idToken, and accessToken. |
-
---------------------
-
-
-### deauthenticate(...)
-
-```typescript
-deauthenticate(options?: { stopPushNotifications: boolean; } | undefined) => Promise<void>
-```
-
-Deauthenticates the visitor. Be aware that deauthentication process relies on <a href="#authenticationbehavior">`AuthenticationBehavior`</a>.
-
-| Param         | Type                                             | Description                                                        |
-| ------------- | ------------------------------------------------ | ------------------------------------------------------------------ |
-| **`options`** | <code>{ stopPushNotifications: boolean; }</code> | - Provides options to stop push notifications on deauthentication. |
-
---------------------
-
-
-### isAuthenticated()
-
-```typescript
-isAuthenticated() => Promise<boolean>
-```
-
-Provides the current authentication state.
-
-**Returns:** <code>Promise&lt;boolean&gt;</code>
-
---------------------
-
-
-### refreshAuthentication(...)
-
-```typescript
-refreshAuthentication(options: { idToken: string; accessToken?: string; }) => Promise<void>
-```
-
-Renews visitor authentication.
-
-| Param         | Type                                                    |
-| ------------- | ------------------------------------------------------- |
-| **`options`** | <code>{ idToken: string; accessToken?: string; }</code> |
-
---------------------
-
-
-### pauseLiveObservation()
-
-```typescript
-pauseLiveObservation() => Promise<void>
-```
-
-Pauses the ongoing LiveObservation session.
-
---------------------
-
-
-### resumeLiveObservation()
-
-```typescript
-resumeLiveObservation() => Promise<void>
-```
-
-Resumes the paused LiveObservation session.
-
---------------------
-
-
-### getVisitorInfo()
-
-```typescript
-getVisitorInfo() => Promise<VisitorInfo>
-```
-
-Fetches the visitor information.
-
-**Returns:** <code>Promise&lt;<a href="#visitorinfo">VisitorInfo</a>&gt;</code>
-
---------------------
-
-
-### updateVisitorInfo(...)
-
-```typescript
-updateVisitorInfo(visitorInfo: VisitorInfoUpdate) => Promise<void>
-```
-
-Updates the visitor information.
-
-| Param             | Type                                                            |
-| ----------------- | --------------------------------------------------------------- |
-| **`visitorInfo`** | <code><a href="#visitorinfoupdate">VisitorInfoUpdate</a></code> |
-
---------------------
-
-
-### endEngagement()
-
-```typescript
-endEngagement() => Promise<void>
-```
-
-Ends the current engagement.
-
---------------------
-
-
-### Interfaces
-
-
-#### Configuration
-
-GliaWidgets SDK configuration.
-
-| Prop                                                                 | Type                                                                  | Description                                                                                                                                                                                        |
-| -------------------------------------------------------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`siteId`**                                                         | <code>string</code>                                                   | The Glia site ID.                                                                                                                                                                                  |
-| **`queueIds`**                                                       | <code>string[]</code>                                                 |                                                                                                                                                                                                    |
-| **`apiKey`**                                                         | <code><a href="#apikey">ApiKey</a></code>                             | The API key for the Glia site.                                                                                                                                                                     |
-| **`region`**                                                         | <code><a href="#region">Region</a></code>                             | The region of the site. Possible values are defined in the {@link <a href="#region">Region</a>}.                                                                                                   |
-| **`companyName`**                                                    | <code>string</code>                                                   | The name of the company. This is used as the company name shown in the UI while establishing a connection with an operator. The default value is `undefined`.                                      |
-| **`overrideLocale`**                                                 | <code>string</code>                                                   | The name of the locale to be used instead of the default locale of the site. If not provided, the default locale will be used. The default value is `undefined`.                                   |
-| **`uiUnifiedConfig`**                                                | <code>string \| object</code>                                         | UI customization settings in a cross-platform format. This can be a JSON object or a JSON string. The default value is `undefined`.                                                                |
-| **`visitorContextAssetId`**                                          | <code>string</code>                                                   | ID of the PDF asset containing additional visitor context for an operator. The default value is `undefined`.                                                                                       |
-| **`pushNotifications`**                                              | <code><a href="#pushnotificationsios">PushNotificationsIOS</a></code> | Push notifications environment to use. NOTE: Only for iOS. The default value is <a href="#pushnotificationsios">`PushNotificationsIOS</a>.DISABLED`.                                               |
-| **`enableBubbleOutsideApp`**                                         | <code>boolean</code>                                                  | A bubble shown outside the app during an engagement when the app is not in the foreground. Available only on Android when a visitor grants Screen Overlay permission. The default value is `true`. |
-| **`enableBubbleInsideApp`**                                          | <code>boolean</code>                                                  | A bubble shown within the app but outside the engagement view during an engagement. The default value is `true`.                                                                                   |
-| **`suppressPushNotificationsPermissionRequestDuringAuthentication`** | <code>boolean</code>                                                  | Whether to suppress push notification permission request during authentication. The default value is `false`.                                                                                      |
-
-
-#### ApiKey
-
-Used for configuring the Glia SDK with site API key ID and secret.
-
-Note that for the SDK to work properly, the site API key needs to have the 'Create Visitor' permission only.
-
-| Prop         | Type                | Description                 |
-| ------------ | ------------------- | --------------------------- |
-| **`id`**     | <code>string</code> | The ID of the site API key. |
-| **`secret`** | <code>string</code> | The site API key secret.    |
-
-
-#### Queue
-
-<a href="#queue">Queue</a> information.
-
-| Prop             | Type                                           | Description                             |
-| ---------------- | ---------------------------------------------- | --------------------------------------- |
-| **`is_default`** | <code>boolean</code>                           | Indicates if queue is default.          |
-| **`media`**      | <code>string[]</code>                          | <a href="#queue">Queue</a> media types. |
-| **`name`**       | <code>string</code>                            | <a href="#queue">Queue</a> name.        |
-| **`status`**     | <code><a href="#queue">Queue</a>.Status</code> |                                         |
-
-
-#### VisitorInfo
-
-The information about a visitor.
-This information is visible to operators and can be updated by the SDK or operators.
-
-| Prop                   | Type                                                            | Description                                         |
-| ---------------------- | --------------------------------------------------------------- | --------------------------------------------------- |
-| **`name`**             | <code>string</code>                                             | Visitor's name.                                     |
-| **`email`**            | <code>string</code>                                             | Visitor's email address.                            |
-| **`phone`**            | <code>string</code>                                             | Visitor's phone number.                             |
-| **`note`**             | <code>string</code>                                             | Additional notes about the visitor.                 |
-| **`externalId`**       | <code>string</code>                                             | External ID to be used in third-party integrations. |
-| **`customAttributes`** | <code><a href="#record">Record</a>&lt;string, string&gt;</code> | A dictionary with custom attributes.                |
-| **`banned`**           | <code>boolean</code>                                            | Indicates whether the visitor is blocked.           |
-
-
-#### VisitorInfoUpdate
-
-Used to update visitor information.
-If some fields of visitor information are not set, they will not be updated on the server.
-
-| Prop                               | Type                                                                                         | Description                                                                            |
-| ---------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| **`name`**                         | <code>string</code>                                                                          | Visitor's name. The default value is `undefined`.                                      |
-| **`email`**                        | <code>string</code>                                                                          | Visitor's email address. The default value is `undefined`.                             |
-| **`phone`**                        | <code>string</code>                                                                          | Visitor's phone number. The default value is `undefined`.                              |
-| **`note`**                         | <code>string</code>                                                                          | Additional notes about the visitor. The default value is `undefined`.                  |
-| **`noteUpdateMethod`**             | <code><a href="#visitorinfoupdate">VisitorInfoUpdate</a>.NoteUpdateMethod</code>             | The method for updating the notes about the visitor. The default value is `undefined`. |
-| **`externalId`**                   | <code>string</code>                                                                          | External ID to be used in third-party integrations. The default value is `undefined`.  |
-| **`customAttributes`**             | <code><a href="#record">Record</a>&lt;string, string&gt;</code>                              | A dictionary with custom attributes. The default value is `undefined`.                 |
-| **`customAttributesUpdateMethod`** | <code><a href="#visitorinfoupdate">VisitorInfoUpdate</a>.CustomAttributesUpdateMethod</code> | The method for updating custom attributes. The default value is `undefined`.           |
-
-
-### Type Aliases
-
-
-#### Region
-
-Site's region. Use `us` for US and other regions except Europe, use `eu` for Europe.
-
-<code>(typeof <a href="#region">Region</a>)[keyof typeof Region]</code>
-
-
-#### PushNotificationsIOS
-
-Push notifications environment for iOS.
-
-<code>(typeof <a href="#pushnotificationsios">PushNotificationsIOS</a>)[keyof typeof PushNotificationsIOS]</code>
-
-
-#### PushNotificationType
-
-Available push notifications types.
-
-<code>(typeof <a href="#pushnotificationtype">PushNotificationType</a>)[keyof typeof PushNotificationType]</code>
-
-
-#### Queues
-
-A collection of queues where:
-- The key is the queue ID.
-- The value is a <a href="#queue">`Queue`</a> object that describes the queue's details.
-
-<code><a href="#record">Record</a>&lt;string, <a href="#queue">Queue</a>&gt;</code>
-
-
-#### Record
-
-Construct a type with a set of properties K of type T
-
-<code>{ [P in K]: T; }</code>
-
-
-#### MediaType
-
-<a href="#queue">Queue</a> media types.
-
-<code>(typeof <a href="#mediatype">MediaType</a>)[keyof typeof MediaType]</code>
-
-
-#### AuthenticationBehavior
-
-Behavior for authentication and deauthentication.
-FORBIDDEN_DURING_ENGAGEMENT - Do not allow authentication and deauthentication during an ongoing engagement. Default behavior.
-ALLOWED_DURING_ENGAGEMENT - Allow authentication and deauthentication during an ongoing engagement.
-
-<code>(typeof <a href="#authenticationbehavior">AuthenticationBehavior</a>)[keyof typeof AuthenticationBehavior]</code>
-
-</docgen-api>
+For technical support and questions, please contact [Glia Service Desk](https://glia.atlassian.net/servicedesk/customer/portal/1).
