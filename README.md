@@ -8,7 +8,7 @@ GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. 
 
 Updated underlying SDKs:
 - Android Widgets SDK v3.2.0
-- iOS Widgets SDK v3.2.0.
+- iOS Widgets SDK v3.2.0
 
 #### Android Widgets SDK
 ##### Changed
