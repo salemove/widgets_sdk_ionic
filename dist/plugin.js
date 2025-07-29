@@ -5,6 +5,17 @@ var capacitorGliaSdk = (function (exports, core) {
     // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
     });
     class GliaSdkImpl {
+        constructor() {
+            this.unreadMessageCountCallbacks = new Set();
+            this.unreadMessageCount = null;
+            GliaSdkIonicPlugin.addListener('gliaWidgetsUnreadMessageCountChanged', (info) => {
+                let count = info.count;
+                if (count !== this.unreadMessageCount) {
+                    this.unreadMessageCountCallbacks.forEach((callback) => callback(count));
+                    this.unreadMessageCount = count;
+                }
+            });
+        }
         async configure(configuration) {
             let uiUnifiedConfig;
             if (configuration.uiUnifiedConfig) {
@@ -95,6 +106,15 @@ var capacitorGliaSdk = (function (exports, core) {
         }
         async endEngagement() {
             return GliaSdkIonicPlugin.endEngagement();
+        }
+        subscribeToUnreadMessageCount(callback) {
+            if (this.unreadMessageCount !== null) {
+                callback(this.unreadMessageCount);
+            }
+            this.unreadMessageCountCallbacks.add(callback);
+        }
+        unsubscribeFromUnreadMessageCount(callback) {
+            this.unreadMessageCountCallbacks.delete(callback);
         }
     }
 

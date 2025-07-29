@@ -303,6 +303,11 @@ export declare const PushNotificationsIOS: Readonly<{
     PRODUCTION: string;
 }>;
 export declare type PushNotificationsIOS = (typeof PushNotificationsIOS)[keyof typeof PushNotificationsIOS];
+/**
+ * Callback function type for unread message count updates.
+ * @param count - The current unread message count for Secure Conversations.
+ */
+export declare type UnreadMessageCountCallback = (count: number) => void;
 export interface GliaSdk {
     /**
      * Configures GliaWidgets SDK.
@@ -479,4 +484,22 @@ export interface GliaSdk {
      * Ends the current engagement.
      */
     endEngagement(): Promise<void>;
+    /**
+     * Subscribes to updates of the unread message count.
+     *
+     * This method allows you to receive updates whenever the unread message count for
+     * Secure Conversations changes. It does not count live chat messages.
+     * The provided callback will be triggered with the updated count.
+     *
+     * @param callback - A callback function that will be invoked with the updated unread message count.
+     */
+    subscribeToUnreadMessageCount(callback: UnreadMessageCountCallback): void;
+    /**
+     * Unsubscribes from updates of the unread message count.
+     *
+     * This method stops receiving updates for the unread message count for the provided callback.
+     *
+     * @param callback - The same callback function instance that was previously subscribed to receive updates.
+     */
+    unsubscribeFromUnreadMessageCount(callback: UnreadMessageCountCallback): void;
 }

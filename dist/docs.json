@@ -367,6 +367,52 @@
         "docs": "Ends the current engagement.",
         "complexTypes": [],
         "slug": "endengagement"
+      },
+      {
+        "name": "subscribeToUnreadMessageCount",
+        "signature": "(callback: UnreadMessageCountCallback) => void",
+        "parameters": [
+          {
+            "name": "callback",
+            "docs": "- A callback function that will be invoked with the updated unread message count.",
+            "type": "UnreadMessageCountCallback"
+          }
+        ],
+        "returns": "void",
+        "tags": [
+          {
+            "name": "param",
+            "text": "callback - A callback function that will be invoked with the updated unread message count."
+          }
+        ],
+        "docs": "Subscribes to updates of the unread message count.\n\nThis method allows you to receive updates whenever the unread message count for\nSecure Conversations changes. It does not count live chat messages.\nThe provided callback will be triggered with the updated count.",
+        "complexTypes": [
+          "UnreadMessageCountCallback"
+        ],
+        "slug": "subscribetounreadmessagecount"
+      },
+      {
+        "name": "unsubscribeFromUnreadMessageCount",
+        "signature": "(callback: UnreadMessageCountCallback) => void",
+        "parameters": [
+          {
+            "name": "callback",
+            "docs": "- The same callback function instance that was previously subscribed to receive updates.",
+            "type": "UnreadMessageCountCallback"
+          }
+        ],
+        "returns": "void",
+        "tags": [
+          {
+            "name": "param",
+            "text": "callback - The same callback function instance that was previously subscribed to receive updates."
+          }
+        ],
+        "docs": "Unsubscribes from updates of the unread message count.\n\nThis method stops receiving updates for the unread message count for the provided callback.",
+        "complexTypes": [
+          "UnreadMessageCountCallback"
+        ],
+        "slug": "unsubscribefromunreadmessagecount"
       }
     ],
     "properties": []
@@ -780,6 +826,17 @@
       "types": [
         {
           "text": "(typeof AuthenticationBehavior)[keyof typeof AuthenticationBehavior]",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "UnreadMessageCountCallback",
+      "slug": "unreadmessagecountcallback",
+      "docs": "Callback function type for unread message count updates.",
+      "types": [
+        {
+          "text": "(count: number): void",
           "complexTypes": []
         }
       ]
