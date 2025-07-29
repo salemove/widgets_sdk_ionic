@@ -1,4 +1,4 @@
-import { registerPlugin } from '@capacitor/core';
+import { Plugin, registerPlugin } from '@capacitor/core';
 
 import type {
     AuthenticationBehavior,
@@ -7,18 +7,34 @@ import type {
     Queues,
     VisitorInfo,
     VisitorInfoUpdate,
-    PushNotificationType
+    PushNotificationType,
+    UnreadMessageCountCallback
 } from './definitions';
 
 const GliaSdkIonicPlugin = registerPlugin<GliaSdkPluginInternal>('GliaSdk', {
     // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
 });
 
-interface GliaSdkPluginInternal extends GliaSdk {
+interface GliaSdkPluginInternal extends GliaSdk, Plugin {
     isAuthenticatedInternal(): Promise<{ isAuthenticated: boolean }>;
 }
 
 export class GliaSdkImpl implements GliaSdk {
+    private unreadMessageCountCallbacks: Set<UnreadMessageCountCallback> = new Set();
+    private unreadMessageCount: number | null = null;
+
+    constructor() {
+        GliaSdkIonicPlugin.addListener('gliaWidgetsUnreadMessageCountChanged', (info: { count: number }) => {
+            let count = info.count;
+            if (count !== this.unreadMessageCount) {
+                this.unreadMessageCountCallbacks.forEach((callback) =>
+                    callback(count)
+                );
+                this.unreadMessageCount = count;
+            }
+        });
+    }
+
     async configure(configuration: Configuration): Promise<void> {
         let uiUnifiedConfig: string | undefined;
         if (configuration.uiUnifiedConfig) {
@@ -142,5 +158,16 @@ export class GliaSdkImpl implements GliaSdk {
 
     async endEngagement(): Promise<void> {
         return GliaSdkIonicPlugin.endEngagement();
+    }
+
+    subscribeToUnreadMessageCount(callback: UnreadMessageCountCallback) {
+        if (this.unreadMessageCount !== null) {
+            callback(this.unreadMessageCount);
+        }
+        this.unreadMessageCountCallbacks.add(callback);
+    }
+
+    unsubscribeFromUnreadMessageCount(callback: UnreadMessageCountCallback) {
+        this.unreadMessageCountCallbacks.delete(callback);
     }
 }

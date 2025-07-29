@@ -9,7 +9,7 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 @CapacitorPlugin(name = "GliaSdk")
 public class GliaSdkPlugin extends Plugin {
 
-    private GliaSdk implementation = new GliaSdk();
+    private final GliaSdk implementation = new GliaSdk(this::notifyListeners);
 
     @PluginMethod
     public void echo(PluginCall call) {

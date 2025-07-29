@@ -1,7 +1,5 @@
 package com.glia.widgets.ionic;
 
-import static java.util.Locale.filter;
-
 import android.app.Activity;
 import android.util.Log;
 
@@ -42,6 +40,16 @@ public class GliaSdk {
     public String echo(String value) {
         Log.i("Echo", value);
         return value;
+    }
+
+    private final EventEmitter eventEmitter;
+
+    public interface EventEmitter {
+        void notify(String eventName, JSObject params);
+    }
+
+    public GliaSdk(EventEmitter eventEmitter) {
+        this.eventEmitter = eventEmitter;
     }
 
     public void configure(PluginCall call, Activity activity) {
@@ -98,7 +106,7 @@ public class GliaSdk {
                 () -> {
                     configureQueueIds = jsArrayToArrayList(queueIds);
 
-                    call.resolve();
+                    subscribeToUnreadMessageCount(call);
                 },
                 exception -> {
                     call.reject(exception.getMessage());
@@ -452,6 +460,20 @@ public class GliaSdk {
                 .collect(Collectors.toList());
         GliaWidgets.getPushNotifications().subscribeTo(activity, types);
         call.resolve();
+    }
+
+    public void subscribeToUnreadMessageCount(PluginCall call) {
+        try {
+            GliaWidgets.getSecureConversations().subscribeToUnreadMessageCount(count -> {
+                JSObject params = new JSObject();
+                params.put("count", count);
+                // Emit the event to the JS side
+                eventEmitter.notify("gliaWidgetsUnreadMessageCountChanged", params);
+            });
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("SUBSCRIPTION_ERROR", "Failed to subscribe to unread message count: " + e.getMessage(), e);
+        }
     }
 
     public ArrayList<String> jsArrayToArrayList(JSArray jsArray) {

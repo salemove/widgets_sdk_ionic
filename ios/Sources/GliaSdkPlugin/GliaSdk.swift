@@ -7,6 +7,12 @@ import GliaWidgets
     private var entryWidget: EntryWidget?
     private var authentication: Glia.Authentication?
     private var configureQueueIds: [String]?
+    private var unreadMessageCountToken: String?
+    private var eventEmitter: ((_ eventName: String, _ data: [String: Any]?) -> Void)?
+    
+    public func setEventEmitter(eventEmitter: @escaping (_ eventName: String, _ data: [String: Any]?) -> Void) {
+        self.eventEmitter = eventEmitter
+    }
 
     @objc public func configure(_ call: CAPPluginCall) {
         guard
@@ -103,7 +109,7 @@ import GliaWidgets
                         do {
                             self?.entryWidget = try Glia.sharedInstance.getEntryWidget(
                                 queueIds: queueIds ?? [])
-                            call.resolve()
+                            self?.subscribeToUnreadMessageCount(call)
                         } catch {
                             call.reject("Error occured='\(error)'.")
                         }
@@ -464,6 +470,22 @@ import GliaWidgets
                 call.reject("Could not update visitor info. Error='\(error.localizedDescription)'.")
             }
         }
+    }
+    
+    private func subscribeToUnreadMessageCount(_ call: CAPPluginCall) {
+        if let unreadMessageCountToken {
+            Glia.sharedInstance.secureConversation.unsubscribeSecureUnreadMessageCount(unreadMessageCountToken)
+        }
+        unreadMessageCountToken = Glia.sharedInstance.secureConversation.subscribeSecureUnreadMessageCount { [weak self] (result: Result<Int?, Error>) in
+            switch result {
+            case let .success(messageCount):
+                DispatchQueue.main.async {
+                    self?.eventEmitter?("gliaWidgetsUnreadMessageCountChanged", ["count": messageCount ?? 0])
+                }
+            default: break
+            }
+        }
+        call.resolve()
     }
 
 }
