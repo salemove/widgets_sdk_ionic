@@ -36,6 +36,14 @@ public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "updateVisitorInfo", returnType: CAPPluginReturnPromise)
     ]
     private let implementation = GliaSdk()
+    
+    public override init() {
+        super.init()
+        
+        implementation.setEventEmitter { [weak self] name, data in
+            self?.notifyListeners(name, data: data)
+        }
+    }
 
     @objc func configure(_ call: CAPPluginCall) {
         implementation.configure(call)

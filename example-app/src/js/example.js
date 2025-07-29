@@ -17,6 +17,10 @@ window.configure = (suppressPushNotificationsPermissionRequest) => {
     })
         .then(() => {
             console.log('Did configure GliaSDK!');
+            GliaSdk.subscribeToUnreadMessageCount((count) => {
+                console.log('Unread message count changed:', count);
+                document.getElementById('unreadMessageCount').textContent = count;
+            });
             alert('Did configure GliaSDK!');
         })
         .catch((error) => {
