@@ -58,6 +58,7 @@ import GliaWidgets
                 visitorContext = .init(assetId: assetId)
             } else {
                 call.reject("'visitorContextAssetId' is invalid.")
+                return
             }
         }
 
