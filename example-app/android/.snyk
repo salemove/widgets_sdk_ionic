@@ -1,0 +1,12 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+
+version: v1.25.1
+
+ignore:
+ 'snyk:lic:maven:javax.annotation:javax.annotation-api:(CDDL-1.1_OR_GPL-2.0-with-classpath-exception)':
+  - '*':
+    reason: https://glia.atlassian.net/browse/MOB-4515
+    expires: 2028-01-10T00:00:00.000Z
+    created: 2025-07-30T04:35:33.179Z
+
+patch: {}
