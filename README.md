@@ -4,13 +4,30 @@ GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.2.1
+
+Updated underlying SDKs:
+- [iOS Widgets SDK v3.2.1](#ios-widgets-sdk-v321)
+
+#### Added
+- Added support for subscribing to the count of the unread secure messages.
+
+#### iOS Widgets SDK v3.2.1
+##### Changed
+- Phoenix Client iOS dependency has been updated to version 5.3.5.
+
+##### Fixed
+- For authenticated visitors, the Chat screen on iOS now does not show a separate close button, only the left arrow, matching the Android UI. 
+- When a visitor requests a live chat after leaving Secure Messaging, they are now automatically enqueued.
+- The "Leave Current Conversation" dialog is now correctly shown when an ongoing transferred Secure Messaging engagement exists and the visitor decides to start a new engagement.
+
 ### 3.2.0
 
 Updated underlying SDKs:
-- Android Widgets SDK v3.2.0
-- iOS Widgets SDK v3.2.0
+- [Android Widgets SDK v3.2.0](#android-widgets-sdk-v320)
+- [iOS Widgets SDK v3.2.0](#ios-widgets-sdk-v320)
 
-#### Android Widgets SDK
+#### Android Widgets SDK v3.2.0
 ##### Changed
 - The Add Attachment and Send Message buttons are now enabled and disabled instead of appearing or disappearing.
 - All screen sharing functionality has been completely removed from both the Widget SDK and Core SDK.
@@ -19,7 +36,7 @@ Updated underlying SDKs:
 - Unified several design differences between iOS and Android, including dialog element sizing, confirmation dialog padding, avatar size and placeholder padding, and various survey elements.
 - Fixed an issue with visitor deauthentication where the engagement would end when the authentication behavior was configured as `FORBIDDEN_DURING_ENGAGEMENT`.
 
-#### iOS Widgets SDK
+#### iOS Widgets SDK v3.2.0
 ##### Changed
 - All screen sharing functionality has been completely removed from both the Widget SDK and Core SDK.
 
