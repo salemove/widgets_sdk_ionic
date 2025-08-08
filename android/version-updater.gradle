@@ -1,0 +1,48 @@
+/**
+ * This build script is responsible for reading and updating the project related versions for integration with CI/CD flows
+ */
+
+ext {
+    gradlePropertiesFilePath = "version.properties"
+    widgetsSdkVersionTagInProperties = 'dependency.gliaAndroidWidgetsSdk.version'
+    widgetsSdkVersionTag = 'gliaAndroidWidgetsSdkVersion'
+}
+
+exposeGradlePropertiesToBuildScripts()
+
+def exposeGradlePropertiesToBuildScripts() {
+  def propertiesFile = project.file('version.properties')
+  def properties = new Properties()
+  if (propertiesFile.exists()) {
+    propertiesFile.withInputStream { properties.load(it) }
+  }
+  ext[widgetsSdkVersionTag] = properties.getProperty(widgetsSdkVersionTagInProperties)
+}
+
+/**
+ * A task class for editing the Widgets SDK version in version.properties
+ * Example of usage from terminal:
+ * ./gradlew salemove_widgets-sdk-react-native:saveGliaAndroidWidgetsSdkVersion --sdkVersion=3.2.0
+ */
+class UpdateGliaAndroidWidgetsSdkVersion extends DefaultTask {
+  private String newAndroidWidgetsSdkVersion
+
+  @Option(option = "sdkVersion", description = "Widgets SDK version that should be overriden in configuration files")
+  void setAndroidWidgetsSdkVersion(String coreSdkVersion) {
+    this.newAndroidWidgetsSdkVersion = coreSdkVersion
+  }
+
+  @TaskAction
+  void write() {
+    def propertiesFile = project.file('version.properties')
+    def properties = new Properties()
+    if (propertiesFile.exists()) {
+      propertiesFile.withInputStream { properties.load(it) }
+    }
+    properties.setProperty(project.widgetsSdkVersionTagInProperties, newAndroidWidgetsSdkVersion)
+    propertiesFile.withOutputStream { properties.store(it, null) }
+  }
+}
+
+tasks.register('saveGliaAndroidWidgetsSdkVersion', UpdateGliaAndroidWidgetsSdkVersion)
+

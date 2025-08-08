@@ -47,6 +47,11 @@ repositories {
     mavenCentral()
 }
 
+apply {
+    from "version-updater.gradle"
+}
+
+def glia_android_widgets_version = project.ext.get("gliaAndroidWidgetsSdkVersion")
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -56,7 +61,7 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
 
-    api("com.glia:android-widgets:3.2.0")
+    api "com.glia:android-widgets:$glia_android_widgets_version"
 }
 
 allprojects {
