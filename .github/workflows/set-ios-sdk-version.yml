@@ -1,0 +1,35 @@
+name: Update Glia iOS Widgets SDK Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version in semantic versioning format (i.e. 1.0.2)'
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Glia iOS Widgets SDK version
+        run: sed -i "s/s.dependency 'GliaWidgets', '.*'/s.dependency 'GliaWidgets', '${{ github.event.inputs.version }}'/" GliaWidgetsIonic.podspec
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          title: "Update iOS Widgets SDK version to ${{ github.event.inputs.version }}"
+          body: "This PR sets the iOS Widgets SDK version to ${{ github.event.inputs.version }}."
+          base: development
+          branch: update-ios-widgets-sdk-version-${{ github.event.inputs.version }}
+          commit-message: "chore: update iOS Widgets SDK version to ${{ github.event.inputs.version }}"
