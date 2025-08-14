@@ -115,4 +115,4 @@ jobs:
       - name: Run iOS Build
         run: |
           cd example-app/ios/App
-          xcodebuild -workspace App.xcworkspace -scheme App -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.0' -showBuildTimingSummary build
+          xcodebuild -workspace App.xcworkspace -scheme App -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.6' -showBuildTimingSummary build
