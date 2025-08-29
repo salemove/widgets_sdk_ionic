@@ -56,5 +56,5 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
 
-    api("com.glia:android-widgets:3.1.0")
+    api("com.glia:android-widgets:3.1.2")
 }
