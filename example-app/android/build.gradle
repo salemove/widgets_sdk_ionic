@@ -28,7 +28,7 @@ allprojects {
         resolutionStrategy {
             force 'com.google.protobuf:protobuf-java:3.25.5'
             force 'com.google.protobuf:protobuf-java-util:3.25.5'
-            force 'io.netty:netty-codec-http2:4.1.118.Final'
+            force 'io.netty:netty-codec-http2:4.1.125.Final'
         }
     }
 }
