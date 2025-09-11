@@ -5,7 +5,6 @@ environment.ts
 
 # iOS files
 Pods
-Podfile.lock
 Package.resolved
 Build
 xcuserdata
