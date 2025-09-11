@@ -4,6 +4,40 @@ GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.2.2
+
+Updated underlying SDKs:
+- [Android Widgets SDK v3.2.2](#android-widgets-sdk-v322)
+- [iOS Widgets SDK v3.2.2](#ios-widgets-sdk-v322)
+
+### Android Widgets SDK v3.2.2
+#### Added
+- Implemented site info caching for 10 seconds to reduce frequent API calls.
+
+#### Changed
+- Integrators can now extend the Glia SDK's built-in `GliaFcmService`.
+- Improved `GliaWidgets.init()` exception causes, providing more informative messages for `com.glia.widgets.GliaWidgetsException` when the SDK fails to initialize due to credential issues.
+- Updated Unified Customization for survey screen and added some configuration options.
+- Replaced the custom survey view with a bottom sheet design to improve display behavior, addressing issues like full-screen expansion and background transparency.
+
+#### Fixed
+- Unified a design difference between iOS and Android related to applying styles to survey input fields.
+- Corrected an error where cached locale strings failed to receive updates depending on the device's time zone relative to UTC. Locale strings now update immediately on device restart.
+- Fixed an issue that caused a crash when establishing media streams.
+- Addressed memory leak issues, improving overall performance and stability.
+- Aligned operator name display across Widgets screens to consistently show only the first name.
+
+### iOS Widgets SDK v3.2.2
+#### Changed
+- The header of the Chat screen now has a shadow.
+- Updated Unified Customization for survey screen and added some configuration options.
+
+#### Fixed
+- Fixed an issue that the visitor survey was not opening after ending the chat.
+- Fixed a bug where a failed engagement could not be closed.
+- Fixed an issue of app crashing when uploading attachments to the chat during a Live Observation.
+- Unified a design difference between iOS and Android related to applying styles to survey input fields.
+
 ### 3.2.1
 
 Updated underlying SDKs:
