@@ -1,0 +1,69 @@
+PODS:
+  - Capacitor (6.2.1):
+    - CapacitorCordova
+  - CapacitorCamera (6.1.2):
+    - Capacitor
+  - CapacitorCordova (6.2.1)
+  - CapacitorPushNotifications (6.0.4):
+    - Capacitor
+  - CapacitorSplashScreen (6.0.3):
+    - Capacitor
+  - GliaCoreDependency (2.4.0)
+  - GliaCoreSDK (2.2.3):
+    - GliaCoreDependency (= 2.4.0)
+    - TwilioVoice (= 6.8.0)
+    - WebRTC-lib (= 119.0.0)
+  - GliaWidgets (3.2.2):
+    - GliaCoreSDK (= 2.2.3)
+  - GliaWidgetsIonic (3.2.2):
+    - Capacitor
+    - GliaWidgets (= 3.2.2)
+  - TwilioVoice (6.8.0)
+  - WebRTC-lib (119.0.0)
+
+DEPENDENCIES:
+  - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
+  - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
+  - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
+  - GliaWidgetsIonic (from `../../..`)
+
+SPEC REPOS:
+  trunk:
+    - GliaCoreDependency
+    - GliaCoreSDK
+    - GliaWidgets
+    - TwilioVoice
+    - WebRTC-lib
+
+EXTERNAL SOURCES:
+  Capacitor:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorCamera:
+    :path: "../../node_modules/@capacitor/camera"
+  CapacitorCordova:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorPushNotifications:
+    :path: "../../node_modules/@capacitor/push-notifications"
+  CapacitorSplashScreen:
+    :path: "../../node_modules/@capacitor/splash-screen"
+  GliaWidgetsIonic:
+    :path: "../../.."
+
+SPEC CHECKSUMS:
+  Capacitor: c95400d761e376be9da6be5a05f226c0e865cebf
+  CapacitorCamera: 9bc7b005d0e6f1d5f525b8137045b60cffffce79
+  CapacitorCordova: 8d93e14982f440181be7304aa9559ca631d77fff
+  CapacitorPushNotifications: b3f20973cb167cb8fee622e309ec521134798241
+  CapacitorSplashScreen: fd8bf1bf9081d9aa8817b7cd37d740d1bdaf2fb2
+  GliaCoreDependency: bf99fc5a6fe66348b58123caded985506a8cf762
+  GliaCoreSDK: 5ff52cd64551104c7262116348105750a32996d2
+  GliaWidgets: cc82c3bbbc52cb0062bfa98f5cbc9473c2f18f93
+  GliaWidgetsIonic: 065c2647918273b0f70cbe551aa4505a55ab1b8e
+  TwilioVoice: 9563c9ad71b9ab7bbad0b59b67cfe4be96c75d23
+  WebRTC-lib: 4e9a17058f880cd658e88383c1ac8f1119af3700
+
+PODFILE CHECKSUM: 3669c05a1a7b91843759dbd0152317e6cf85c176
+
+COCOAPODS: 1.16.2
