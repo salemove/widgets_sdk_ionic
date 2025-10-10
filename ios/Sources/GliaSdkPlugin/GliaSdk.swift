@@ -1,6 +1,8 @@
 import Capacitor
 import Foundation
 import GliaWidgets
+import class GliaCoreSDK.DependencyContainer
+import GliaOpenTelemetry
 
 @objc public class GliaSdk: NSObject {
 
@@ -9,9 +11,13 @@ import GliaWidgets
     private var configureQueueIds: [String]?
     private var unreadMessageCountToken: String?
     private var eventEmitter: ((_ eventName: String, _ data: [String: Any]?) -> Void)?
-    
+
     public func setEventEmitter(eventEmitter: @escaping (_ eventName: String, _ data: [String: Any]?) -> Void) {
         self.eventEmitter = eventEmitter
+    }
+
+    override init() {
+        GliaCoreSDK.DependencyContainer.current.widgets.openTelemetry.setGlobalAttribute(.string(FrameworkNames.ionic.rawValue), forKey: .sdkFrameworkName)
     }
 
     @objc public func configure(_ call: CAPPluginCall) {
@@ -487,5 +493,4 @@ import GliaWidgets
         }
         call.resolve()
     }
-
 }
