@@ -11,7 +11,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", branch: "main"),
-        .package(url: "https://github.com/salemove/ios-sdk-widgets", exact: "3.1.1")
+        .package(url: "https://github.com/salemove/ios-sdk-widgets", exact: "3.3.0")
     ],
     targets: [
         .target(

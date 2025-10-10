@@ -1,10 +1,13 @@
 import GliaWidgets
 import UIKit
+import class GliaCoreSDK.DependencyContainer
+import GliaOpenTelemetry
 
 extension Glia {
   public static func initialize() {
-    _ = Glia.sharedInstance
-  }
+      GliaCoreSDK.DependencyContainer.current.widgets.openTelemetry.setGlobalAttribute(.string(FrameworkNames.ionic.rawValue), forKey: .sdkFrameworkName)
+      _ = Glia.sharedInstance
+  } 
 }
 
 extension QueueStatus {
