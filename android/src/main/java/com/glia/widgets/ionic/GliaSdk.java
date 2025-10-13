@@ -10,6 +10,9 @@ import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.PluginCall;
 import com.glia.androidsdk.Glia;
+import com.glia.telemetry_lib.FrameworkNames;
+import com.glia.telemetry_lib.GliaTelemetry;
+import com.glia.telemetry_lib.GlobalAttribute;
 import com.glia.widgets.GliaWidgets;
 import com.glia.widgets.GliaWidgetsConfig;
 import com.glia.widgets.SiteApiKey;
@@ -50,6 +53,8 @@ public class GliaSdk {
 
     public GliaSdk(EventEmitter eventEmitter) {
         this.eventEmitter = eventEmitter;
+
+        GliaTelemetry.setGlobalAttribute(GlobalAttribute.SdkFrameworkName.INSTANCE, FrameworkNames.IONIC);
     }
 
     public void configure(PluginCall call, Activity activity) {
