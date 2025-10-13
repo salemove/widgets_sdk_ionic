@@ -6,6 +6,8 @@ ext {
     gradlePropertiesFilePath = "version.properties"
     widgetsSdkVersionTagInProperties = 'dependency.gliaAndroidWidgetsSdk.version'
     widgetsSdkVersionTag = 'gliaAndroidWidgetsSdkVersion'
+    telemetryLibVersionTagInProperties = 'dependency.telemetryLib.version'
+    telemetryLibVersionTag = 'gliaTelemetryLibVersion'
 }
 
 exposeGradlePropertiesToBuildScripts()
@@ -17,19 +19,26 @@ def exposeGradlePropertiesToBuildScripts() {
     propertiesFile.withInputStream { properties.load(it) }
   }
   ext[widgetsSdkVersionTag] = properties.getProperty(widgetsSdkVersionTagInProperties)
+  ext[telemetryLibVersionTag] = properties.getProperty(telemetryLibVersionTagInProperties)
 }
 
 /**
  * A task class for editing the Widgets SDK version in version.properties
  * Example of usage from terminal:
- * ./gradlew salemove_widgets-sdk-react-native:saveGliaAndroidWidgetsSdkVersion --sdkVersion=3.2.0
+ * ./gradlew glia-widgets-ionic:saveGliaAndroidWidgetsSdkVersion --sdkVersion=3.2.0
+ * ./gradlew glia-widgets-ionic:saveGliaTelemetryLibVersion --sdkVersion=1.0.2
  */
-class UpdateGliaAndroidWidgetsSdkVersion extends DefaultTask {
-  private String newAndroidWidgetsSdkVersion
+class UpdateVersionProperty extends DefaultTask {
+  private String newVersion
+  private String propertyKey
 
-  @Option(option = "sdkVersion", description = "Widgets SDK version that should be overriden in configuration files")
-  void setAndroidWidgetsSdkVersion(String coreSdkVersion) {
-    this.newAndroidWidgetsSdkVersion = coreSdkVersion
+  @Option(option = "sdkVersion", description = "Version that should be overridden in configuration files")
+  void setSdkVersion(String sdkVersion) {
+    this.newVersion = sdkVersion
+  }
+
+  void setPropertyKey(String propertyKey) {
+    this.propertyKey = propertyKey
   }
 
   @TaskAction
@@ -39,10 +48,14 @@ class UpdateGliaAndroidWidgetsSdkVersion extends DefaultTask {
     if (propertiesFile.exists()) {
       propertiesFile.withInputStream { properties.load(it) }
     }
-    properties.setProperty(project.widgetsSdkVersionTagInProperties, newAndroidWidgetsSdkVersion)
+    properties.setProperty(propertyKey, newVersion)
     propertiesFile.withOutputStream { properties.store(it, null) }
   }
 }
 
-tasks.register('saveGliaAndroidWidgetsSdkVersion', UpdateGliaAndroidWidgetsSdkVersion)
-
+tasks.register('saveGliaAndroidWidgetsSdkVersion', UpdateVersionProperty) {
+  it.setPropertyKey(project.widgetsSdkVersionTagInProperties)
+}
+tasks.register('saveGliaTelemetryLibVersion', UpdateVersionProperty) {
+  it.setPropertyKey(project.telemetryLibVersionTagInProperties)
+}

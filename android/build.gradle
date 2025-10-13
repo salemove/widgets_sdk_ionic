@@ -52,6 +52,7 @@ apply {
 }
 
 def glia_android_widgets_version = project.ext.get("gliaAndroidWidgetsSdkVersion")
+def glia_telemetry_version = project.ext.get("gliaTelemetryLibVersion")
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -62,6 +63,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
 
     api "com.glia:android-widgets:$glia_android_widgets_version"
+    implementation "com.glia:android-telemetry:$glia_telemetry_version"
 }
 
 allprojects {
