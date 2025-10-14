@@ -4,6 +4,31 @@ GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.3.0
+
+Updated underlying SDKs:
+- [Android Widgets SDK v3.3.0](#android-widgets-sdk-v330)
+- [iOS Widgets SDK v3.3.0](#ios-widgets-sdk-v330)
+
+#### Android Widgets SDK v3.3.0
+##### Changed
+- Significantly improved logging to enhance monitoring and diagnostic capabilities.
+- Upgraded Kotlin version to 2.1.21 and the AGP (Android Gradle Plugin) version to 8.13.0.
+- Upgraded the internal WebRTC dependency to the Chrome M138 branch.
+- Enhanced Live Observation state management, ensuring the pause/resume status persists correctly when changed during queueing and is retained after engagement ends.
+
+##### Fixed
+- Fixed an issue where the chat screen was crashing in rare cases due to unfinished animations.
+
+#### iOS Widgets SDK v3.3.0
+##### Changed
+- Significantly improved logging to enhance monitoring and diagnostic capabilities.
+- The minimum deployment version has been increased from iOS 14 to iOS 15.
+
+##### Fixed
+- Fixed a bug where authentication during an ongoing audio call disabled the chat button.
+- Aligned operator name display across Widgets screens to consistently show only the first name.
+
 ### 3.2.2
 
 Updated underlying SDKs:
