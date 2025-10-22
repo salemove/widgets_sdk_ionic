@@ -408,13 +408,17 @@ export interface GliaSdk {
     getQueues(): Promise<Queues>;
     /**
      * @deprecated Use showVisitorCode() instead.
-     * Presents GliaWidgets UI with a visitor code for sharing with operator to start an engagement.
+     * Presents a GliaWidgets alert with a visitor code to share with an operator to start an engagement.
      */
     showVisitorCodeViewController(): Promise<void>;
     /**
-     * Presents GliaWidgets UI with a visitor code for sharing with operator to start an engagement.
+     * Presents a GliaWidgets alert with a visitor code to share with an operator to start an engagement.
      */
     showVisitorCode(): Promise<void>;
+    /**
+    * Closes a GliaWidgets alert with a visitor code if it is currently visible.
+    */
+    hideVisitorCode(): Promise<void>;
     /**
      * Authenticates the visitor.
      * @param options - Provides options for authentication such as behavior, idToken, and accessToken.
