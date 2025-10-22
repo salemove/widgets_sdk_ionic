@@ -117,6 +117,10 @@ export class GliaSdkImpl implements GliaSdk {
         return GliaSdkIonicPlugin.showVisitorCode();
     }
 
+    async hideVisitorCode(): Promise<void> {
+        return GliaSdkIonicPlugin.hideVisitorCode();
+    }
+
     async authenticate(options: {
         behavior: AuthenticationBehavior;
         idToken: string;

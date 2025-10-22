@@ -216,7 +216,7 @@
         "tags": [
           {
             "name": "deprecated",
-            "text": "Use showVisitorCode() instead.\nPresents GliaWidgets UI with a visitor code for sharing with operator to start an engagement."
+            "text": "Use showVisitorCode() instead.\nPresents a GliaWidgets alert with a visitor code to share with an operator to start an engagement."
           }
         ],
         "docs": "",
@@ -229,9 +229,19 @@
         "parameters": [],
         "returns": "Promise<void>",
         "tags": [],
-        "docs": "Presents GliaWidgets UI with a visitor code for sharing with operator to start an engagement.",
+        "docs": "Presents a GliaWidgets alert with a visitor code to share with an operator to start an engagement.",
         "complexTypes": [],
         "slug": "showvisitorcode"
+      },
+      {
+        "name": "hideVisitorCode",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Closes a GliaWidgets alert with a visitor code if it is currently visible.",
+        "complexTypes": [],
+        "slug": "hidevisitorcode"
       },
       {
         "name": "authenticate",

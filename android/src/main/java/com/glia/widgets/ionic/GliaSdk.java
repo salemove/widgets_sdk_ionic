@@ -133,14 +133,20 @@ public class GliaSdk {
     }
 
     public void showEntryWidget(PluginCall call, Activity activity) {
-        JSArray queueIds = call.getArray("queueIds", new JSArray());
-        entryWidget = GliaWidgets.getEntryWidget(jsArrayToArrayList(queueIds));
-        entryWidget.show(activity);
-        call.resolve();
+        try {
+            JSArray queueIds = call.getArray("queueIds", new JSArray());
+            entryWidget = GliaWidgets.getEntryWidget(jsArrayToArrayList(queueIds));
+            entryWidget.show(activity);
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("Could not show entry widget. Error='" + e.getMessage() + "'");
+        }
     }
 
     public void hideEntryWidget(PluginCall call) {
-        entryWidget.hide();
+        if (entryWidget != null) {
+            entryWidget.hide();
+        }
         call.resolve();
     }
 
@@ -297,8 +303,21 @@ public class GliaSdk {
     }
 
     public void showVisitorCode(PluginCall call) {
-        GliaWidgets.getCallVisualizer().showVisitorCodeDialog();
-        call.resolve();
+        try {
+            GliaWidgets.getCallVisualizer().showVisitorCodeDialog();
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("Could not show visitor code. Error='" + e.getMessage() + "'");
+        }
+    }
+
+    public void hideVisitorCode(PluginCall call) {
+        try {
+            GliaWidgets.getCallVisualizer().hideVisitorCodeDialog();
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("Could not hide visitor code. Error='" + e.getMessage() + "'");
+        }
     }
 
     public void authenticate(PluginCall call) {

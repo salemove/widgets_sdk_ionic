@@ -95,6 +95,11 @@ public class GliaSdkPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void hideVisitorCode(PluginCall call) {
+        implementation.hideVisitorCode(call);
+    }
+
+    @PluginMethod
     public void authenticate(PluginCall call) {
         implementation.authenticate(call);
     }
