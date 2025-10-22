@@ -79,6 +79,9 @@ var capacitorGliaSdk = (function (exports, core) {
         async showVisitorCode() {
             return GliaSdkIonicPlugin.showVisitorCode();
         }
+        async hideVisitorCode() {
+            return GliaSdkIonicPlugin.hideVisitorCode();
+        }
         async authenticate(options) {
             return GliaSdkIonicPlugin.authenticate(options);
         }

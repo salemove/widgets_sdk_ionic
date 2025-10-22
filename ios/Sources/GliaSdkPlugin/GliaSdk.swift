@@ -338,6 +338,13 @@ import GliaOpenTelemetry
         }
     }
 
+    @objc public func hideVisitorCode(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            Glia.sharedInstance.callVisualizer.hideVisitorCodeViewController()
+            call.resolve()
+        }
+    }
+
     @objc public func startSecureMessaging(_ call: CAPPluginCall) {
         var queueIds = configureQueueIds
         let useOptions = call.getBool("useOptions", false)

@@ -248,6 +248,10 @@ window.showVisitorCodeViewController = () => {
     GliaSdk.showVisitorCodeViewController()
 }
 
+window.hideVisitorCode = () => {
+    GliaSdk.hideVisitorCode()
+}
+
 window.startSecureConversation = () => {
     GliaSdk.startSecureConversation()
 }
