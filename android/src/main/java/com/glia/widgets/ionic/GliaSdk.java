@@ -15,6 +15,7 @@ import com.glia.telemetry_lib.GliaTelemetry;
 import com.glia.telemetry_lib.GlobalAttribute;
 import com.glia.widgets.GliaWidgets;
 import com.glia.widgets.GliaWidgetsConfig;
+import com.glia.widgets.Regions;
 import com.glia.widgets.SiteApiKey;
 import com.glia.widgets.authentication.Authentication;
 import com.glia.widgets.engagement.MediaType;
@@ -26,6 +27,7 @@ import com.glia.widgets.visitor.VisitorInfoUpdateRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -97,7 +99,7 @@ public class GliaSdk {
         GliaWidgetsConfig.Builder gliaConfigBuilder = new GliaWidgetsConfig.Builder()
                 .setSiteApiKey(new SiteApiKey(siteApiKeyId, siteApiKeySecret))
                 .setSiteId(siteId)
-                .setRegion(region)
+                .setRegion(Regions.fromString(region))
                 .setCompanyName(companyName)
                 .setUiJsonRemoteConfig(uiUnifiedConfig)
                 .setManualLocaleOverride(overrideLocale)
@@ -245,7 +247,6 @@ public class GliaSdk {
             if (exception != null) {
                 String message = exception != null ? exception.getMessage() : "listQueues failed";
                 call.reject(message);
-                return;
             } else {
                 if (response == null) {
                     call.resolve();
@@ -268,7 +269,7 @@ public class GliaSdk {
     }
 
     public void getQueues(PluginCall call) {
-        GliaWidgets.getQueues( response -> {
+        GliaWidgets.getQueues(response -> {
             if (response == null) {
                 call.resolve();
             } else {
