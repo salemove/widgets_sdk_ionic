@@ -4,6 +4,41 @@ GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.3.1
+
+#### Added
+- The new method `hideVisitorCode()` allows closing the Call Visualizer's visitor code dialog programmatically.
+
+Updated underlying SDKs:
+- [Android Widgets SDK v3.3.1](#android-widgets-sdk-v331)
+- [iOS Widgets SDK v3.3.1](#ios-widgets-sdk-v331)
+
+#### Android Widgets SDK v3.3.1
+##### Added
+- The new method `hideVisitorCodeDialog()` allows closing the Call Visualizer's visitor code dialog programmatically.
+- The chat bubble now shows a pulsing halo animation when the visitor is waiting to be connected.
+
+##### Changed
+- Refactored `GliaWidgetsConfig` to use `Region` instead of `String` for region configuration, and deprecated the previous `String` type used for this setting.
+- Improved the reliability and connection stability of audio and video calls.
+
+##### Fixed
+- Fixed an issue causing the SDK to crash on older devices running Android 7.0 (API 24) and Android 7.1 (API 25).
+
+#### iOS Widgets SDK v3.3.1
+##### Added
+- The new method `hideVisitorCodeViewController()` allows closing the Call Visualizer's visitor code dialog programmatically.
+
+##### Changed
+- Improved the reliability and connection stability of audio and video calls.
+- The minimum deployment version has been increased from iOS 14 to iOS 15.5.
+
+##### Fixed
+- Fixed an issue where messages were not delivered and the operator typing indicator animation did not work after a Secure Conversation was upgraded to a live engagement.
+- Operator typing indicator animation keeps working correctly also after an attachment is uploaded.
+- Fixed a bug where the visitor could not close Chat when the session timed out in the background.
+- Significantly reduced memory consumption when uploading a lot of attachments to the chat.
+
 ### 3.3.0
 
 Updated underlying SDKs:
@@ -23,7 +58,6 @@ Updated underlying SDKs:
 #### iOS Widgets SDK v3.3.0
 ##### Changed
 - Significantly improved logging to enhance monitoring and diagnostic capabilities.
-- The minimum deployment version has been increased from iOS 14 to iOS 15.
 
 ##### Fixed
 - Fixed a bug where authentication during an ongoing audio call disabled the chat button.
