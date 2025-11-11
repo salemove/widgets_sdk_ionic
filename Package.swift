@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "GliaWidgetsIonic",
-    platforms: [.iOS(.v14)],
+    platforms: [.iOS("15.5")],
     products: [
         .library(
             name: "GliaWidgetsIonic",
@@ -11,7 +11,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", branch: "main"),
-        .package(url: "https://github.com/salemove/ios-sdk-widgets", exact: "3.3.0")
+        .package(url: "https://github.com/salemove/ios-sdk-widgets", exact: "3.3.1")
     ],
     targets: [
         .target(
