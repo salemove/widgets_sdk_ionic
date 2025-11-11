@@ -1,12 +1,9 @@
-def glia_sdk_force_dynamic_linkage(installer)
+def open_telemetry_force_dynamic_linkage(installer)
     dynamic_frameworks = [
-      'GliaWidgets',
-      'GliaCoreSDK', 
-      'GliaCoreDependency', 
-      'GliaOpenTelemetry', 
-      'PhoenixChannelsClient', 
-      'TwilioVoice', 
-      'WebRTC-lib'
+        'OpenTelemetry-Swift-Sdk',
+        'OpenTelemetry-Swift-Api',
+        'OpenTelemetry-Swift-Protocol-Exporter-Http',
+        'OpenTelemetry-Swift-SdkResourceExtension'
     ]
     installer.pod_targets.each do |pod|
         if dynamic_frameworks.include?(pod.name)
