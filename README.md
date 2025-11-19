@@ -4,7 +4,20 @@ GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.3.2
+
+Updated underlying SDKs:
+- [Android Widgets SDK v3.3.2](#android-widgets-sdk-v332)
+
+#### Android Widgets SDK v3.3.2
+##### Fixed
+- Corrected a typo in the US base domain configuration.
+- The outside app bubble is no longer shown when there is no engagement.
+- Fixed a `ClassCastException` that occurred in the SDK due to an ID collision.
+
 ### 3.3.1
+
+We identified an issue in this release, please use 3.3.2 or higher instead.
 
 #### Added
 - The new method `hideVisitorCode()` allows closing the Call Visualizer's visitor code dialog programmatically.
