@@ -4,7 +4,30 @@ GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.3.3
+
+Updated underlying SDKs:
+- [Android Widgets SDK v3.3.3](#android-widgets-sdk-v333)
+- [iOS Widgets SDK v3.3.3](#ios-widgets-sdk-v333)
+
+#### Android Widgets SDK v3.3.3
+##### Changed
+- Improved internal logging capabilities.
+
+##### Fixed
+- Fixed a crash that occurred when navigating back from the Chat, Audio, or Video screens.
+
+#### iOS Widgets SDK v3.3.3
+##### Changed
+- The minimum deployment version has been changed to iOS 15.1. (Note that in version 3.3.1, the minimum deployment version was previously increased from iOS 14 to iOS 15.5).
+- Improved internal logging capabilities.
+
+##### Fixed
+- The text positioning of the Live Observation indicator (SnackBar) was corrected, ensuring its content is aligned to the left.
+
 ### 3.3.2
+
+We identified an issue in this release, please use 3.3.3 or higher instead.
 
 Updated underlying SDKs:
 - [Android Widgets SDK v3.3.2](#android-widgets-sdk-v332)
@@ -17,7 +40,7 @@ Updated underlying SDKs:
 
 ### 3.3.1
 
-We identified an issue in this release, please use 3.3.2 or higher instead.
+We identified an issue in this release, please use 3.3.3 or higher instead.
 
 #### Added
 - The new method `hideVisitorCode()` allows closing the Call Visualizer's visitor code dialog programmatically.
