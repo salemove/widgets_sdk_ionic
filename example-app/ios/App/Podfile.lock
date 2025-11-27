@@ -18,7 +18,7 @@ PODS:
   - GliaOpenTelemetry (1.0.7)
   - GliaWidgets (3.3.3):
     - GliaCoreSDK (= 2.3.2)
-  - GliaWidgetsIonic (3.3.3):
+  - GliaWidgetsIonic (3.3.4):
     - Capacitor
     - GliaWidgets (= 3.3.3)
   - PhoenixChannelsClient (1.0.1)
@@ -67,7 +67,7 @@ SPEC CHECKSUMS:
   GliaCoreSDK: 25116d821601f20b2d46846bc9acf85cbaca90b4
   GliaOpenTelemetry: 256aa4372a57e1235dc78bb64f5af1daa569e2a7
   GliaWidgets: d1109b01ea6cf949ecf5b2ba20ff89e25302062e
-  GliaWidgetsIonic: e90bdd7139b1b77693790e09a8b67cac07b90043
+  GliaWidgetsIonic: 22f51bc00b4b5e006a50889e636e8818084508d6
   PhoenixChannelsClient: 74cf91ecd76471e5fb262745256733dce7ee3cb6
   TwilioVoice: 9563c9ad71b9ab7bbad0b59b67cfe4be96c75d23
   WebRTC-lib: 4e9a17058f880cd658e88383c1ac8f1119af3700
