@@ -32,7 +32,7 @@
         "@capacitor/core": "6.2.1",
         "@capacitor/ios": "^6.2.1",
         "@capacitor/push-notifications": "^6.0.0",
-        "@capacitor/splash-screen": "^6.0.3",
+        "@capacitor/splash-screen": "^6.0.4",
         "glia-widgets-ionic": "file:.."
     },
     "devDependencies": {
