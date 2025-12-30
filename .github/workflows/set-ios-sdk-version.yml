@@ -14,6 +14,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      LEFTHOOK: 0 # Disable Lefthook during CI runs
     steps:
       - uses: actions/checkout@v4.2.2
         with:
