@@ -115,4 +115,7 @@ jobs:
       - name: Run iOS Build
         run: |
           cd example-app/ios/App
-          xcodebuild -workspace App.xcworkspace -scheme App -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.6' -showBuildTimingSummary build
+          # Find an available iPhone simulator with iOS 18.5 or 18.6
+          DEVICE_ID=$(xcrun xctrace list devices 2>&1 | awk '/iPhone/ && /\(18\.[56]/ { match($0, /[0-9A-F]{8}-([0-9A-F]{4}-){3}[0-9A-F]{12}/); print substr($0, RSTART, RLENGTH); exit }')
+          echo "Using device ID: $DEVICE_ID"
+          xcodebuild -workspace App.xcworkspace -scheme App -sdk iphonesimulator -destination "id=$DEVICE_ID" -showBuildTimingSummary build
