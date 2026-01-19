@@ -4,6 +4,44 @@ GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.4.0
+
+Updated underlying SDKs:
+- [Android Widgets SDK v3.4.0](#android-widgets-sdk-v40)
+- [iOS Widgets SDK v3.4.0](#ios-widgets-sdk-v340)
+
+#### Android Widgets SDK v3.4.0
+##### Added
+- Added a real-time connection quality notice that appears during periods of poor or lost connectivity.
+
+##### Changed
+- Improved the file attachment functionality so that videos can now be recorded directly within the app to send as attachments.
+- Updated Glia branding on dialogs.
+
+##### Fixed
+- Video engagements now automatically reestablish after the app is restarted.
+- Resolved an issue where audio streaming failed to reestablish automatically after a network disconnection of up to two minutes.
+- Fixed a rare `IllegalStateException` that occurred during a chat transfer while the app was in the background.
+- Resolved an issue where the `enableBubbleInsideApp` setting was not functioning correctly for chat bubble configurations.
+- Corrected inconsistent button states and background display issues on the Call screen for specific devices.
+- Resolved an issue with taking photos to send as attachments.
+- Fixed an issue where the bubble disappeared after an operator ended a live engagement that started as a Secure Conversation, even if unread messages were present.
+
+#### iOS Widgets SDK v3.4.0
+##### Added
+- Added a real-time connection quality notice that appears during periods of poor or lost connectivity.
+
+##### Changed
+- Improved the file attachment functionality by ensuring that only allowed attachment type options are displayed.
+
+##### Fixed
+- Video engagements in Call Visualizer now automatically reestablish after the app is restarted.
+- Resolved a delay in reestablishing Live Observation when moving the app from the background to the foreground.
+- Resolved an issue where audio streaming failed to reestablish automatically after a network disconnection of up to two minutes.
+- Fixed a couple of issues where audio engagements failed to restore properly, for example, after a network change.
+- Corrected the text alignment of the Live Observation indicator to ensure it uses leading alignment.
+- Unified the styling of survey input fields to ensure design consistency between iOS and Android.
+
 ### 3.3.3
 
 Updated underlying SDKs:
