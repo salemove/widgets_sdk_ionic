@@ -115,4 +115,28 @@ jobs:
       - name: Run iOS Build
         run: |
           cd example-app/ios/App
-          xcodebuild -workspace App.xcworkspace -scheme App -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.6' -showBuildTimingSummary build
+
+          # 1. Capture the full device line first (for logging and debugging)
+          # Looks for iPhone + iOS 26.2(latest)
+          DEVICE_LINE=$(xcrun xctrace list devices 2>&1 | awk '/iPhone/ && /\(26\.[2]/ { print $0; exit }')
+
+          # 2. Validate that a device was actually found
+          if [ -z "$DEVICE_LINE" ]; then
+            echo "❌ Error: No iPhone found with iOS 26.2"
+            exit 1
+          fi
+
+          # 3. Print the selected device details to the CI logs
+          echo "📱 Selected Device: $DEVICE_LINE"
+
+          # 4. Extract the UUID from the captured line
+          DEVICE_ID=$(echo "$DEVICE_LINE" | awk '{ match($0, /[0-9A-F]{8}-([0-9A-F]{4}-){3}[0-9A-F]{12}/); print substr($0, RSTART, RLENGTH) }')
+
+          echo "✅ Using Device ID: $DEVICE_ID"
+
+          # 5. Run the build
+          xcodebuild -workspace App.xcworkspace \
+          -scheme App \
+          -sdk iphonesimulator \
+          -destination "id=$DEVICE_ID" \
+          -showBuildTimingSummary build
