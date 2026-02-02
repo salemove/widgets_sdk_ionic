@@ -5,3 +5,7 @@ node_modules/
 .DS_Store
 .sourcemaps
 dist/
+
+# Bundler
+.bundle/
+vendor/bundle/
