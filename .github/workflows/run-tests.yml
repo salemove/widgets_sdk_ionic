@@ -80,6 +80,7 @@ jobs:
         with:
           ruby-version: 3.2
           bundler-cache: true
+          working-directory: example-app
 
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1
@@ -110,6 +111,7 @@ jobs:
           npm run build
           cd example-app
           npm run build
+          bundle install
           npx cap sync ios
 
       - name: Run iOS Build
