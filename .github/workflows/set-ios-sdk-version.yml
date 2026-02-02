@@ -23,7 +23,20 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update Glia iOS Widgets SDK version
-        run: sed -i "s/s.dependency 'GliaWidgets', '.*'/s.dependency 'GliaWidgets', '${{ github.event.inputs.version }}'/" GliaWidgetsIonic.podspec
+        run: sed -i '' "s/s.dependency 'GliaWidgets', '.*'/s.dependency 'GliaWidgets', '${{ github.event.inputs.version }}'/" GliaWidgetsIonic.podspec
+
+      - name: Install dependencies
+        run: |-
+          npm install
+          cd example-app
+          npm install
+
+      - name: Update iOS pods
+        run: |
+          cd example-app
+          bundle install
+          cd ios/App
+          bundle exec pod update GliaWidgets
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
