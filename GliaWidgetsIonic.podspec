@@ -13,6 +13,6 @@ Pod::Spec.new do |s|
   s.source_files = 'ios/Sources/**/*.{swift,h,m,c,cc,mm,cpp}'
   s.ios.deployment_target  = '15.1'
   s.dependency 'Capacitor'
-  s.dependency 'GliaWidgets', '3.4.0'
+  s.dependency 'GliaWidgets', '3.3.3'
   s.swift_version = '5.1'
 end
