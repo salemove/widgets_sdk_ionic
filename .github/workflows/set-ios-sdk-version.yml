@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     env:
       LEFTHOOK: 0 # Disable Lefthook during CI runs
     steps:
@@ -21,6 +21,18 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2
+          bundler-cache: true
+          working-directory: example-app
 
       - name: Update Glia iOS Widgets SDK version
         run: sed -i '' "s/s.dependency 'GliaWidgets', '.*'/s.dependency 'GliaWidgets', '${{ github.event.inputs.version }}'/" GliaWidgetsIonic.podspec
