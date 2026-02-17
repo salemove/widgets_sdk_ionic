@@ -10,6 +10,19 @@ export const Region = Object.freeze({
     EU: 'eu',
 });
 /**
+ * Authorization method type constants.
+ */
+export const AuthorizationMethodType = Object.freeze({
+    /**
+     * Site API key authorization (legacy).
+     */
+    SITE_API_KEY: 'siteApiKey',
+    /**
+     * User API key authorization.
+     */
+    USER_API_KEY: 'userApiKey',
+});
+/**
  * Behavior for authentication and deauthentication.
  * FORBIDDEN_DURING_ENGAGEMENT - Do not allow authentication and deauthentication during an ongoing engagement. Default behavior.
  * ALLOWED_DURING_ENGAGEMENT - Allow authentication and deauthentication during an ongoing engagement.

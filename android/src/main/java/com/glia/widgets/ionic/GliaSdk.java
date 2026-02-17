@@ -16,7 +16,7 @@ import com.glia.telemetry_lib.GlobalAttribute;
 import com.glia.widgets.GliaWidgets;
 import com.glia.widgets.GliaWidgetsConfig;
 import com.glia.widgets.Regions;
-import com.glia.widgets.SiteApiKey;
+import com.glia.widgets.AuthorizationMethod;
 import com.glia.widgets.authentication.Authentication;
 import com.glia.widgets.engagement.MediaType;
 import com.glia.widgets.entrywidget.EntryWidget;
@@ -61,9 +61,10 @@ public class GliaSdk {
 
     public void configure(PluginCall call, Activity activity) {
 
-        JSObject apiKey = call.getObject("apiKey");
-        String siteApiKeyId = apiKey.getString("id");
-        String siteApiKeySecret = apiKey.getString("secret");
+        JSObject authMethod = call.getObject("authorizationMethod");
+        String authMethodType = authMethod != null ? authMethod.getString("type") : null;
+        String authMethodId = authMethod != null ? authMethod.getString("id") : null;
+        String authMethodSecret = authMethod != null ? authMethod.getString("secret") : null;
         String siteId = call.getString("siteId");
         String region = call.getString("region");
         String companyName = call.getString("companyName");
@@ -76,13 +77,18 @@ public class GliaSdk {
         Boolean suppressPushNotificationsPermissionRequestDuringAuthentication =
                 call.getBoolean("suppressPushNotificationsPermissionRequestDuringAuthentication", false);
 
-        if (siteApiKeyId == null) {
-            call.reject("'siteApiKeyId' is missing.");
+        if (authMethodType == null) {
+            call.reject("'authorizationMethod.type' is missing or invalid.");
             return;
         }
 
-        if (siteApiKeySecret == null) {
-            call.reject("'siteApiKeySecret' is missing.");
+        if (authMethodId == null) {
+            call.reject("'authorizationMethod.id' is missing or invalid.");
+            return;
+        }
+
+        if (authMethodSecret == null) {
+            call.reject("'authorizationMethod.secret' is missing or invalid.");
             return;
         }
 
@@ -96,8 +102,21 @@ public class GliaSdk {
             return;
         }
 
+        AuthorizationMethod authorizationMethod;
+        switch (authMethodType) {
+            case "siteApiKey":
+                authorizationMethod = new AuthorizationMethod.SiteApiKey(authMethodId, authMethodSecret);
+                break;
+            case "userApiKey":
+                authorizationMethod = new AuthorizationMethod.UserApiKey(authMethodId, authMethodSecret);
+                break;
+            default:
+                call.reject("'authorizationMethod.type' must be 'siteApiKey' or 'userApiKey', got: " + authMethodType);
+                return;
+        }
+
         GliaWidgetsConfig.Builder gliaConfigBuilder = new GliaWidgetsConfig.Builder()
-                .setSiteApiKey(new SiteApiKey(siteApiKeyId, siteApiKeySecret))
+                .setAuthorizationMethod(authorizationMethod)
                 .setSiteId(siteId)
                 .setRegion(Regions.fromString(region))
                 .setCompanyName(companyName)

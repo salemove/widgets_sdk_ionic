@@ -17,11 +17,20 @@ export interface Configuration {
      */
     queueIds?: string[];
     /**
+     * The authorization method for the Glia site.
+     * Supports both Site API Key (legacy) and User API Key.
+     *
+     * @see {@link AuthorizationMethod} for more details.
+     * @see {@link AuthorizationMethodType} for available types.
+     */
+    authorizationMethod?: AuthorizationMethod;
+    /**
      * The API key for the Glia site.
      *
+     * @deprecated Use `authorizationMethod` instead. This field will be treated as a Site API Key.
      * @see {@link ApiKey} for more details.
      */
-    apiKey: ApiKey;
+    apiKey?: ApiKey;
     /**
      * The region of the site.
      * Possible values are defined in the {@link Region}.
@@ -96,6 +105,62 @@ export declare const Region: Readonly<{
     EU: string;
 }>;
 export declare type Region = (typeof Region)[keyof typeof Region];
+/**
+ * Authorization method type constants.
+ */
+export declare const AuthorizationMethodType: Readonly<{
+    /**
+     * Site API key authorization (legacy).
+     */
+    SITE_API_KEY: "siteApiKey";
+    /**
+     * User API key authorization.
+     */
+    USER_API_KEY: "userApiKey";
+}>;
+/**
+ * Type representing the authorization method type.
+ */
+export declare type AuthorizationMethodType = (typeof AuthorizationMethodType)[keyof typeof AuthorizationMethodType];
+/**
+ * Site API key authorization configuration.
+ */
+export interface SiteApiKeyAuth {
+    /**
+     * Authorization type discriminator.
+     */
+    type: 'siteApiKey';
+    /**
+     * The site API key ID.
+     */
+    id: string;
+    /**
+     * The site API key secret.
+     */
+    secret: string;
+}
+/**
+ * User API key authorization configuration.
+ */
+export interface UserApiKeyAuth {
+    /**
+     * Authorization type discriminator.
+     */
+    type: 'userApiKey';
+    /**
+     * The user API key ID.
+     */
+    id: string;
+    /**
+     * The user API key secret.
+     */
+    secret: string;
+}
+/**
+ * Authorization method configuration.
+ * Use this to specify how the SDK should authenticate with Glia services.
+ */
+export declare type AuthorizationMethod = SiteApiKeyAuth | UserApiKeyAuth;
 /**
  * Behavior for authentication and deauthentication.
  * FORBIDDEN_DURING_ENGAGEMENT - Do not allow authentication and deauthentication during an ongoing engagement. Default behavior.
