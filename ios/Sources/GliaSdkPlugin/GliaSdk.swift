@@ -29,12 +29,32 @@ import GliaOpenTelemetry
             return
         }
 
+        guard let authMethodDict = call.getObject("authorizationMethod") else {
+            call.reject("'authorizationMethod' is missing or invalid.")
+            return
+        }
+
         guard
-            let apiKey = call.getObject("apiKey"),
-            let siteApiKeyId = apiKey["id"] as? String,
-            let siteApiKeySecret = apiKey["secret"] as? String
+            let authMethodType = authMethodDict["type"] as? String,
+            !authMethodType.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         else {
-            call.reject("'apiKey' is missed or invalid.")
+            call.reject("'authorizationMethod.type' is missing or invalid.")
+            return
+        }
+
+        guard
+            let authMethodId = authMethodDict["id"] as? String,
+            !authMethodId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        else {
+            call.reject("'authorizationMethod.id' is missing or invalid.")
+            return
+        }
+
+        guard
+            let authMethodSecret = authMethodDict["secret"] as? String,
+            !authMethodSecret.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        else {
+            call.reject("'authorizationMethod.secret' is missing or invalid.")
             return
         }
 
@@ -92,11 +112,25 @@ import GliaOpenTelemetry
             call.getBool("suppressPushNotificationsPermissionRequestDuringAuthentication") ?? false
 
         DispatchQueue.main.async {
+            // Create authorization method based on type
+            let authorizationMethod: Configuration.AuthorizationMethod
+            switch authMethodType.lowercased() {
+            case "siteapikey":
+                authorizationMethod = .siteApiKey(id: authMethodId, secret: authMethodSecret)
+            case "userapikey":
+                // Temporary: iOS SDK 3.4.0 may not have .userApiKey support yet
+                // This will be enabled in Phase 6 after iOS SDK release
+                call.reject("'userApiKey' authorization method is not yet supported on iOS. A future SDK update will enable this.")
+                return
+            default:
+                call.reject("'authorizationMethod.type' must be 'siteApiKey' or 'userApiKey', got: \(authMethodType)")
+                return
+            }
+
             do {
                 try Glia.sharedInstance.configure(
                     with: Configuration(
-                        authorizationMethod: .siteApiKey(
-                            id: siteApiKeyId, secret: siteApiKeySecret),
+                        authorizationMethod: authorizationMethod,
                         environment: region,
                         site: siteId,
                         visitorContext: visitorContext,
