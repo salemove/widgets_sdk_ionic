@@ -9,18 +9,18 @@ PODS:
   - CapacitorSplashScreen (6.0.4):
     - Capacitor
   - GliaCoreDependency (2.4.0)
-  - GliaCoreSDK (2.5.1):
+  - GliaCoreSDK (2.6.3):
     - GliaCoreDependency (= 2.4.0)
     - GliaOpenTelemetry (= 1.0.8)
     - PhoenixChannelsClient (= 1.1.3)
     - TwilioVoice (= 6.8.0)
     - WebRTC-lib (= 119.0.0)
   - GliaOpenTelemetry (1.0.8)
-  - GliaWidgets (3.4.0):
-    - GliaCoreSDK (= 2.5.1)
+  - GliaWidgets (3.5.0):
+    - GliaCoreSDK (= 2.6.3)
   - GliaWidgetsIonic (3.4.0):
     - Capacitor
-    - GliaWidgets (= 3.4.0)
+    - GliaWidgets (= 3.5.0)
   - PhoenixChannelsClient (1.1.3)
   - TwilioVoice (6.8.0)
   - WebRTC-lib (119.0.0)
@@ -64,10 +64,10 @@ SPEC CHECKSUMS:
   CapacitorPushNotifications: 35abece14371c57172e8321c9ccc8b6fa35fabfe
   CapacitorSplashScreen: ef140a8b1ea7244e0c245ce2dd4ce5251e7ab86a
   GliaCoreDependency: bf99fc5a6fe66348b58123caded985506a8cf762
-  GliaCoreSDK: e8b0ff0c140972bcc2d36b411e3724f432d9d13a
+  GliaCoreSDK: 51953e9dd9b9329a82af8efd362f78581344d330
   GliaOpenTelemetry: 9c66a07da9b15a2e00a648e22728a3aa26c7d2d6
-  GliaWidgets: 8b45233afcd653a01d96d5bb9a9aae5719cb26c4
-  GliaWidgetsIonic: e44fcb97c8ce8ff20e975f42e0e07375d9ac0c27
+  GliaWidgets: 5a4c4304b12f0b23c7b37cd4b64d5264315097ac
+  GliaWidgetsIonic: 801bf0ea23daac1bd795987a6747834e7f236cb2
   PhoenixChannelsClient: 42c589ca5b73a5dfe08588c12f525c306619eaf5
   TwilioVoice: 9563c9ad71b9ab7bbad0b59b67cfe4be96c75d23
   WebRTC-lib: 4e9a17058f880cd658e88383c1ac8f1119af3700

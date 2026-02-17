@@ -1,126 +1,6 @@
 var capacitorGliaSdk = (function (exports, core) {
     'use strict';
 
-    const GliaSdkIonicPlugin = core.registerPlugin('GliaSdk', {
-    // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
-    });
-    class GliaSdkImpl {
-        constructor() {
-            this.unreadMessageCountCallbacks = new Set();
-            this.unreadMessageCount = null;
-            GliaSdkIonicPlugin.addListener('gliaWidgetsUnreadMessageCountChanged', (info) => {
-                let count = info.count;
-                if (count !== this.unreadMessageCount) {
-                    this.unreadMessageCountCallbacks.forEach((callback) => callback(count));
-                    this.unreadMessageCount = count;
-                }
-            });
-        }
-        async configure(configuration) {
-            let uiUnifiedConfig;
-            if (configuration.uiUnifiedConfig) {
-                if (typeof configuration.uiUnifiedConfig === 'object') {
-                    uiUnifiedConfig = JSON.stringify(configuration.uiUnifiedConfig);
-                }
-                else if (typeof configuration.uiUnifiedConfig === 'string') {
-                    uiUnifiedConfig = configuration.uiUnifiedConfig;
-                }
-            }
-            return GliaSdkIonicPlugin.configure(Object.assign(Object.assign({}, configuration), { uiUnifiedConfig: uiUnifiedConfig }));
-        }
-        async subscribeToPushNotificationTypes(options) {
-            return GliaSdkIonicPlugin.subscribeToPushNotificationTypes(options);
-        }
-        async presentEntryWidget() {
-            return GliaSdkIonicPlugin.presentEntryWidget();
-        }
-        async showEntryWidget(options) {
-            return GliaSdkIonicPlugin.showEntryWidget(options);
-        }
-        async hideEntryWidget() {
-            return GliaSdkIonicPlugin.hideEntryWidget();
-        }
-        async startChat(options) {
-            if (options) {
-                options.useOptions = true;
-            }
-            return GliaSdkIonicPlugin.startChat(options);
-        }
-        async startAudio(options) {
-            if (options) {
-                options.useOptions = true;
-            }
-            return GliaSdkIonicPlugin.startAudio();
-        }
-        async startVideo(options) {
-            if (options) {
-                options.useOptions = true;
-            }
-            return GliaSdkIonicPlugin.startVideo();
-        }
-        async startSecureConversation() {
-            return GliaSdkIonicPlugin.startSecureConversation();
-        }
-        async startSecureMessaging(options) {
-            return GliaSdkIonicPlugin.startSecureMessaging(options);
-        }
-        async clearVisitorSession() {
-            return GliaSdkIonicPlugin.clearVisitorSession();
-        }
-        async listQueues() {
-            return GliaSdkIonicPlugin.listQueues();
-        }
-        async getQueues() {
-            return GliaSdkIonicPlugin.getQueues();
-        }
-        async showVisitorCodeViewController() {
-            return GliaSdkIonicPlugin.showVisitorCodeViewController();
-        }
-        async showVisitorCode() {
-            return GliaSdkIonicPlugin.showVisitorCode();
-        }
-        async hideVisitorCode() {
-            return GliaSdkIonicPlugin.hideVisitorCode();
-        }
-        async authenticate(options) {
-            return GliaSdkIonicPlugin.authenticate(options);
-        }
-        async deauthenticate(options) {
-            return GliaSdkIonicPlugin.deauthenticate(options);
-        }
-        async isAuthenticated() {
-            const result = await GliaSdkIonicPlugin.isAuthenticatedInternal();
-            return result.isAuthenticated;
-        }
-        async refreshAuthentication(options) {
-            return GliaSdkIonicPlugin.refreshAuthentication(options);
-        }
-        async pauseLiveObservation() {
-            return GliaSdkIonicPlugin.pauseLiveObservation();
-        }
-        async resumeLiveObservation() {
-            return GliaSdkIonicPlugin.resumeLiveObservation();
-        }
-        async getVisitorInfo() {
-            return GliaSdkIonicPlugin.getVisitorInfo();
-        }
-        async updateVisitorInfo(visitorInfo) {
-            return GliaSdkIonicPlugin.updateVisitorInfo(visitorInfo);
-        }
-        async endEngagement() {
-            return GliaSdkIonicPlugin.endEngagement();
-        }
-        subscribeToUnreadMessageCount(callback) {
-            if (this.unreadMessageCount !== null) {
-                callback(this.unreadMessageCount);
-            }
-            this.unreadMessageCountCallbacks.add(callback);
-        }
-        unsubscribeFromUnreadMessageCount(callback) {
-            this.unreadMessageCountCallbacks.delete(callback);
-        }
-    }
-
     /**
      * @fileoverview GliaWidgets SDK definitions.
      * This file contains TypeScript interfaces and types used in the Glia Ionic SDK.
@@ -132,6 +12,42 @@ var capacitorGliaSdk = (function (exports, core) {
         US: 'us',
         EU: 'eu',
     });
+    /**
+     * Authorization method type constants.
+     */
+    const AuthorizationMethodType = Object.freeze({
+        /**
+         * Site API key authorization (legacy).
+         */
+        SITE_API_KEY: 'siteApiKey',
+        /**
+         * User API key authorization.
+         */
+        USER_API_KEY: 'userApiKey',
+    });
+    exports.AuthorizationMethod = void 0;
+    (function (AuthorizationMethod) {
+        /**
+         * Creates a Site API key authorization configuration.
+         *
+         * @param id - The site API key ID.
+         * @param secret - The site API key secret.
+         */
+        function siteApiKey(id, secret) {
+            return { type: AuthorizationMethodType.SITE_API_KEY, id, secret };
+        }
+        AuthorizationMethod.siteApiKey = siteApiKey;
+        /**
+         * Creates a User API key authorization configuration.
+         *
+         * @param id - The user API key ID.
+         * @param secret - The user API key secret.
+         */
+        function userApiKey(id, secret) {
+            return { type: AuthorizationMethodType.USER_API_KEY, id, secret };
+        }
+        AuthorizationMethod.userApiKey = userApiKey;
+    })(exports.AuthorizationMethod || (exports.AuthorizationMethod = {}));
     /**
      * Behavior for authentication and deauthentication.
      * FORBIDDEN_DURING_ENGAGEMENT - Do not allow authentication and deauthentication during an ongoing engagement. Default behavior.
@@ -229,9 +145,161 @@ var capacitorGliaSdk = (function (exports, core) {
         PRODUCTION: 'production',
     });
 
+    const GliaSdkIonicPlugin = core.registerPlugin('GliaSdk', {
+    // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
+    });
+    class GliaSdkImpl {
+        constructor() {
+            this.unreadMessageCountCallbacks = new Set();
+            this.unreadMessageCount = null;
+            GliaSdkIonicPlugin.addListener('gliaWidgetsUnreadMessageCountChanged', (info) => {
+                let count = info.count;
+                if (count !== this.unreadMessageCount) {
+                    this.unreadMessageCountCallbacks.forEach((callback) => callback(count));
+                    this.unreadMessageCount = count;
+                }
+            });
+        }
+        async configure(configuration) {
+            // Validate authorization configuration
+            const hasAuthMethod = !!configuration.authorizationMethod;
+            const hasApiKey = !!configuration.apiKey;
+            if (!hasAuthMethod && !hasApiKey) {
+                return Promise.reject(new Error("Configuration must include either 'authorizationMethod' or 'apiKey'. " +
+                    "The 'apiKey' field is deprecated; use 'authorizationMethod' instead."));
+            }
+            if (hasAuthMethod && hasApiKey) {
+                console.warn('[GliaWidgets] Both authorizationMethod and apiKey provided. ' +
+                    'Using authorizationMethod. The apiKey field is deprecated and will be removed in a future version.');
+            }
+            if (!hasAuthMethod && hasApiKey) {
+                console.warn('[GliaWidgets] The apiKey field is deprecated and will be removed in a future version. ' +
+                    'Please migrate to authorizationMethod. See documentation for details.');
+            }
+            // Build native config with authorizationMethod always present
+            const nativeConfig = Object.assign({}, configuration);
+            if (hasAuthMethod) {
+                nativeConfig.authorizationMethod = configuration.authorizationMethod;
+            }
+            else if (hasApiKey) {
+                // Legacy path: transform apiKey to authorizationMethod (Site API Key)
+                nativeConfig.authorizationMethod = {
+                    type: AuthorizationMethodType.SITE_API_KEY,
+                    id: configuration.apiKey.id,
+                    secret: configuration.apiKey.secret,
+                };
+            }
+            // Remove apiKey from native config (always use authorizationMethod internally)
+            delete nativeConfig.apiKey;
+            // Handle uiUnifiedConfig transformation (existing logic)
+            let uiUnifiedConfig;
+            if (configuration.uiUnifiedConfig) {
+                if (typeof configuration.uiUnifiedConfig === 'object') {
+                    uiUnifiedConfig = JSON.stringify(configuration.uiUnifiedConfig);
+                }
+                else if (typeof configuration.uiUnifiedConfig === 'string') {
+                    uiUnifiedConfig = configuration.uiUnifiedConfig;
+                }
+            }
+            return GliaSdkIonicPlugin.configure(Object.assign(Object.assign({}, nativeConfig), { uiUnifiedConfig: uiUnifiedConfig }));
+        }
+        async subscribeToPushNotificationTypes(options) {
+            return GliaSdkIonicPlugin.subscribeToPushNotificationTypes(options);
+        }
+        async presentEntryWidget() {
+            return GliaSdkIonicPlugin.presentEntryWidget();
+        }
+        async showEntryWidget(options) {
+            return GliaSdkIonicPlugin.showEntryWidget(options);
+        }
+        async hideEntryWidget() {
+            return GliaSdkIonicPlugin.hideEntryWidget();
+        }
+        async startChat(options) {
+            if (options) {
+                options.useOptions = true;
+            }
+            return GliaSdkIonicPlugin.startChat(options);
+        }
+        async startAudio(options) {
+            if (options) {
+                options.useOptions = true;
+            }
+            return GliaSdkIonicPlugin.startAudio();
+        }
+        async startVideo(options) {
+            if (options) {
+                options.useOptions = true;
+            }
+            return GliaSdkIonicPlugin.startVideo();
+        }
+        async startSecureConversation() {
+            return GliaSdkIonicPlugin.startSecureConversation();
+        }
+        async startSecureMessaging(options) {
+            return GliaSdkIonicPlugin.startSecureMessaging(options);
+        }
+        async clearVisitorSession() {
+            return GliaSdkIonicPlugin.clearVisitorSession();
+        }
+        async listQueues() {
+            return GliaSdkIonicPlugin.listQueues();
+        }
+        async getQueues() {
+            return GliaSdkIonicPlugin.getQueues();
+        }
+        async showVisitorCodeViewController() {
+            return GliaSdkIonicPlugin.showVisitorCodeViewController();
+        }
+        async showVisitorCode() {
+            return GliaSdkIonicPlugin.showVisitorCode();
+        }
+        async hideVisitorCode() {
+            return GliaSdkIonicPlugin.hideVisitorCode();
+        }
+        async authenticate(options) {
+            return GliaSdkIonicPlugin.authenticate(options);
+        }
+        async deauthenticate(options) {
+            return GliaSdkIonicPlugin.deauthenticate(options);
+        }
+        async isAuthenticated() {
+            const result = await GliaSdkIonicPlugin.isAuthenticatedInternal();
+            return result.isAuthenticated;
+        }
+        async refreshAuthentication(options) {
+            return GliaSdkIonicPlugin.refreshAuthentication(options);
+        }
+        async pauseLiveObservation() {
+            return GliaSdkIonicPlugin.pauseLiveObservation();
+        }
+        async resumeLiveObservation() {
+            return GliaSdkIonicPlugin.resumeLiveObservation();
+        }
+        async getVisitorInfo() {
+            return GliaSdkIonicPlugin.getVisitorInfo();
+        }
+        async updateVisitorInfo(visitorInfo) {
+            return GliaSdkIonicPlugin.updateVisitorInfo(visitorInfo);
+        }
+        async endEngagement() {
+            return GliaSdkIonicPlugin.endEngagement();
+        }
+        subscribeToUnreadMessageCount(callback) {
+            if (this.unreadMessageCount !== null) {
+                callback(this.unreadMessageCount);
+            }
+            this.unreadMessageCountCallbacks.add(callback);
+        }
+        unsubscribeFromUnreadMessageCount(callback) {
+            this.unreadMessageCountCallbacks.delete(callback);
+        }
+    }
+
     const gliaSdk = new GliaSdkImpl();
 
     exports.AuthenticationBehavior = AuthenticationBehavior;
+    exports.AuthorizationMethodType = AuthorizationMethodType;
     exports.GliaSdk = gliaSdk;
     exports.MediaType = MediaType;
     exports.PushNotificationType = PushNotificationType;

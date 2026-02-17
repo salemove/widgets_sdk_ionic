@@ -29,12 +29,32 @@ import GliaOpenTelemetry
             return
         }
 
+        guard let authMethodDict = call.getObject("authorizationMethod") else {
+            call.reject("'authorizationMethod' is missing or invalid.")
+            return
+        }
+
         guard
-            let apiKey = call.getObject("apiKey"),
-            let siteApiKeyId = apiKey["id"] as? String,
-            let siteApiKeySecret = apiKey["secret"] as? String
+            let authMethodType = authMethodDict["type"] as? String,
+            !authMethodType.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         else {
-            call.reject("'apiKey' is missed or invalid.")
+            call.reject("'authorizationMethod.type' is missing or invalid.")
+            return
+        }
+
+        guard
+            let authMethodId = authMethodDict["id"] as? String,
+            !authMethodId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        else {
+            call.reject("'authorizationMethod.id' is missing or invalid.")
+            return
+        }
+
+        guard
+            let authMethodSecret = authMethodDict["secret"] as? String,
+            !authMethodSecret.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        else {
+            call.reject("'authorizationMethod.secret' is missing or invalid.")
             return
         }
 
@@ -81,8 +101,6 @@ import GliaOpenTelemetry
             features.remove(.bubbleView)
         }
 
-        let isWhiteLabelApp = call.getBool("isWhiteLabelApp") ?? false
-
         var pushNotifications: Configuration.PushNotifications?
         if let pushNotificationsRaw = call.getString("pushNotifications") {
             pushNotifications = Configuration.PushNotifications(rawValue: pushNotificationsRaw)
@@ -92,16 +110,23 @@ import GliaOpenTelemetry
             call.getBool("suppressPushNotificationsPermissionRequestDuringAuthentication") ?? false
 
         DispatchQueue.main.async {
+            // Create authorization method based on type
+            let authorizationMethod: Configuration.AuthorizationMethod
+            switch authMethodType.lowercased() {
+            case "siteapikey":
+                authorizationMethod = .siteApiKey(id: authMethodId, secret: authMethodSecret)
+            default:
+                authorizationMethod = .userApiKey(id: authMethodId, secret: authMethodSecret)
+            }
+
             do {
                 try Glia.sharedInstance.configure(
                     with: Configuration(
-                        authorizationMethod: .siteApiKey(
-                            id: siteApiKeyId, secret: siteApiKeySecret),
+                        authorizationMethod: authorizationMethod,
                         environment: region,
                         site: siteId,
                         visitorContext: visitorContext,
                         pushNotifications: pushNotifications ?? .disabled,
-                        isWhiteLabelApp: isWhiteLabelApp,
                         companyName: companyName,
                         manualLocaleOverride: overrideLocale,
                         suppressPushNotificationsPermissionRequestDuringAuthentication:
