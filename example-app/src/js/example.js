@@ -1,12 +1,26 @@
-import { GliaSdk, PushNotificationsIOS, PushNotificationType } from 'glia-widgets-ionic';
+import { GliaSdk, PushNotificationsIOS, PushNotificationType, AuthorizationMethod } from 'glia-widgets-ionic';
 import { environment } from '../environments/environment.ts'
 import uiThemeConfig from '../config/unified_config.json';
 
 window.configure = (suppressPushNotificationsPermissionRequest) => {
     const queueIdInputValue = document.getElementById("queueIdInput").value;
+
+    // Automatic prefix detection: "gls_" → Site API Key, otherwise → User API Key
+    const authorizationMethod = environment.IONIC_API_SECRET.startsWith('gls_')
+        ? AuthorizationMethod.siteApiKey(
+              environment.IONIC_API_KEY,
+              environment.IONIC_API_SECRET
+          )
+        : AuthorizationMethod.userApiKey(
+              environment.IONIC_API_KEY,
+              environment.IONIC_API_SECRET
+          );
+
+    console.log('[ExampleApp] Auto-detected authorization type: ' + authorizationMethod.type);
+
     GliaSdk.configure({
         siteId: environment.IONIC_SITE_ID,
-        apiKey: { id: environment.IONIC_API_KEY, secret: environment.IONIC_API_SECRET },
+        authorizationMethod: authorizationMethod,
         region: environment.IONIC_REGION,
         queueIds: [queueIdInputValue],
         pushNotifications: PushNotificationsIOS.SANDBOX,

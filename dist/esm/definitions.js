@@ -10,6 +10,42 @@ export const Region = Object.freeze({
     EU: 'eu',
 });
 /**
+ * Authorization method type constants.
+ */
+export const AuthorizationMethodType = Object.freeze({
+    /**
+     * Site API key authorization (legacy).
+     */
+    SITE_API_KEY: 'siteApiKey',
+    /**
+     * User API key authorization.
+     */
+    USER_API_KEY: 'userApiKey',
+});
+export var AuthorizationMethod;
+(function (AuthorizationMethod) {
+    /**
+     * Creates a Site API key authorization configuration.
+     *
+     * @param id - The site API key ID.
+     * @param secret - The site API key secret.
+     */
+    function siteApiKey(id, secret) {
+        return { type: AuthorizationMethodType.SITE_API_KEY, id, secret };
+    }
+    AuthorizationMethod.siteApiKey = siteApiKey;
+    /**
+     * Creates a User API key authorization configuration.
+     *
+     * @param id - The user API key ID.
+     * @param secret - The user API key secret.
+     */
+    function userApiKey(id, secret) {
+        return { type: AuthorizationMethodType.USER_API_KEY, id, secret };
+    }
+    AuthorizationMethod.userApiKey = userApiKey;
+})(AuthorizationMethod || (AuthorizationMethod = {}));
+/**
  * Behavior for authentication and deauthentication.
  * FORBIDDEN_DURING_ENGAGEMENT - Do not allow authentication and deauthentication during an ongoing engagement. Default behavior.
  * ALLOWED_DURING_ENGAGEMENT - Allow authentication and deauthentication during an ongoing engagement.
