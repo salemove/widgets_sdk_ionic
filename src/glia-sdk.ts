@@ -10,6 +10,7 @@ import type {
     PushNotificationType,
     UnreadMessageCountCallback
 } from './definitions';
+import { AuthorizationMethodType } from './definitions';
 
 const GliaSdkIonicPlugin = registerPlugin<GliaSdkPluginInternal>('GliaSdk', {
     // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
@@ -36,6 +37,51 @@ export class GliaSdkImpl implements GliaSdk {
     }
 
     async configure(configuration: Configuration): Promise<void> {
+        // Validate authorization configuration
+        const hasAuthMethod = !!configuration.authorizationMethod;
+        const hasApiKey = !!configuration.apiKey;
+
+        if (!hasAuthMethod && !hasApiKey) {
+            return Promise.reject(
+                new Error(
+                    "Configuration must include either 'authorizationMethod' or 'apiKey'. " +
+                    "The 'apiKey' field is deprecated; use 'authorizationMethod' instead."
+                )
+            );
+        }
+
+        if (hasAuthMethod && hasApiKey) {
+            console.warn(
+                '[GliaWidgets] Both authorizationMethod and apiKey provided. ' +
+                'Using authorizationMethod. The apiKey field is deprecated and will be removed in a future version.'
+            );
+        }
+
+        if (!hasAuthMethod && hasApiKey) {
+            console.warn(
+                '[GliaWidgets] The apiKey field is deprecated and will be removed in a future version. ' +
+                'Please migrate to authorizationMethod. See documentation for details.'
+            );
+        }
+
+        // Build native config with authorizationMethod always present
+        const nativeConfig = { ...configuration };
+
+        if (hasAuthMethod) {
+            nativeConfig.authorizationMethod = configuration.authorizationMethod;
+        } else if (hasApiKey) {
+            // Legacy path: transform apiKey to authorizationMethod (Site API Key)
+            nativeConfig.authorizationMethod = {
+                type: AuthorizationMethodType.SITE_API_KEY,
+                id: configuration.apiKey!.id,
+                secret: configuration.apiKey!.secret,
+            };
+        }
+
+        // Remove apiKey from native config (always use authorizationMethod internally)
+        delete nativeConfig.apiKey;
+
+        // Handle uiUnifiedConfig transformation (existing logic)
         let uiUnifiedConfig: string | undefined;
         if (configuration.uiUnifiedConfig) {
             if (typeof configuration.uiUnifiedConfig === 'object') {
@@ -44,8 +90,9 @@ export class GliaSdkImpl implements GliaSdk {
                 uiUnifiedConfig = configuration.uiUnifiedConfig;
             }
         }
+
         return GliaSdkIonicPlugin.configure({
-            ...configuration,
+            ...nativeConfig,
             uiUnifiedConfig: uiUnifiedConfig,
         });
     }

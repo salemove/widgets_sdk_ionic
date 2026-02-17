@@ -1,16 +1,10 @@
 import { WebPlugin } from '@capacitor/core';
 
-import type { GliaSdk, ApiKey, Region, Queues, PushNotificationType, AuthenticationBehavior, VisitorInfo, VisitorInfoUpdate } from './definitions';
+import type { GliaSdk, Configuration, Queues, PushNotificationType, AuthenticationBehavior, VisitorInfo, VisitorInfoUpdate } from './definitions';
 
 export class GliaSdkWeb extends WebPlugin implements GliaSdk {
 
-    async configure(options: {
-        siteId: string;
-        apiKey: ApiKey;
-        region: Region;
-        companyName: string;
-        overrideLocale?: string;
-    }): Promise<void> {
+    async configure(options: Configuration): Promise<void> {
         console.log(options);
         console.log("Web doesn't support GliaWidget SDK. Use Glia JS SDK instead.");
     }
