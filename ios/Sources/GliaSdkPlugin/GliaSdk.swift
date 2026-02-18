@@ -101,8 +101,6 @@ import GliaOpenTelemetry
             features.remove(.bubbleView)
         }
 
-        let isWhiteLabelApp = call.getBool("isWhiteLabelApp") ?? false
-
         var pushNotifications: Configuration.PushNotifications?
         if let pushNotificationsRaw = call.getString("pushNotifications") {
             pushNotifications = Configuration.PushNotifications(rawValue: pushNotificationsRaw)
@@ -118,10 +116,7 @@ import GliaOpenTelemetry
             case "siteapikey":
                 authorizationMethod = .siteApiKey(id: authMethodId, secret: authMethodSecret)
             case "userapikey":
-                // Temporary: iOS SDK 3.4.0 may not have .userApiKey support yet
-                // This will be enabled in Phase 6 after iOS SDK release
-                call.reject("'userApiKey' authorization method is not yet supported on iOS. A future SDK update will enable this.")
-                return
+                authorizationMethod = .userApiKey(id: authMethodId, secret: authMethodSecret)
             default:
                 call.reject("'authorizationMethod.type' must be 'siteApiKey' or 'userApiKey', got: \(authMethodType)")
                 return
@@ -135,7 +130,6 @@ import GliaOpenTelemetry
                         site: siteId,
                         visitorContext: visitorContext,
                         pushNotifications: pushNotifications ?? .disabled,
-                        isWhiteLabelApp: isWhiteLabelApp,
                         companyName: companyName,
                         manualLocaleOverride: overrideLocale,
                         suppressPushNotificationsPermissionRequestDuringAuthentication:
