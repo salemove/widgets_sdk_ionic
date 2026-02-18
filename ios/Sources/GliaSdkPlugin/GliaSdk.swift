@@ -115,11 +115,8 @@ import GliaOpenTelemetry
             switch authMethodType.lowercased() {
             case "siteapikey":
                 authorizationMethod = .siteApiKey(id: authMethodId, secret: authMethodSecret)
-            case "userapikey":
-                authorizationMethod = .userApiKey(id: authMethodId, secret: authMethodSecret)
             default:
-                call.reject("'authorizationMethod.type' must be 'siteApiKey' or 'userApiKey', got: \(authMethodType)")
-                return
+                authorizationMethod = .userApiKey(id: authMethodId, secret: authMethodSecret)
             }
 
             do {

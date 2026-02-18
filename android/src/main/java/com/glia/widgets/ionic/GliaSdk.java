@@ -103,16 +103,12 @@ public class GliaSdk {
         }
 
         AuthorizationMethod authorizationMethod;
-        switch (authMethodType) {
-            case "siteApiKey":
+        switch (authMethodType.toLowerCase()) {
+            case "siteapikey":
                 authorizationMethod = new AuthorizationMethod.SiteApiKey(authMethodId, authMethodSecret);
                 break;
-            case "userApiKey":
-                authorizationMethod = new AuthorizationMethod.UserApiKey(authMethodId, authMethodSecret);
-                break;
             default:
-                call.reject("'authorizationMethod.type' must be 'siteApiKey' or 'userApiKey', got: " + authMethodType);
-                return;
+                authorizationMethod = new AuthorizationMethod.UserApiKey(authMethodId, authMethodSecret);
         }
 
         GliaWidgetsConfig.Builder gliaConfigBuilder = new GliaWidgetsConfig.Builder()
