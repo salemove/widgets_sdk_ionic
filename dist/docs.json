@@ -635,7 +635,12 @@
       "name": "ApiKey",
       "slug": "apikey",
       "docs": "Used for configuring the Glia SDK with site API key ID and secret.\n\nNote that for the SDK to work properly, the site API key needs to have the 'Create Visitor' permission only.",
-      "tags": [],
+      "tags": [
+        {
+          "text": "Use `AuthorizationMethod` with `siteApiKey()` or `userApiKey()` helper functions instead.",
+          "name": "deprecated"
+        }
+      ],
       "methods": [],
       "properties": [
         {

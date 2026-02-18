@@ -25,6 +25,29 @@ var capacitorGliaSdk = (function (exports, core) {
          */
         USER_API_KEY: 'userApiKey',
     });
+    exports.AuthorizationMethod = void 0;
+    (function (AuthorizationMethod) {
+        /**
+         * Creates a Site API key authorization configuration.
+         *
+         * @param id - The site API key ID.
+         * @param secret - The site API key secret.
+         */
+        function siteApiKey(id, secret) {
+            return { type: AuthorizationMethodType.SITE_API_KEY, id, secret };
+        }
+        AuthorizationMethod.siteApiKey = siteApiKey;
+        /**
+         * Creates a User API key authorization configuration.
+         *
+         * @param id - The user API key ID.
+         * @param secret - The user API key secret.
+         */
+        function userApiKey(id, secret) {
+            return { type: AuthorizationMethodType.USER_API_KEY, id, secret };
+        }
+        AuthorizationMethod.userApiKey = userApiKey;
+    })(exports.AuthorizationMethod || (exports.AuthorizationMethod = {}));
     /**
      * Behavior for authentication and deauthentication.
      * FORBIDDEN_DURING_ENGAGEMENT - Do not allow authentication and deauthentication during an ongoing engagement. Default behavior.

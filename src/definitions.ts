@@ -100,6 +100,8 @@ export interface Configuration {
  * Used for configuring the Glia SDK with site API key ID and secret.
  *
  * Note that for the SDK to work properly, the site API key needs to have the 'Create Visitor' permission only.
+ * 
+ * @deprecated Use `AuthorizationMethod` with `siteApiKey()` or `userApiKey()` helper functions instead.
  */
 export interface ApiKey {
     /**
@@ -188,6 +190,28 @@ export interface UserApiKeyAuth {
  * Use this to specify how the SDK should authenticate with Glia services.
  */
 export type AuthorizationMethod = SiteApiKeyAuth | UserApiKeyAuth;
+
+export namespace AuthorizationMethod {
+  /**
+   * Creates a Site API key authorization configuration.
+   *
+   * @param id - The site API key ID.
+   * @param secret - The site API key secret.
+   */
+  export function siteApiKey(id: string, secret: string): SiteApiKeyAuth {
+    return { type: AuthorizationMethodType.SITE_API_KEY, id, secret };
+  }
+
+  /**
+   * Creates a User API key authorization configuration.
+   *
+   * @param id - The user API key ID.
+   * @param secret - The user API key secret.
+   */
+  export function userApiKey(id: string, secret: string): UserApiKeyAuth {
+    return { type: AuthorizationMethodType.USER_API_KEY, id, secret };
+  }
+}
 
 /**
  * Behavior for authentication and deauthentication.
