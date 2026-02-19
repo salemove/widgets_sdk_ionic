@@ -21,16 +21,16 @@ export interface Configuration {
 
     /**
      * The authorization method for the Glia site.
-     * Supports both Site API Key (legacy) and User API Key.
+     * Supports both service credential (user) API keys and site API keys (deprecated).
      *
      * @see {@link AuthorizationMethod} for more details.
      */
     authorizationMethod?: AuthorizationMethod;
 
     /**
-     * The API key for the Glia site.
+     * The Glia site API key used to authenticate the app.
      *
-     * @deprecated Use `authorizationMethod` instead. This field will be treated as a Site API Key.
+     * @deprecated Use `authorizationMethod` instead.
      * @see {@link ApiKey} for more details.
      */
     apiKey?: ApiKey;
@@ -139,23 +139,24 @@ export interface SiteApiKey {
 }
 
 /**
- * User API key authorization configuration.
+ * Service credential (user) API key authorization configuration.
  */
 export interface UserApiKey {
     /**
-     * The user API key ID.
+     * The service credential (user) API key ID.
      */
     userApiKeyId: string;
 
     /**
-     * The user API key secret.
+     * The service credential (user) API key secret.
      */
     userApiKeySecret: string;
 }
 
 /**
  * Authorization method configuration.
- * Use this to specify how the SDK should authenticate with Glia services.
+ * Use this to specify the credentials the SDK uses to authenticate
+ * and authorize requests with Glia services.
  */
 export type AuthorizationMethod = SiteApiKey | UserApiKey;
 
