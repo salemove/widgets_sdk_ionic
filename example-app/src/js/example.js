@@ -16,7 +16,8 @@ window.configure = (suppressPushNotificationsPermissionRequest) => {
               environment.IONIC_API_SECRET
           );
 
-    console.log('[ExampleApp] Auto-detected authorization type: ' + authorizationMethod.type);
+    const authType = 'siteApiKeyId' in authorizationMethod ? 'siteApiKey' : 'userApiKey';
+    console.log('[ExampleApp] Auto-detected authorization type: ' + authType);
 
     GliaSdk.configure({
         siteId: environment.IONIC_SITE_ID,

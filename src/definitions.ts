@@ -24,7 +24,6 @@ export interface Configuration {
      * Supports both Site API Key (legacy) and User API Key.
      *
      * @see {@link AuthorizationMethod} for more details.
-     * @see {@link AuthorizationMethodType} for available types.
      */
     authorizationMethod?: AuthorizationMethod;
 
@@ -125,44 +124,18 @@ export const Region = Object.freeze({
 export type Region = (typeof Region)[keyof typeof Region];
 
 /**
- * Authorization method type constants.
- */
-export const AuthorizationMethodType = Object.freeze({
-    /**
-     * Site API key authorization (legacy).
-     */
-    SITE_API_KEY: 'siteApiKey' as const,
-
-    /**
-     * User API key authorization.
-     */
-    USER_API_KEY: 'userApiKey' as const,
-});
-
-/**
- * Type representing the authorization method type.
- */
-export type AuthorizationMethodType =
-    (typeof AuthorizationMethodType)[keyof typeof AuthorizationMethodType];
-
-/**
  * Site API key authorization configuration.
  */
 export interface SiteApiKeyAuth {
     /**
-     * Authorization type discriminator.
-     */
-    type: 'siteApiKey';
-
-    /**
      * The site API key ID.
      */
-    id: string;
+    siteApiKeyId: string;
 
     /**
      * The site API key secret.
      */
-    secret: string;
+    siteApiKeySecret: string;
 }
 
 /**
@@ -170,19 +143,14 @@ export interface SiteApiKeyAuth {
  */
 export interface UserApiKeyAuth {
     /**
-     * Authorization type discriminator.
-     */
-    type: 'userApiKey';
-
-    /**
      * The user API key ID.
      */
-    id: string;
+    userApiKeyId: string;
 
     /**
      * The user API key secret.
      */
-    secret: string;
+    userApiKeySecret: string;
 }
 
 /**
@@ -199,7 +167,7 @@ export namespace AuthorizationMethod {
    * @param secret - The site API key secret.
    */
   export function siteApiKey(id: string, secret: string): SiteApiKeyAuth {
-    return { type: AuthorizationMethodType.SITE_API_KEY, id, secret };
+    return { siteApiKeyId: id, siteApiKeySecret: secret };
   }
 
   /**
@@ -209,7 +177,7 @@ export namespace AuthorizationMethod {
    * @param secret - The user API key secret.
    */
   export function userApiKey(id: string, secret: string): UserApiKeyAuth {
-    return { type: AuthorizationMethodType.USER_API_KEY, id, secret };
+    return { userApiKeyId: id, userApiKeySecret: secret };
   }
 }
 
