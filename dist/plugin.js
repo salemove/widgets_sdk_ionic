@@ -1,150 +1,17 @@
 var capacitorGliaSdk = (function (exports, core) {
     'use strict';
 
-    /**
-     * @fileoverview GliaWidgets SDK definitions.
-     * This file contains TypeScript interfaces and types used in the Glia Ionic SDK.
-     */
-    /**
-     * Site's region. Use `us` for US and other regions except Europe, use `eu` for Europe.
-     */
-    const Region = Object.freeze({
-        US: 'us',
-        EU: 'eu',
-    });
-    /**
-     * Authorization method type constants.
-     */
-    const AuthorizationMethodType = Object.freeze({
-        /**
-         * Site API key authorization (legacy).
-         */
-        SITE_API_KEY: 'siteApiKey',
-        /**
-         * User API key authorization.
-         */
-        USER_API_KEY: 'userApiKey',
-    });
-    exports.AuthorizationMethod = void 0;
-    (function (AuthorizationMethod) {
-        /**
-         * Creates a Site API key authorization configuration.
-         *
-         * @param id - The site API key ID.
-         * @param secret - The site API key secret.
-         */
-        function siteApiKey(id, secret) {
-            return { type: AuthorizationMethodType.SITE_API_KEY, id, secret };
+    const AuthorizationMethodType = {
+        SITE: 'siteAuth',
+        USER: 'userAuth',
+    };
+    function toNativeAuthMethod(authMethod) {
+        if ('siteApiKeyId' in authMethod) {
+            const siteAuth = authMethod;
+            return { type: AuthorizationMethodType.SITE, id: siteAuth.siteApiKeyId, secret: siteAuth.siteApiKeySecret };
         }
-        AuthorizationMethod.siteApiKey = siteApiKey;
-        /**
-         * Creates a User API key authorization configuration.
-         *
-         * @param id - The user API key ID.
-         * @param secret - The user API key secret.
-         */
-        function userApiKey(id, secret) {
-            return { type: AuthorizationMethodType.USER_API_KEY, id, secret };
-        }
-        AuthorizationMethod.userApiKey = userApiKey;
-    })(exports.AuthorizationMethod || (exports.AuthorizationMethod = {}));
-    /**
-     * Behavior for authentication and deauthentication.
-     * FORBIDDEN_DURING_ENGAGEMENT - Do not allow authentication and deauthentication during an ongoing engagement. Default behavior.
-     * ALLOWED_DURING_ENGAGEMENT - Allow authentication and deauthentication during an ongoing engagement.
-     */
-    const AuthenticationBehavior = Object.freeze({
-        FORBIDDEN_DURING_ENGAGEMENT: 'forbiddenDuringEngagement',
-        ALLOWED_DURING_ENGAGEMENT: 'allowedDuringEngagement',
-    });
-    // eslint-disable-next-line @typescript-eslint/no-namespace
-    exports.Queue = void 0;
-    (function (Queue) {
-        /**
-         * Queue status.
-         */
-        Queue.Status = Object.freeze({
-            OPENED: 'opened',
-            CLOSED: 'closed',
-            FULL: 'full',
-            UNSTAFFED: 'unstaffed',
-        });
-    })(exports.Queue || (exports.Queue = {}));
-    /**
-     * Queue media types.
-     */
-    const MediaType = Object.freeze({
-        TEXT: 'text',
-        PHONE: 'phone',
-        AUDIO: 'audio',
-        VIDEO: 'video',
-        MESSAGING: 'messaging',
-    });
-    // eslint-disable-next-line @typescript-eslint/no-namespace
-    exports.VisitorInfoUpdate = void 0;
-    (function (VisitorInfoUpdate) {
-        /**
-         * Specifies a method for updating the visitor's notes.
-         * replace - The visitor's notes will be overwritten with the notes specified in the request.
-         * append - A line break (\n) will be added, and the specified notes will be appended to the existing visitor’s notes.
-         */
-        VisitorInfoUpdate.NoteUpdateMethod = Object.freeze({
-            REPLACE: 'replace',
-            APPEND: 'append',
-        });
-        /**
-         * Specifies a method for updating the visitor's custom attributes.
-         * replace - All custom attributes for the visitor will be overwritten with the attributes specified in the request.
-         * merge - Only custom attributes present in the request will be added or updated. Custom attributes can be removed by setting their values to `null`.
-         */
-        VisitorInfoUpdate.CustomAttributesUpdateMethod = Object.freeze({
-            REPLACE: 'replace',
-            MERGE: 'merge',
-        });
-    })(exports.VisitorInfoUpdate || (exports.VisitorInfoUpdate = {}));
-    /**
-     * Available push notifications types.
-     */
-    const PushNotificationType = Object.freeze({
-        /**
-         * The SDK will subscribe to push notifications for when the engagement starts.
-         */
-        START: 'start',
-        /**
-         * The SDK will subscribe to push notifications for when the engagement ends.
-         */
-        END: 'end',
-        /**
-         * The SDK will subscribe to push notifications for when the engagement fails.
-         */
-        FAILED: 'failed',
-        /**
-         * The SDK will subscribe to push notifications for when a new message is received.
-         */
-        MESSAGE: 'message',
-        /**
-         * The SDK will subscribe to push notifications for when the engagement is transferred to another operator.
-         */
-        TRANSFER: 'transfer',
-    });
-    /**
-     * Push notifications environment for iOS.
-     */
-    const PushNotificationsIOS = Object.freeze({
-        /**
-         * Push notifications are disabled.
-         */
-        DISABLED: 'disabled',
-        /**
-         * Push notifications are configured for sandbox environment. Suitable for testing.
-         */
-        SANDBOX: 'sandbox',
-        /**
-         * Push notifications are configured for production environment.
-         */
-        PRODUCTION: 'production',
-    });
-
+        return { type: AuthorizationMethodType.USER, id: authMethod.userApiKeyId, secret: authMethod.userApiKeySecret };
+    }
     const GliaSdkIonicPlugin = core.registerPlugin('GliaSdk', {
     // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
     });
@@ -179,12 +46,12 @@ var capacitorGliaSdk = (function (exports, core) {
             // Build native config with authorizationMethod always present
             const nativeConfig = Object.assign({}, configuration);
             if (hasAuthMethod) {
-                nativeConfig.authorizationMethod = configuration.authorizationMethod;
+                nativeConfig.authorizationMethod = toNativeAuthMethod(configuration.authorizationMethod);
             }
             else if (hasApiKey) {
                 // Legacy path: transform apiKey to authorizationMethod (Site API Key)
                 nativeConfig.authorizationMethod = {
-                    type: AuthorizationMethodType.SITE_API_KEY,
+                    type: AuthorizationMethodType.SITE,
                     id: configuration.apiKey.id,
                     secret: configuration.apiKey.secret,
                 };
@@ -296,10 +163,117 @@ var capacitorGliaSdk = (function (exports, core) {
         }
     }
 
+    /**
+     * @fileoverview GliaWidgets SDK definitions.
+     * This file contains TypeScript interfaces and types used in the Glia Ionic SDK.
+     */
+    /**
+     * Site's region. Use `us` for US and other regions except Europe, use `eu` for Europe.
+     */
+    const Region = Object.freeze({
+        US: 'us',
+        EU: 'eu',
+    });
+    /**
+     * Behavior for authentication and deauthentication.
+     * FORBIDDEN_DURING_ENGAGEMENT - Do not allow authentication and deauthentication during an ongoing engagement. Default behavior.
+     * ALLOWED_DURING_ENGAGEMENT - Allow authentication and deauthentication during an ongoing engagement.
+     */
+    const AuthenticationBehavior = Object.freeze({
+        FORBIDDEN_DURING_ENGAGEMENT: 'forbiddenDuringEngagement',
+        ALLOWED_DURING_ENGAGEMENT: 'allowedDuringEngagement',
+    });
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    exports.Queue = void 0;
+    (function (Queue) {
+        /**
+         * Queue status.
+         */
+        Queue.Status = Object.freeze({
+            OPENED: 'opened',
+            CLOSED: 'closed',
+            FULL: 'full',
+            UNSTAFFED: 'unstaffed',
+        });
+    })(exports.Queue || (exports.Queue = {}));
+    /**
+     * Queue media types.
+     */
+    const MediaType = Object.freeze({
+        TEXT: 'text',
+        PHONE: 'phone',
+        AUDIO: 'audio',
+        VIDEO: 'video',
+        MESSAGING: 'messaging',
+    });
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    exports.VisitorInfoUpdate = void 0;
+    (function (VisitorInfoUpdate) {
+        /**
+         * Specifies a method for updating the visitor's notes.
+         * replace - The visitor's notes will be overwritten with the notes specified in the request.
+         * append - A line break (\n) will be added, and the specified notes will be appended to the existing visitor’s notes.
+         */
+        VisitorInfoUpdate.NoteUpdateMethod = Object.freeze({
+            REPLACE: 'replace',
+            APPEND: 'append',
+        });
+        /**
+         * Specifies a method for updating the visitor's custom attributes.
+         * replace - All custom attributes for the visitor will be overwritten with the attributes specified in the request.
+         * merge - Only custom attributes present in the request will be added or updated. Custom attributes can be removed by setting their values to `null`.
+         */
+        VisitorInfoUpdate.CustomAttributesUpdateMethod = Object.freeze({
+            REPLACE: 'replace',
+            MERGE: 'merge',
+        });
+    })(exports.VisitorInfoUpdate || (exports.VisitorInfoUpdate = {}));
+    /**
+     * Available push notifications types.
+     */
+    const PushNotificationType = Object.freeze({
+        /**
+         * The SDK will subscribe to push notifications for when the engagement starts.
+         */
+        START: 'start',
+        /**
+         * The SDK will subscribe to push notifications for when the engagement ends.
+         */
+        END: 'end',
+        /**
+         * The SDK will subscribe to push notifications for when the engagement fails.
+         */
+        FAILED: 'failed',
+        /**
+         * The SDK will subscribe to push notifications for when a new message is received.
+         */
+        MESSAGE: 'message',
+        /**
+         * The SDK will subscribe to push notifications for when the engagement is transferred to another operator.
+         */
+        TRANSFER: 'transfer',
+    });
+    /**
+     * Push notifications environment for iOS.
+     */
+    const PushNotificationsIOS = Object.freeze({
+        /**
+         * Push notifications are disabled.
+         */
+        DISABLED: 'disabled',
+        /**
+         * Push notifications are configured for sandbox environment. Suitable for testing.
+         */
+        SANDBOX: 'sandbox',
+        /**
+         * Push notifications are configured for production environment.
+         */
+        PRODUCTION: 'production',
+    });
+
     const gliaSdk = new GliaSdkImpl();
 
     exports.AuthenticationBehavior = AuthenticationBehavior;
-    exports.AuthorizationMethodType = AuthorizationMethodType;
     exports.GliaSdk = gliaSdk;
     exports.MediaType = MediaType;
     exports.PushNotificationType = PushNotificationType;

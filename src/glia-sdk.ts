@@ -5,12 +5,28 @@ import type {
     Configuration,
     GliaSdk,
     Queues,
+    SiteApiKey,
     VisitorInfo,
     VisitorInfoUpdate,
     PushNotificationType,
-    UnreadMessageCountCallback
+    UnreadMessageCountCallback,
+    AuthorizationMethod,
 } from './definitions';
-import { AuthorizationMethodType } from './definitions';
+
+const AuthorizationMethodType = {
+    SITE: 'siteAuth',
+    USER: 'userAuth',
+} as const;
+
+function toNativeAuthMethod(
+    authMethod: AuthorizationMethod
+): { type: string; id: string; secret: string } {
+    if ('siteApiKeyId' in authMethod) {
+        const siteAuth = authMethod as SiteApiKey;
+        return { type: AuthorizationMethodType.SITE, id: siteAuth.siteApiKeyId, secret: siteAuth.siteApiKeySecret };
+    }
+    return { type: AuthorizationMethodType.USER, id: authMethod.userApiKeyId, secret: authMethod.userApiKeySecret };
+}
 
 const GliaSdkIonicPlugin = registerPlugin<GliaSdkPluginInternal>('GliaSdk', {
     // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
@@ -68,11 +84,13 @@ export class GliaSdkImpl implements GliaSdk {
         const nativeConfig = { ...configuration };
 
         if (hasAuthMethod) {
-            nativeConfig.authorizationMethod = configuration.authorizationMethod;
+            (nativeConfig as any).authorizationMethod = toNativeAuthMethod(
+                configuration.authorizationMethod!
+            );
         } else if (hasApiKey) {
             // Legacy path: transform apiKey to authorizationMethod (Site API Key)
-            nativeConfig.authorizationMethod = {
-                type: AuthorizationMethodType.SITE_API_KEY,
+            (nativeConfig as any).authorizationMethod = {
+                type: AuthorizationMethodType.SITE,
                 id: configuration.apiKey!.id,
                 secret: configuration.apiKey!.secret,
             };

@@ -104,7 +104,7 @@ public class GliaSdk {
 
         AuthorizationMethod authorizationMethod;
         switch (authMethodType.toLowerCase()) {
-            case "siteapikey":
+            case "siteauth":
                 authorizationMethod = new AuthorizationMethod.SiteApiKey(authMethodId, authMethodSecret);
                 break;
             default:

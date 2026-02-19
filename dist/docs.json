@@ -464,14 +464,6 @@
             {
               "text": "AuthorizationMethod} for more details.",
               "name": "link"
-            },
-            {
-              "text": "{",
-              "name": "see"
-            },
-            {
-              "text": "AuthorizationMethodType} for available types.",
-              "name": "link"
             }
           ],
           "docs": "The authorization method for the Glia site.\nSupports both Site API Key (legacy) and User API Key.",
@@ -579,21 +571,14 @@
       "methods": [],
       "properties": [
         {
-          "name": "type",
-          "tags": [],
-          "docs": "Authorization type discriminator.",
-          "complexTypes": [],
-          "type": "'siteApiKey'"
-        },
-        {
-          "name": "id",
+          "name": "siteApiKeyId",
           "tags": [],
           "docs": "The site API key ID.",
           "complexTypes": [],
           "type": "string"
         },
         {
-          "name": "secret",
+          "name": "siteApiKeySecret",
           "tags": [],
           "docs": "The site API key secret.",
           "complexTypes": [],
@@ -609,21 +594,14 @@
       "methods": [],
       "properties": [
         {
-          "name": "type",
-          "tags": [],
-          "docs": "Authorization type discriminator.",
-          "complexTypes": [],
-          "type": "'userApiKey'"
-        },
-        {
-          "name": "id",
+          "name": "userApiKeyId",
           "tags": [],
           "docs": "The user API key ID.",
           "complexTypes": [],
           "type": "string"
         },
         {
-          "name": "secret",
+          "name": "userApiKeySecret",
           "tags": [],
           "docs": "The user API key secret.",
           "complexTypes": [],
