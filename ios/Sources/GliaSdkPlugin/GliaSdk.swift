@@ -113,7 +113,7 @@ import GliaOpenTelemetry
             // Create authorization method based on type
             let authorizationMethod: Configuration.AuthorizationMethod
             switch authMethodType.lowercased() {
-            case "siteapikey":
+            case "siteauth":
                 authorizationMethod = .siteApiKey(id: authMethodId, secret: authMethodSecret)
             default:
                 authorizationMethod = .userApiKey(id: authMethodId, secret: authMethodSecret)

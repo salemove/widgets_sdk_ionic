@@ -21,7 +21,6 @@ export interface Configuration {
      * Supports both Site API Key (legacy) and User API Key.
      *
      * @see {@link AuthorizationMethod} for more details.
-     * @see {@link AuthorizationMethodType} for available types.
      */
     authorizationMethod?: AuthorizationMethod;
     /**
@@ -108,77 +107,36 @@ export declare const Region: Readonly<{
 }>;
 export declare type Region = (typeof Region)[keyof typeof Region];
 /**
- * Authorization method type constants.
- */
-export declare const AuthorizationMethodType: Readonly<{
-    /**
-     * Site API key authorization (legacy).
-     */
-    SITE_API_KEY: "siteApiKey";
-    /**
-     * User API key authorization.
-     */
-    USER_API_KEY: "userApiKey";
-}>;
-/**
- * Type representing the authorization method type.
- */
-export declare type AuthorizationMethodType = (typeof AuthorizationMethodType)[keyof typeof AuthorizationMethodType];
-/**
  * Site API key authorization configuration.
  */
 export interface SiteApiKeyAuth {
     /**
-     * Authorization type discriminator.
-     */
-    type: 'siteApiKey';
-    /**
      * The site API key ID.
      */
-    id: string;
+    siteApiKeyId: string;
     /**
      * The site API key secret.
      */
-    secret: string;
+    siteApiKeySecret: string;
 }
 /**
  * User API key authorization configuration.
  */
 export interface UserApiKeyAuth {
     /**
-     * Authorization type discriminator.
-     */
-    type: 'userApiKey';
-    /**
      * The user API key ID.
      */
-    id: string;
+    userApiKeyId: string;
     /**
      * The user API key secret.
      */
-    secret: string;
+    userApiKeySecret: string;
 }
 /**
  * Authorization method configuration.
  * Use this to specify how the SDK should authenticate with Glia services.
  */
 export declare type AuthorizationMethod = SiteApiKeyAuth | UserApiKeyAuth;
-export declare namespace AuthorizationMethod {
-    /**
-     * Creates a Site API key authorization configuration.
-     *
-     * @param id - The site API key ID.
-     * @param secret - The site API key secret.
-     */
-    function siteApiKey(id: string, secret: string): SiteApiKeyAuth;
-    /**
-     * Creates a User API key authorization configuration.
-     *
-     * @param id - The user API key ID.
-     * @param secret - The user API key secret.
-     */
-    function userApiKey(id: string, secret: string): UserApiKeyAuth;
-}
 /**
  * Behavior for authentication and deauthentication.
  * FORBIDDEN_DURING_ENGAGEMENT - Do not allow authentication and deauthentication during an ongoing engagement. Default behavior.
