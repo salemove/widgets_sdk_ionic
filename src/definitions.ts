@@ -159,27 +159,6 @@ export interface UserApiKeyAuth {
  */
 export type AuthorizationMethod = SiteApiKeyAuth | UserApiKeyAuth;
 
-export namespace AuthorizationMethod {
-  /**
-   * Creates a Site API key authorization configuration.
-   *
-   * @param id - The site API key ID.
-   * @param secret - The site API key secret.
-   */
-  export function siteApiKey(id: string, secret: string): SiteApiKeyAuth {
-    return { siteApiKeyId: id, siteApiKeySecret: secret };
-  }
-
-  /**
-   * Creates a User API key authorization configuration.
-   *
-   * @param id - The user API key ID.
-   * @param secret - The user API key secret.
-   */
-  export function userApiKey(id: string, secret: string): UserApiKeyAuth {
-    return { userApiKeyId: id, userApiKeySecret: secret };
-  }
-}
 
 /**
  * Behavior for authentication and deauthentication.

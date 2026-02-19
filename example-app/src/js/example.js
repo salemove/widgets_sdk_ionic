@@ -1,4 +1,4 @@
-import { GliaSdk, PushNotificationsIOS, PushNotificationType, AuthorizationMethod } from 'glia-widgets-ionic';
+import { GliaSdk, PushNotificationsIOS, PushNotificationType } from 'glia-widgets-ionic';
 import { environment } from '../environments/environment.ts'
 import uiThemeConfig from '../config/unified_config.json';
 
@@ -7,14 +7,14 @@ window.configure = (suppressPushNotificationsPermissionRequest) => {
 
     // Automatic prefix detection: "gls_" → Site API Key, otherwise → User API Key
     const authorizationMethod = environment.IONIC_API_SECRET.startsWith('gls_')
-        ? AuthorizationMethod.siteApiKey(
-              environment.IONIC_API_KEY,
-              environment.IONIC_API_SECRET
-          )
-        : AuthorizationMethod.userApiKey(
-              environment.IONIC_API_KEY,
-              environment.IONIC_API_SECRET
-          );
+        ? {
+              siteApiKeyId: environment.IONIC_API_KEY,
+              siteApiKeySecret: environment.IONIC_API_SECRET,
+          }
+        : {
+              userApiKeyId: environment.IONIC_API_KEY,
+              userApiKeySecret: environment.IONIC_API_SECRET,
+          };
 
     const authType = 'siteApiKeyId' in authorizationMethod ? 'siteApiKey' : 'userApiKey';
     console.log('[ExampleApp] Auto-detected authorization type: ' + authType);
