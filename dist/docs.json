@@ -466,7 +466,7 @@
               "name": "link"
             }
           ],
-          "docs": "The authorization method for the Glia site.\nSupports both Site API Key (legacy) and User API Key.",
+          "docs": "The authorization method for the Glia site.\nSupports both service credential (user) API keys and site API keys (deprecated).",
           "complexTypes": [
             "AuthorizationMethod"
           ],
@@ -476,7 +476,7 @@
           "name": "apiKey",
           "tags": [
             {
-              "text": "Use `authorizationMethod` instead. This field will be treated as a Site API Key.",
+              "text": "Use `authorizationMethod` instead.",
               "name": "deprecated"
             },
             {
@@ -488,7 +488,7 @@
               "name": "link"
             }
           ],
-          "docs": "The API key for the Glia site.",
+          "docs": "The Glia site API key used to authenticate the app.",
           "complexTypes": [
             "ApiKey"
           ],
@@ -564,8 +564,8 @@
       ]
     },
     {
-      "name": "SiteApiKeyAuth",
-      "slug": "siteapikeyauth",
+      "name": "SiteApiKey",
+      "slug": "siteapikey",
       "docs": "Site API key authorization configuration.",
       "tags": [],
       "methods": [],
@@ -587,23 +587,23 @@
       ]
     },
     {
-      "name": "UserApiKeyAuth",
-      "slug": "userapikeyauth",
-      "docs": "User API key authorization configuration.",
+      "name": "UserApiKey",
+      "slug": "userapikey",
+      "docs": "Service credential (user) API key authorization configuration.",
       "tags": [],
       "methods": [],
       "properties": [
         {
           "name": "userApiKeyId",
           "tags": [],
-          "docs": "The user API key ID.",
+          "docs": "The service credential (user) API key ID.",
           "complexTypes": [],
           "type": "string"
         },
         {
           "name": "userApiKeySecret",
           "tags": [],
-          "docs": "The user API key secret.",
+          "docs": "The service credential (user) API key secret.",
           "complexTypes": [],
           "type": "string"
         }
@@ -833,18 +833,18 @@
     {
       "name": "AuthorizationMethod",
       "slug": "authorizationmethod",
-      "docs": "Authorization method configuration.\nUse this to specify how the SDK should authenticate with Glia services.",
+      "docs": "Authorization method configuration.\nUse this to specify the credentials the SDK uses to authenticate\nand authorize requests with Glia services.",
       "types": [
         {
-          "text": "SiteApiKeyAuth",
+          "text": "SiteApiKey",
           "complexTypes": [
-            "SiteApiKeyAuth"
+            "SiteApiKey"
           ]
         },
         {
-          "text": "UserApiKeyAuth",
+          "text": "UserApiKey",
           "complexTypes": [
-            "UserApiKeyAuth"
+            "UserApiKey"
           ]
         }
       ]
