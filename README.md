@@ -4,6 +4,38 @@ GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.5.0
+
+Updated underlying SDKs:
+- [Android Widgets SDK v3.5.0](#android-widgets-sdk-v350)
+- [iOS Widgets SDK v3.5.0](#ios-widgets-sdk-v350)
+
+#### Android Widgets SDK v3.5.0
+### Added
+- Added support for service credentials, a new capability that aligns service-to-service API keys with Glia’s access management framework.
+
+### Changed
+- Site API key is now deprecated in favor of service credentials API key authentication.
+- Enhanced telemetry logging to include API key type information for better monitoring and diagnostics.
+
+### Fixed
+- Resolved a couple of issues that were caused by missing proguard rules for the `jni_zero` package to protect it from obfuscation.
+
+#### iOS Widgets SDK v3.5.0
+### Added
+- Added support for service credentials, a new capability that aligns service-to-service API keys with Glia’s access management framework.
+- Enhanced Live Observation to capture all key windows, including bubbles, Glia alerts, system alerts, picker menus, and more, making them visible to the operator.
+
+### Changed
+- Site API key is now deprecated in favor of service credentials API key authentication.
+- 🚨 Breaking change: Removed the white label configuration (`isWhiteLabelApp`) that were deprecated in version 3.1.0.
+
+### Fixed
+- Resolved an issue where the call duration was not shown consistently for audio calls.
+- Fixed a font rendering issue related to UIKit to SwiftUI conversion.
+- Corrected an issue where top and bottom text alignment in CallView could not be updated via Remote Customization JSON configuration.
+
+
 ### 3.4.0
 
 Updated underlying SDKs:
