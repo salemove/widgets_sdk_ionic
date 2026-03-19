@@ -4,6 +4,26 @@ GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.5.1
+
+Updated underlying SDKs:
+- [Android Widgets SDK v3.5.1](#android-widgets-sdk-v351)
+- [iOS Widgets SDK v3.5.1](#ios-widgets-sdk-v351)
+
+#### Android Widgets SDK v3.5.1
+##### Added
+- Added accessibility support for the chat attachment selector, ensuring control roles are properly announced by screen readers.
+- Added accessibility hints for survey item titles, ensuring questions are properly announced on the survey dialog.
+
+#### iOS Widgets SDK v3.5.1
+##### Changed
+- Removed unnecessary payload data from SDK logs to improve security and reduce log noise.
+
+##### Fixed
+- Resolved a UI freeze that occurred when ending an engagement programmatically.
+- Fixed a crash that occurred during Unified Customization UI configuration.
+
+
 ### 3.5.0
 
 Updated underlying SDKs:
