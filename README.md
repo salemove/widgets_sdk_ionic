@@ -4,6 +4,15 @@ GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.5.2
+
+Updated underlying SDKs:
+- [iOS Widgets SDK v3.5.2](#ios-widgets-sdk-v352)
+
+#### iOS Widgets SDK v3.5.2
+##### Fixed
+- Fixed a crash that could occur when a CoBrowsing session with Live Observation was initiated.
+
 ### 3.5.1
 
 Updated underlying SDKs:
