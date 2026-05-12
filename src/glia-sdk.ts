@@ -144,14 +144,14 @@ export class GliaSdkImpl implements GliaSdk {
         if (options) {
             options.useOptions = true;
         }
-        return GliaSdkIonicPlugin.startAudio();
+        return GliaSdkIonicPlugin.startAudio(options);
     }
 
     async startVideo(options?: { queueIds?: string[]; useOptions?: boolean }): Promise<void> {
         if (options) {
             options.useOptions = true;
         }
-        return GliaSdkIonicPlugin.startVideo();
+        return GliaSdkIonicPlugin.startVideo(options);
     }
 
     async startSecureConversation(): Promise<void> {
