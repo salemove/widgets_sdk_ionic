@@ -29,6 +29,7 @@ public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "startSecureMessaging", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "pauseLiveObservation", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "resumeLiveObservation", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "endEngagement", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(
             name: "subscribeToPushNotificationTypes",
             returnType: CAPPluginReturnPromise
@@ -128,6 +129,10 @@ public class GliaSdkPlugin: CAPPlugin, CAPBridgedPlugin {
 
     @objc func resumeLiveObservation(_ call: CAPPluginCall) {
         implementation.resumeLiveObservation(call)
+    }
+
+    @objc func endEngagement(_ call: CAPPluginCall) {
+        implementation.endEngagement(call)
     }
 
     @objc func subscribeToPushNotificationTypes(_ call: CAPPluginCall) {

@@ -403,6 +403,13 @@ import GliaOpenTelemetry
         }
     }
 
+    @objc public func endEngagement(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            Glia.sharedInstance.endEngagement()
+            call.resolve()
+        }
+    }
+
     func hideEntryWidget(_ call: CAPPluginCall) {
         guard let entryWidget else {
             call.reject("Entry Widget is not shown.")
