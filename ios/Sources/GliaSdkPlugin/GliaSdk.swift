@@ -405,8 +405,9 @@ import GliaOpenTelemetry
 
     @objc public func endEngagement(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
-            Glia.sharedInstance.endEngagement()
-            call.resolve()
+            Glia.sharedInstance.endEngagement { _ in
+                call.resolve()
+            }
         }
     }
 
