@@ -1,8 +1,46 @@
 # Glia Widgets Ionic
 
-GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. It provides all the necessary UI components to quickly integrate GliaSDK into your project.
+GliaWidgets SDK is a simple and customizable framework built on top of GliaSDK. It provides all the necessary UI components to quickly integrate GliaSDK into your project.
 
 ## Changelog
+
+### 3.5.4
+
+#### Fixed
+- Fixed the `endEngagement()` method not working on iOS.
+- Fixed the `queueIds` parameter not being passed to `startAudio()` and `startVideo()` methods.
+
+Updated underlying SDKs:
+- [Android Widgets SDK v3.5.2](#android-widgets-sdk-v352)
+- [iOS Widgets SDK v3.5.4](#ios-widgets-sdk-v354)
+
+#### Android Widgets SDK v3.5.2
+##### Added
+- Improved screen reader accessibility across the SDK, including adding a button role to the chat bubble, a visible label to the message input field, and hints to confirmation dialog buttons.
+
+##### Changed
+- Updated the Stay In Touch permission dialog to align with Android guidelines, replacing the two-button layout with a single Continue button.
+
+##### Fixed
+- Fixed a crash that could occur during engagement transfers when multiple operator status items shared the same identifier.
+- Fixed an issue where the previous operator's connection and joined status was removed from chat history during an engagement transfer.
+
+#### iOS Widgets SDK v3.5.4
+##### Fixed
+- Resolved an issue where the visitor stopped receiving operator messages after a transfer.
+- Fixed an issue where the chat operator header displayed incorrect operator data after an engagement transfer.
+- Fixed an issue where links in operator messages were not clickable on iOS 26.
+
+### 3.5.3
+
+Updated underlying SDKs:
+- [iOS Widgets SDK v3.5.3](#ios-widgets-sdk-v353)
+
+#### iOS Widgets SDK v3.5.3
+##### Fixed
+- Fixed an issue where the SDK UI remained open and unresponsive after ending an engagement programmatically.
+- Improved VoiceOver accessibility by adding hints to several action elements, including the Deny button in the permission dialog.
+- Resolved an issue where the Live Observation indicator was not displayed correctly over other UI elements.
 
 ### 3.5.2
 
@@ -31,7 +69,6 @@ Updated underlying SDKs:
 ##### Fixed
 - Resolved a UI freeze that occurred when ending an engagement programmatically.
 - Fixed a crash that occurred during Unified Customization UI configuration.
-
 
 ### 3.5.0
 
@@ -63,7 +100,6 @@ Updated underlying SDKs:
 - Resolved an issue where the call duration was not shown consistently for audio calls.
 - Fixed a font rendering issue related to UIKit to SwiftUI conversion.
 - Corrected an issue where top and bottom text alignment in CallView could not be updated via Remote Customization JSON configuration.
-
 
 ### 3.4.0
 
