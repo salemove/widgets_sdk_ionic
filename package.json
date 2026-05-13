@@ -1,7 +1,7 @@
 {
   "name": "@salemove/widgets_sdk_ionic",
   "version": "3.5.3",
-  "description": "GliaWidgets SDK is a simple and customisable framework built on top of GliaSDK. It provides all the necessary UI components to quickly integrate GliaSDK into your project.",
+  "description": "GliaWidgets SDK is a simple and customizable framework built on top of GliaSDK. It provides all the necessary UI components to quickly integrate GliaSDK into your project.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
