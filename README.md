@@ -4,6 +4,23 @@ GliaWidgets SDK is a simple and customizable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.5.5
+
+Updated underlying SDKs:
+- [iOS Widgets SDK v3.5.6](#ios-widgets-sdk-v356)
+
+#### iOS Widgets SDK v3.5.6
+##### Fixed
+- Fixed a performance issue where the app experienced a drop in frame rate during an active Live Observation session.
+- Fixed a Call Visualizer crash that could occur when the operator ended a video engagement while the visitor had the video UI minimized.
+- Resolved a Live Observation issue, affecting only Flutter apps, where the feed could appear distorted or go dark after the visitor logged in.
+
+#### iOS Widgets SDK v3.5.5
+##### Fixed
+- Resolved an issue where a Live Observation session persisted after the visitor ended the engagement, causing the operator to continue seeing the visitor's screen.
+- The SnackBar now correctly updates its styling when the SDK is reconfigured with a new theme.
+- Fixed the alert background color and close button color to apply correctly from Remote Configuration JSON.
+
 ### 3.5.4
 
 #### Fixed
