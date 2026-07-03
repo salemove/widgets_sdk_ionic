@@ -92,13 +92,13 @@ var capacitorGliaSdk = (function (exports, core) {
             if (options) {
                 options.useOptions = true;
             }
-            return GliaSdkIonicPlugin.startAudio();
+            return GliaSdkIonicPlugin.startAudio(options);
         }
         async startVideo(options) {
             if (options) {
                 options.useOptions = true;
             }
-            return GliaSdkIonicPlugin.startVideo();
+            return GliaSdkIonicPlugin.startVideo(options);
         }
         async startSecureConversation() {
             return GliaSdkIonicPlugin.startSecureConversation();
