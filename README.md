@@ -4,6 +4,22 @@ GliaWidgets SDK is a simple and customizable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.5.6
+
+Updated underlying SDKs:
+- [Android Widgets SDK v3.5.3](#android-widgets-sdk-v353)
+- [iOS Widgets SDK v3.5.7](#ios-widgets-sdk-v357)
+
+#### Android Widgets SDK v3.5.3
+##### Fixed
+- Fixed an issue where call audio could cut out when the app was moved to the background or the device screen turned off during an ongoing call.
+- Fixed a crash that could occur when a background network request failed due to a temporary DNS resolution error.
+- Improved TalkBack accessibility so that chat bot responses are now announced automatically as soon as they appear in the chat.
+
+#### iOS Widgets SDK v3.5.7
+##### Changed
+- Upgraded the internal WebRTC dependency to the Chrome M149 branch, improving the security and stability of audio and video calls.
+
 ### 3.5.5
 
 Updated underlying SDKs:
