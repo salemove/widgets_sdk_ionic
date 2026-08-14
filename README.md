@@ -4,6 +4,22 @@ GliaWidgets SDK is a simple and customizable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.5.7
+Updated underlying SDK:
+- [Android Widgets SDK v3.5.4](#android-widgets-sdk-v354)
+
+#### Android Widgets SDK v3.5.4
+##### Fixed
+- Fixed a crash that could occur when the app was moved to the background during a video call.
+- Fixed memory leaks:
+  - When the Call screen was opened and closed repeatedly.
+  - That affected video resources after reconnecting to the network during a video engagement.
+  - When the overlay chat bubble was dismissed.
+##### Changed
+- Upgraded:
+  - Kotlin = 2.2.21
+  - compileSdk = 36 (37 is supported)
+
 ### 3.5.6
 
 Updated underlying SDKs:
