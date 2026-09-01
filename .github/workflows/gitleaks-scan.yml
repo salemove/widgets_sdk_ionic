@@ -42,4 +42,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE_PUBLIC }}
+<<<<<<< HEAD
           GITLEAKS_NOTIFY_USER_LIST: '@salemove/tm-devsec'
+=======
+          GITLEAKS_NOTIFY_USER_LIST: '@salemove/tm-devsec'
+>>>>>>> 4e4d1ca (Add gitleaks-scan workflow (public-repo secret scanning))
