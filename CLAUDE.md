@@ -6,6 +6,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `@salemove/widgets_sdk_ionic` is a Capacitor plugin that wraps the native GliaWidgets SDKs (iOS Swift, Android Java) and exposes them to Ionic/Capacitor apps via a TypeScript API. Published to GitHub Packages.
 
+## Platform Services
+
+> Read by Glia's engineering knowledge base and review bots. Update it when a
+> dependency is added or removed.
+
+This wrapper reaches no Glia backend service directly — it delegates to the
+native Widgets SDKs, which in turn go through the Core SDKs. The Glia libraries
+it depends on:
+
+| Library | Role |
+|---------|------|
+| `android-sdk-widgets` | Native Widgets SDK for Android |
+| `ios-sdk-widgets` | Native Widgets SDK for iOS |
+| `android-telemetry` | GliaLogger / GliaTracer on the Android side |
+
 ## Commands
 
 ```bash
