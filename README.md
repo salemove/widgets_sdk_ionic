@@ -4,6 +4,31 @@ GliaWidgets SDK is a simple and customizable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.5.7
+Updated underlying SDKs: 
+- [Android Widgets SDK v3.5.5](#android-widgets-sdk-v355)
+- [iOS Widgets SDK v3.5.9](#ios-widgets-sdk-v359)  
+
+#### Android Widgets SDK v3.5.5 
+##### Changed
+- Custom card web content is restricted:
+  - Links: A card opens content outside the app only when the visitor taps an `http`, `https`, `tel`, or `mailto` link. Navigation started by card scripts, redirects, and all other URL schemes are blocked.
+  - Iframes and forms: Iframes do not load, except inline `srcdoc` iframes. Form submissions are blocked.
+  - WebView access: Cards cannot access content providers or open new windows.
+##### Fixed
+- File uploads work on Android 7–9. 
+- Audio and video upgrade requests and diagnostic logging work on devices set to various languages.
+- In Call Visualizer video calls, the call service starts with only the media types the visitor uses.
+- Visitors can open a video they sent from the Photo Picker without the app crashing.
+- Visitors receive operator messages reliably.
+
+#### iOS Widgets SDK v3.5.9 
+##### Changed
+- Custom cards open external links only when the visitor taps a link. Links opened by card scripts are blocked.
+##### Fixed
+- When Glia rejects an anonymous visitor's access token, the SDK renews the token automatically and the visitor's session continues.
+- Visitors receive operator messages reliably.
+
 ### 3.5.6
 
 Updated underlying SDKs:
