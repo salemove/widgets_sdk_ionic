@@ -20,7 +20,7 @@ var capacitorGliaSdk = (function (exports, core) {
             this.unreadMessageCountCallbacks = new Set();
             this.unreadMessageCount = null;
             GliaSdkIonicPlugin.addListener('gliaWidgetsUnreadMessageCountChanged', (info) => {
-                let count = info.count;
+                const count = info.count;
                 if (count !== this.unreadMessageCount) {
                     this.unreadMessageCountCallbacks.forEach((callback) => callback(count));
                     this.unreadMessageCount = count;

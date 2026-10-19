@@ -2,10 +2,8 @@ package com.glia.widgets.ionic;
 
 import android.app.Activity;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.PluginCall;
@@ -13,10 +11,10 @@ import com.glia.androidsdk.Glia;
 import com.glia.telemetry_lib.FrameworkNames;
 import com.glia.telemetry_lib.GliaTelemetry;
 import com.glia.telemetry_lib.GlobalAttribute;
+import com.glia.widgets.AuthorizationMethod;
 import com.glia.widgets.GliaWidgets;
 import com.glia.widgets.GliaWidgetsConfig;
 import com.glia.widgets.Regions;
-import com.glia.widgets.AuthorizationMethod;
 import com.glia.widgets.authentication.Authentication;
 import com.glia.widgets.engagement.MediaType;
 import com.glia.widgets.entrywidget.EntryWidget;
@@ -24,16 +22,15 @@ import com.glia.widgets.fcm.PushNotificationType;
 import com.glia.widgets.launcher.EngagementLauncher;
 import com.glia.widgets.queue.Queue;
 import com.glia.widgets.visitor.VisitorInfoUpdateRequest;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 public class GliaSdk {
+
     private List<String> configureQueueIds;
 
     private EntryWidget entryWidget;
@@ -60,7 +57,6 @@ public class GliaSdk {
     }
 
     public void configure(PluginCall call, Activity activity) {
-
         JSObject authMethod = call.getObject("authorizationMethod");
         String authMethodType = authMethod != null ? authMethod.getString("type") : null;
         String authMethodId = authMethod != null ? authMethod.getString("id") : null;
@@ -74,8 +70,10 @@ public class GliaSdk {
         visitorContextAssetId = call.getString("visitorContextAssetId");
         Boolean enableBubbleOutsideApp = call.getBoolean("enableBubbleOutsideApp", true);
         Boolean enableBubbleInsideApp = call.getBoolean("enableBubbleInsideApp", true);
-        Boolean suppressPushNotificationsPermissionRequestDuringAuthentication =
-                call.getBoolean("suppressPushNotificationsPermissionRequestDuringAuthentication", false);
+        Boolean suppressPushNotificationsPermissionRequestDuringAuthentication = call.getBoolean(
+            "suppressPushNotificationsPermissionRequestDuringAuthentication",
+            false
+        );
 
         if (authMethodType == null) {
             call.reject("'authorizationMethod.type' is missing or invalid.");
@@ -112,27 +110,29 @@ public class GliaSdk {
         }
 
         GliaWidgetsConfig.Builder gliaConfigBuilder = new GliaWidgetsConfig.Builder()
-                .setAuthorizationMethod(authorizationMethod)
-                .setSiteId(siteId)
-                .setRegion(Regions.fromString(region))
-                .setCompanyName(companyName)
-                .setUiJsonRemoteConfig(uiUnifiedConfig)
-                .setManualLocaleOverride(overrideLocale)
-                .enableBubbleOutsideApp(enableBubbleOutsideApp)
-                .enableBubbleInsideApp(enableBubbleInsideApp)
-                .setSuppressPushNotificationsPermissionRequestDuringAuthentication(suppressPushNotificationsPermissionRequestDuringAuthentication)
-                .setContext(activity.getApplicationContext());
+            .setAuthorizationMethod(authorizationMethod)
+            .setSiteId(siteId)
+            .setRegion(Regions.fromString(region))
+            .setCompanyName(companyName)
+            .setUiJsonRemoteConfig(uiUnifiedConfig)
+            .setManualLocaleOverride(overrideLocale)
+            .enableBubbleOutsideApp(enableBubbleOutsideApp)
+            .enableBubbleInsideApp(enableBubbleInsideApp)
+            .setSuppressPushNotificationsPermissionRequestDuringAuthentication(
+                suppressPushNotificationsPermissionRequestDuringAuthentication
+            )
+            .setContext(activity.getApplicationContext());
 
         GliaWidgets.init(
-                gliaConfigBuilder.build(),
-                () -> {
-                    configureQueueIds = jsArrayToArrayList(queueIds);
+            gliaConfigBuilder.build(),
+            () -> {
+                configureQueueIds = jsArrayToArrayList(queueIds);
 
-                    subscribeToUnreadMessageCount(call);
-                },
-                exception -> {
-                    call.reject(exception.getMessage());
-                }
+                subscribeToUnreadMessageCount(call);
+            },
+            (exception) -> {
+                call.reject(exception.getMessage());
+            }
         );
     }
 
@@ -290,31 +290,34 @@ public class GliaSdk {
     }
 
     public void getQueues(PluginCall call) {
-        GliaWidgets.getQueues(response -> {
-            if (response == null) {
-                call.resolve();
-            } else {
-                JSObject jsObject = new JSObject();
-                for (Queue queue : response) {
-                    JSObject child = new JSObject();
-                    child.put("name", queue.getName());
-                    child.put("is_default", queue.isDefault());
-                    child.put("status", serializedName(queue.getStatus()));
+        GliaWidgets.getQueues(
+            (response) -> {
+                if (response == null) {
+                    call.resolve();
+                } else {
+                    JSObject jsObject = new JSObject();
+                    for (Queue queue : response) {
+                        JSObject child = new JSObject();
+                        child.put("name", queue.getName());
+                        child.put("is_default", queue.isDefault());
+                        child.put("status", serializedName(queue.getStatus()));
 
-                    JSONArray mediaTypes = new JSONArray();
-                    for (MediaType mediaType : queue.getMedia()) {
-                        mediaTypes.put(serializedName(mediaType));
+                        JSONArray mediaTypes = new JSONArray();
+                        for (MediaType mediaType : queue.getMedia()) {
+                            mediaTypes.put(serializedName(mediaType));
+                        }
+                        child.put("media", mediaTypes);
+
+                        jsObject.put(queue.getId(), child);
                     }
-                    child.put("media", mediaTypes);
 
-                    jsObject.put(queue.getId(), child);
+                    call.resolve(jsObject);
                 }
-
-                call.resolve(jsObject);
+            },
+            (exception) -> {
+                call.reject(exception.getMessage());
             }
-        }, exception -> {
-            call.reject(exception.getMessage());
-        });
+        );
     }
 
     public void showVisitorCode(PluginCall call) {
@@ -355,12 +358,7 @@ public class GliaSdk {
         AuthenticationBehavior authBehavior = AuthenticationBehavior.valueOf(authRawBehaviorValue);
 
         authentication = GliaWidgets.getAuthentication(authBehavior.toSdkNativeType());
-        authentication.authenticate(
-                jwtToken,
-                accessToken,
-                call::resolve,
-                exception -> call.reject(exception.getMessage())
-        );
+        authentication.authenticate(jwtToken, accessToken, call::resolve, (exception) -> call.reject(exception.getMessage()));
     }
 
     public void deauthenticate(PluginCall call) {
@@ -369,11 +367,7 @@ public class GliaSdk {
             return;
         }
         boolean stopPushNotifications = call.getBoolean("stopPushNotifications", false);
-        authentication.deauthenticate(
-                stopPushNotifications,
-                call::resolve,
-                exception -> call.reject(exception.getMessage())
-        );
+        authentication.deauthenticate(stopPushNotifications, call::resolve, (exception) -> call.reject(exception.getMessage()));
     }
 
     public void isAuthenticated(PluginCall call) {
@@ -390,12 +384,7 @@ public class GliaSdk {
         if (accessToken != null && accessToken.isEmpty()) {
             accessToken = null;
         }
-        authentication.refresh(
-                jwtToken,
-                accessToken,
-                call::resolve,
-                exception -> call.reject(exception.getMessage())
-        );
+        authentication.refresh(jwtToken, accessToken, call::resolve, (exception) -> call.reject(exception.getMessage()));
     }
 
     public void pauseLiveObservation(PluginCall call) {
@@ -410,28 +399,31 @@ public class GliaSdk {
 
     public void getVisitorInfo(PluginCall call) {
         try {
-            GliaWidgets.getVisitorInfo(visitorInfo -> {
-                JSObject result = new JSObject();
-                result.put("name", visitorInfo.getName());
-                result.put("email", visitorInfo.getEmail());
-                result.put("phone", visitorInfo.getPhone());
-                result.put("note", visitorInfo.getNote());
-                result.put("externalId", visitorInfo.getExternalId());
+            GliaWidgets.getVisitorInfo(
+                (visitorInfo) -> {
+                    JSObject result = new JSObject();
+                    result.put("name", visitorInfo.getName());
+                    result.put("email", visitorInfo.getEmail());
+                    result.put("phone", visitorInfo.getPhone());
+                    result.put("note", visitorInfo.getNote());
+                    result.put("externalId", visitorInfo.getExternalId());
 
-                JSObject customAttributes = new JSObject();
-                if (visitorInfo.getCustomAttributes() != null) {
-                    for (String key : visitorInfo.getCustomAttributes().keySet()) {
-                        customAttributes.put(key, visitorInfo.getCustomAttributes().get(key));
+                    JSObject customAttributes = new JSObject();
+                    if (visitorInfo.getCustomAttributes() != null) {
+                        for (String key : visitorInfo.getCustomAttributes().keySet()) {
+                            customAttributes.put(key, visitorInfo.getCustomAttributes().get(key));
+                        }
                     }
-                }
-                result.put("customAttributes", customAttributes);
-                result.put("banned", visitorInfo.getBanned());
+                    result.put("customAttributes", customAttributes);
+                    result.put("banned", visitorInfo.getBanned());
 
-                call.resolve(result);
-            }, exception -> {
-                String message = exception.getMessage() != null ? exception.getMessage() : "Could not fetch visitor info.";
-                call.reject(message);
-            });
+                    call.resolve(result);
+                },
+                (exception) -> {
+                    String message = exception.getMessage() != null ? exception.getMessage() : "Could not fetch visitor info.";
+                    call.reject(message);
+                }
+            );
         } catch (Exception exception) {
             String message = exception.getMessage() != null ? exception.getMessage() : "Could not fetch visitor info.";
             call.reject(message);
@@ -475,13 +467,9 @@ public class GliaSdk {
                 updateRequest.setCustomAttrsUpdateMethod(toCustomAttributesUpdateMethod(customAttrsUpdateMethod));
             }
 
-            GliaWidgets.updateVisitorInfo(
-                    updateRequest,
-                    call::resolve,
-                    exception -> {
-                        call.reject(exception.getMessage());
-                    }
-            );
+            GliaWidgets.updateVisitorInfo(updateRequest, call::resolve, (exception) -> {
+                call.reject(exception.getMessage());
+            });
         } catch (Exception exception) {
             call.reject("Could not update visitor info. Error='" + exception.getMessage() + "'");
         }
@@ -494,17 +482,18 @@ public class GliaSdk {
 
     public void subscribeToPushNotificationTypes(PluginCall call, Activity activity) {
         JSArray pushNotificationTypes = call.getArray("types", new JSArray());
-        List<PushNotificationType> types = jsArrayToArrayList(pushNotificationTypes).stream()
-                .map(this::toPushNotificationType)
-                .filter(java.util.Objects::nonNull)
-                .collect(Collectors.toList());
+        List<PushNotificationType> types = jsArrayToArrayList(pushNotificationTypes)
+            .stream()
+            .map(this::toPushNotificationType)
+            .filter(java.util.Objects::nonNull)
+            .collect(Collectors.toList());
         GliaWidgets.getPushNotifications().subscribeTo(activity, types);
         call.resolve();
     }
 
     public void subscribeToUnreadMessageCount(PluginCall call) {
         try {
-            GliaWidgets.getSecureConversations().subscribeToUnreadMessageCount(count -> {
+            GliaWidgets.getSecureConversations().subscribeToUnreadMessageCount((count) -> {
                 JSObject params = new JSObject();
                 params.put("count", count);
                 // Emit the event to the JS side
@@ -524,7 +513,7 @@ public class GliaSdk {
 
         try {
             for (int i = 0; i < jsArray.length(); i++) {
-                arrayList.add(jsArray.getString(i));  // Assumes each element is a String
+                arrayList.add(jsArray.getString(i)); // Assumes each element is a String
             }
         } catch (JSONException e) {
             e.printStackTrace();

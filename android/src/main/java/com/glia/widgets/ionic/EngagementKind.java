@@ -1,8 +1,11 @@
 package com.glia.widgets.ionic;
+
 import com.glia.androidsdk.Engagement;
 
 public enum EngagementKind {
-    CHAT, AUDIO, VIDEO;
+    CHAT,
+    AUDIO,
+    VIDEO;
 
     public Engagement.MediaType toAndroidSdkMediaType() {
         switch (this) {

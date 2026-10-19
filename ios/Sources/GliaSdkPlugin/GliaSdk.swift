@@ -29,32 +29,7 @@ import GliaOpenTelemetry
             return
         }
 
-        guard let authMethodDict = call.getObject("authorizationMethod") else {
-            call.reject("'authorizationMethod' is missing or invalid.")
-            return
-        }
-
-        guard
-            let authMethodType = authMethodDict["type"] as? String,
-            !authMethodType.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        else {
-            call.reject("'authorizationMethod.type' is missing or invalid.")
-            return
-        }
-
-        guard
-            let authMethodId = authMethodDict["id"] as? String,
-            !authMethodId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        else {
-            call.reject("'authorizationMethod.id' is missing or invalid.")
-            return
-        }
-
-        guard
-            let authMethodSecret = authMethodDict["secret"] as? String,
-            !authMethodSecret.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        else {
-            call.reject("'authorizationMethod.secret' is missing or invalid.")
+        guard let authorizationMethod = authorizationMethod(from: call) else {
             return
         }
 
@@ -96,8 +71,7 @@ import GliaOpenTelemetry
 
         var features: Features = .all
         if let enableBubbleInsideApp = call.getBool("enableBubbleInsideApp"),
-            !enableBubbleInsideApp
-        {
+           !enableBubbleInsideApp {
             features.remove(.bubbleView)
         }
 
@@ -106,19 +80,10 @@ import GliaOpenTelemetry
             pushNotifications = Configuration.PushNotifications(rawValue: pushNotificationsRaw)
         }
 
-        let suppressPushNotificationsPermissionRequestDuringAuthentication =
+        let suppressPushPermissionRequest =
             call.getBool("suppressPushNotificationsPermissionRequestDuringAuthentication") ?? false
 
         DispatchQueue.main.async {
-            // Create authorization method based on type
-            let authorizationMethod: Configuration.AuthorizationMethod
-            switch authMethodType.lowercased() {
-            case "siteauth":
-                authorizationMethod = .siteApiKey(id: authMethodId, secret: authMethodSecret)
-            default:
-                authorizationMethod = .userApiKey(id: authMethodId, secret: authMethodSecret)
-            }
-
             do {
                 try Glia.sharedInstance.configure(
                     with: Configuration(
@@ -130,7 +95,7 @@ import GliaOpenTelemetry
                         companyName: companyName,
                         manualLocaleOverride: overrideLocale,
                         suppressPushNotificationsPermissionRequestDuringAuthentication:
-                            suppressPushNotificationsPermissionRequestDuringAuthentication
+                            suppressPushPermissionRequest
                     ),
                     uiConfig: uiConfig,
                     features: features
@@ -252,102 +217,18 @@ import GliaOpenTelemetry
             switch result {
             case .success(let queues):
                 call.resolve(
-                    queues.reduce(into: [String: Any]()) { _result, queue in
-                        _result[queue.id] = [
+                    queues.reduce(into: [String: Any]()) { queuesById, queue in
+                        queuesById[queue.id] = [
                             "name": queue.name,
                             "is_default": queue.isDefault,
                             "status": queue.status.stringValue,
-                            "media": queue.media.map { $0.rawValue },
+                            "media": queue.media.map { $0.rawValue }
                         ]
                     }
                 )
 
             case .failure(let error):
                 call.reject("Could not get queues. Error='\(error)'.")
-            }
-        }
-    }
-
-    @objc public func authenticate(_ call: CAPPluginCall) {
-        guard let behavior = call.getString("behavior") else {
-            call.reject("'behavior' is missed or invalid.")
-            return
-        }
-
-        guard let idToken = call.getString("idToken") else {
-            call.reject("'idToken' is missed or invalid.")
-            return
-        }
-
-        let accessToken = call.getString("accessToken")?.trimmingCharacters(
-            in: .whitespacesAndNewlines)
-
-        DispatchQueue.main.async {
-            do {
-                self.authentication = try Glia.sharedInstance.authentication(
-                    with: Glia.Authentication.Behavior(rawValue: behavior)
-                )
-                self.authentication?.authenticate(
-                    with: Glia.Authentication.IdToken(idToken),
-                    accessToken: accessToken?.isEmpty == true ? nil : accessToken
-                ) { result in
-                    switch result {
-                    case .success:
-                        call.resolve()
-                    case .failure(let error):
-                        call.reject("Could not authenticate. Error='\(error)'.")
-                    }
-                }
-            } catch {
-                call.reject("Could not authenticate. Error='\(error)'.")
-            }
-        }
-    }
-
-    @objc public func isAuthenticated(_ call: CAPPluginCall) {
-        DispatchQueue.main.async {
-            call.resolve(["isAuthenticated": self.authentication?.isAuthenticated ?? false])
-        }
-    }
-
-    @objc public func deauthenticate(_ call: CAPPluginCall) {
-        let stopPushNotifications = call.getBool("stopPushNotifications") ?? false
-
-        guard let authentication else {
-            call.resolve()
-            return
-        }
-
-        DispatchQueue.main.async {
-            authentication.deauthenticate(shouldStopPushNotifications: stopPushNotifications) {
-                result in
-                switch result {
-                case .success:
-                    call.resolve()
-                case .failure(let error):
-                    call.reject("Could not deauthenticate. Error='\(error)'.")
-                }
-            }
-        }
-    }
-
-    @objc public func refreshAuthentication(_ call: CAPPluginCall) {
-        guard let idToken = call.getString("idToken") else {
-            call.reject("'idToken' is missed or invalid.")
-            return
-        }
-
-        DispatchQueue.main.async {
-            self.authentication?.refresh(
-                with: Glia.Authentication.IdToken(idToken),
-                accessToken: call.getString("accessToken")
-            ) { result in
-                switch result {
-                case .success:
-                    call.resolve()
-                case .failure(let error):
-                    call.reject("Could not refresh authentication. Error='\(error)'.")
-                }
             }
         }
     }
@@ -438,6 +319,152 @@ import GliaOpenTelemetry
         }
     }
 
+    private func subscribeToUnreadMessageCount(_ call: CAPPluginCall) {
+        if let unreadMessageCountToken {
+            Glia.sharedInstance.secureConversation.unsubscribeSecureUnreadMessageCount(unreadMessageCountToken)
+        }
+        unreadMessageCountToken = Glia.sharedInstance.secureConversation.subscribeSecureUnreadMessageCount { [weak self] (result: Result<Int?, Error>) in
+            switch result {
+            case let .success(messageCount):
+                DispatchQueue.main.async {
+                    self?.eventEmitter?("gliaWidgetsUnreadMessageCountChanged", ["count": messageCount ?? 0])
+                }
+            default: break
+            }
+        }
+        call.resolve()
+    }
+
+    private func authorizationMethod(from call: CAPPluginCall) -> Configuration.AuthorizationMethod? {
+        guard let authMethodDict = call.getObject("authorizationMethod") else {
+            call.reject("'authorizationMethod' is missing or invalid.")
+            return nil
+        }
+
+        guard
+            let authMethodType = authMethodDict["type"] as? String,
+            !authMethodType.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        else {
+            call.reject("'authorizationMethod.type' is missing or invalid.")
+            return nil
+        }
+
+        guard
+            let authMethodId = authMethodDict["id"] as? String,
+            !authMethodId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        else {
+            call.reject("'authorizationMethod.id' is missing or invalid.")
+            return nil
+        }
+
+        guard
+            let authMethodSecret = authMethodDict["secret"] as? String,
+            !authMethodSecret.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        else {
+            call.reject("'authorizationMethod.secret' is missing or invalid.")
+            return nil
+        }
+
+        switch authMethodType.lowercased() {
+        case "siteauth":
+            return .siteApiKey(id: authMethodId, secret: authMethodSecret)
+        default:
+            return .userApiKey(id: authMethodId, secret: authMethodSecret)
+        }
+    }
+}
+
+// MARK: - Authentication
+
+extension GliaSdk {
+    @objc public func authenticate(_ call: CAPPluginCall) {
+        guard let behavior = call.getString("behavior") else {
+            call.reject("'behavior' is missed or invalid.")
+            return
+        }
+
+        guard let idToken = call.getString("idToken") else {
+            call.reject("'idToken' is missed or invalid.")
+            return
+        }
+
+        let accessToken = call.getString("accessToken")?.trimmingCharacters(
+            in: .whitespacesAndNewlines)
+
+        DispatchQueue.main.async {
+            do {
+                self.authentication = try Glia.sharedInstance.authentication(
+                    with: Glia.Authentication.Behavior(rawValue: behavior)
+                )
+                self.authentication?.authenticate(
+                    with: Glia.Authentication.IdToken(idToken),
+                    accessToken: accessToken?.isEmpty == true ? nil : accessToken
+                ) { result in
+                    switch result {
+                    case .success:
+                        call.resolve()
+                    case .failure(let error):
+                        call.reject("Could not authenticate. Error='\(error)'.")
+                    }
+                }
+            } catch {
+                call.reject("Could not authenticate. Error='\(error)'.")
+            }
+        }
+    }
+
+    @objc public func isAuthenticated(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            call.resolve(["isAuthenticated": self.authentication?.isAuthenticated ?? false])
+        }
+    }
+
+    @objc public func deauthenticate(_ call: CAPPluginCall) {
+        let stopPushNotifications = call.getBool("stopPushNotifications") ?? false
+
+        guard let authentication else {
+            call.resolve()
+            return
+        }
+
+        DispatchQueue.main.async {
+            authentication.deauthenticate(shouldStopPushNotifications: stopPushNotifications) {
+                result in
+                switch result {
+                case .success:
+                    call.resolve()
+                case .failure(let error):
+                    call.reject("Could not deauthenticate. Error='\(error)'.")
+                }
+            }
+        }
+    }
+
+    @objc public func refreshAuthentication(_ call: CAPPluginCall) {
+        guard let idToken = call.getString("idToken") else {
+            call.reject("'idToken' is missed or invalid.")
+            return
+        }
+
+        DispatchQueue.main.async {
+            self.authentication?.refresh(
+                with: Glia.Authentication.IdToken(idToken),
+                accessToken: call.getString("accessToken")
+            ) { result in
+                switch result {
+                case .success:
+                    call.resolve()
+                case .failure(let error):
+                    call.reject("Could not refresh authentication. Error='\(error)'.")
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Visitor info
+
+extension GliaSdk {
     func getVisitorInfo(_ call: CAPPluginCall) {
         Glia.sharedInstance.getVisitorInfo { result in
             switch result {
@@ -447,7 +474,7 @@ import GliaOpenTelemetry
                     "email": visitorInfo.email,
                     "phone": visitorInfo.phone,
                     "note": visitorInfo.note,
-                    "banned": visitorInfo.banned,
+                    "banned": visitorInfo.banned
                 ]
 
                 let customAttributes = visitorInfo.customAttributes?.reduce(
@@ -487,9 +514,8 @@ import GliaOpenTelemetry
         }
 
         if let noteUpdateMethodString = call.getString("noteUpdateMethod"),
-            let noteUpdateMethod = VisitorInfoUpdate.NoteUpdateMethod(
-                rawValue: noteUpdateMethodString.lowercased())
-        {
+           let noteUpdateMethod = VisitorInfoUpdate.NoteUpdateMethod(
+            rawValue: noteUpdateMethodString.lowercased()) {
             visitorInfoUpdate.noteUpdateMethod = noteUpdateMethod
         }
 
@@ -498,9 +524,8 @@ import GliaOpenTelemetry
         }
 
         if let customAttributesUpdateMethodString = call.getString("customAttributesUpdateMethod"),
-            let customAttributesUpdateMethod = VisitorInfoUpdate.CustomAttributesUpdateMethod(
-                rawValue: customAttributesUpdateMethodString.lowercased())
-        {
+           let customAttributesUpdateMethod = VisitorInfoUpdate.CustomAttributesUpdateMethod(
+            rawValue: customAttributesUpdateMethodString.lowercased()) {
             visitorInfoUpdate.customAttributesUpdateMethod = customAttributesUpdateMethod
         }
 
@@ -516,21 +541,5 @@ import GliaOpenTelemetry
                 call.reject("Could not update visitor info. Error='\(error.localizedDescription)'.")
             }
         }
-    }
-    
-    private func subscribeToUnreadMessageCount(_ call: CAPPluginCall) {
-        if let unreadMessageCountToken {
-            Glia.sharedInstance.secureConversation.unsubscribeSecureUnreadMessageCount(unreadMessageCountToken)
-        }
-        unreadMessageCountToken = Glia.sharedInstance.secureConversation.subscribeSecureUnreadMessageCount { [weak self] (result: Result<Int?, Error>) in
-            switch result {
-            case let .success(messageCount):
-                DispatchQueue.main.async {
-                    self?.eventEmitter?("gliaWidgetsUnreadMessageCountChanged", ["count": messageCount ?? 0])
-                }
-            default: break
-            }
-        }
-        call.resolve()
     }
 }
