@@ -31,6 +31,7 @@ def exposeGradlePropertiesToBuildScripts() {
 class UpdateVersionProperty extends DefaultTask {
   private String newVersion
   private String propertyKey
+  private File propertiesFile
 
   @Option(option = "sdkVersion", description = "Version that should be overridden in configuration files")
   void setSdkVersion(String sdkVersion) {
@@ -41,9 +42,12 @@ class UpdateVersionProperty extends DefaultTask {
     this.propertyKey = propertyKey
   }
 
+  void setPropertiesFile(File propertiesFile) {
+    this.propertiesFile = propertiesFile
+  }
+
   @TaskAction
   void write() {
-    def propertiesFile = project.file('version.properties')
     def properties = new Properties()
     if (propertiesFile.exists()) {
       propertiesFile.withInputStream { properties.load(it) }
@@ -55,7 +59,9 @@ class UpdateVersionProperty extends DefaultTask {
 
 tasks.register('saveGliaAndroidWidgetsSdkVersion', UpdateVersionProperty) {
   it.setPropertyKey(project.widgetsSdkVersionTagInProperties)
+  it.setPropertiesFile(project.file(gradlePropertiesFilePath))
 }
 tasks.register('saveGliaTelemetryLibVersion', UpdateVersionProperty) {
   it.setPropertyKey(project.telemetryLibVersionTagInProperties)
+  it.setPropertiesFile(project.file(gradlePropertiesFilePath))
 }
