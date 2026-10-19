@@ -4,10 +4,10 @@ import class GliaCoreSDK.DependencyContainer
 import GliaOpenTelemetry
 
 extension Glia {
-  public static func initialize() {
-      GliaCoreSDK.DependencyContainer.current.widgets.openTelemetry.setGlobalAttribute(.string(FrameworkNames.ionic.rawValue), forKey: .sdkFrameworkName)
-      _ = Glia.sharedInstance
-  } 
+    public static func initialize() {
+        GliaCoreSDK.DependencyContainer.current.widgets.openTelemetry.setGlobalAttribute(.string(FrameworkNames.ionic.rawValue), forKey: .sdkFrameworkName)
+        _ = Glia.sharedInstance
+    }
 }
 
 extension QueueStatus {

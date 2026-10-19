@@ -3,7 +3,6 @@ package com.glia.widgets.ionic;
 import com.glia.widgets.authentication.Authentication;
 
 public enum AuthenticationBehavior {
-
     allowedDuringEngagement,
     forbiddenDuringEngagement;
 
@@ -13,5 +12,4 @@ public enum AuthenticationBehavior {
             case forbiddenDuringEngagement -> Authentication.Behavior.FORBIDDEN_DURING_ENGAGEMENT;
         };
     }
-
 }
