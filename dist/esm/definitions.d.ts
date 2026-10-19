@@ -458,8 +458,8 @@ export interface GliaSdk {
      */
     showVisitorCode(): Promise<void>;
     /**
-    * Closes a GliaWidgets alert with a visitor code if it is currently visible.
-    */
+     * Closes a GliaWidgets alert with a visitor code if it is currently visible.
+     */
     hideVisitorCode(): Promise<void>;
     /**
      * Authenticates the visitor.
