@@ -5,6 +5,9 @@ GliaWidgets SDK is a simple and customizable framework built on top of GliaSDK. 
 ## Changelog
 
 ### 3.5.7
+##### Changed
+- Added compatibility with Android Gradle Plugin (AGP) 9.
+
 Updated underlying SDKs: 
 - [Android Widgets SDK v3.5.5](#android-widgets-sdk-v355)
 - [iOS Widgets SDK v3.5.9](#ios-widgets-sdk-v359)  
