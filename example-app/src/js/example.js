@@ -5,23 +5,8 @@ import uiThemeConfig from '../config/unified_config.json';
 window.configure = (suppressPushNotificationsPermissionRequest) => {
     const queueIdInputValue = document.getElementById("queueIdInput").value;
 
-    // Automatic prefix detection: "gls_" → Site API Key, otherwise → User API Key
-    const authorizationMethod = environment.IONIC_API_SECRET.startsWith('gls_')
-        ? {
-              siteApiKeyId: environment.IONIC_API_KEY,
-              siteApiKeySecret: environment.IONIC_API_SECRET,
-          }
-        : {
-              userApiKeyId: environment.IONIC_API_KEY,
-              userApiKeySecret: environment.IONIC_API_SECRET,
-          };
-
-    const authType = 'siteApiKeyId' in authorizationMethod ? 'siteApiKey' : 'userApiKey';
-    console.log('[ExampleApp] Auto-detected authorization type: ' + authType);
-
     GliaSdk.configure({
         siteId: environment.IONIC_SITE_ID,
-        authorizationMethod: authorizationMethod,
         region: environment.IONIC_REGION,
         queueIds: [queueIdInputValue],
         pushNotifications: PushNotificationsIOS.SANDBOX,
