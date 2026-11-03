@@ -14,7 +14,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   build:
@@ -22,6 +21,13 @@ jobs:
     env:
       LEFTHOOK: 0 # Disable Lefthook during CI runs
     steps:
+      - name: Generate PR bot token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.PR_BOT_APP_ID }}
+          private-key: ${{ secrets.PR_BOT_PRIVATE_KEY }}
+
       - uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0
@@ -49,9 +55,8 @@ jobs:
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          token: ${{ steps.app-token.outputs.token }}
           title: "Increment project version to ${{ steps.version.outputs.updated_version }}"
           body: "This PR increments the project version to ${{ steps.version.outputs.updated_version }}."
           base: development
