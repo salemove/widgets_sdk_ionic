@@ -22,7 +22,7 @@
             "text": "configuration - {@link Configuration} options for the GliaWidgets SDK."
           }
         ],
-        "docs": "Configures GliaWidgets SDK.\n\nNote that for the SDK to work properly, the site API key needs to have the 'Create Visitor' permission only.",
+        "docs": "Configures GliaWidgets SDK.",
         "complexTypes": [
           "Configuration"
         ],
@@ -455,46 +455,6 @@
           "type": "string[] | undefined"
         },
         {
-          "name": "authorizationMethod",
-          "tags": [
-            {
-              "text": "{",
-              "name": "see"
-            },
-            {
-              "text": "AuthorizationMethod} for more details.",
-              "name": "link"
-            }
-          ],
-          "docs": "The authorization method for the Glia site.\nSupports both service credential (user) API keys and site API keys (deprecated).",
-          "complexTypes": [
-            "AuthorizationMethod"
-          ],
-          "type": "AuthorizationMethod"
-        },
-        {
-          "name": "apiKey",
-          "tags": [
-            {
-              "text": "Use `authorizationMethod` instead.",
-              "name": "deprecated"
-            },
-            {
-              "text": "{",
-              "name": "see"
-            },
-            {
-              "text": "ApiKey} for more details.",
-              "name": "link"
-            }
-          ],
-          "docs": "The Glia site API key used to authenticate the app.",
-          "complexTypes": [
-            "ApiKey"
-          ],
-          "type": "ApiKey"
-        },
-        {
           "name": "region",
           "tags": [],
           "docs": "The region of the site.\nPossible values are defined in the {@link Region}.",
@@ -560,80 +520,6 @@
           "docs": "Whether to suppress push notification permission request during authentication.\nThe default value is `false`.",
           "complexTypes": [],
           "type": "boolean | undefined"
-        }
-      ]
-    },
-    {
-      "name": "SiteApiKey",
-      "slug": "siteapikey",
-      "docs": "Site API key authorization configuration.",
-      "tags": [],
-      "methods": [],
-      "properties": [
-        {
-          "name": "siteApiKeyId",
-          "tags": [],
-          "docs": "The site API key ID.",
-          "complexTypes": [],
-          "type": "string"
-        },
-        {
-          "name": "siteApiKeySecret",
-          "tags": [],
-          "docs": "The site API key secret.",
-          "complexTypes": [],
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "UserApiKey",
-      "slug": "userapikey",
-      "docs": "Service credential (user) API key authorization configuration.",
-      "tags": [],
-      "methods": [],
-      "properties": [
-        {
-          "name": "userApiKeyId",
-          "tags": [],
-          "docs": "The service credential (user) API key ID.",
-          "complexTypes": [],
-          "type": "string"
-        },
-        {
-          "name": "userApiKeySecret",
-          "tags": [],
-          "docs": "The service credential (user) API key secret.",
-          "complexTypes": [],
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "ApiKey",
-      "slug": "apikey",
-      "docs": "Used for configuring the Glia SDK with site API key ID and secret.\n\nNote that for the SDK to work properly, the site API key needs to have the 'Create Visitor' permission only.",
-      "tags": [
-        {
-          "text": "Use `AuthorizationMethod` with `siteApiKey()` or `userApiKey()` helper functions instead.",
-          "name": "deprecated"
-        }
-      ],
-      "methods": [],
-      "properties": [
-        {
-          "name": "id",
-          "tags": [],
-          "docs": "The ID of the site API key.",
-          "complexTypes": [],
-          "type": "string"
-        },
-        {
-          "name": "secret",
-          "tags": [],
-          "docs": "The site API key secret.",
-          "complexTypes": [],
-          "type": "string"
         }
       ]
     },
@@ -830,25 +716,6 @@
   ],
   "enums": [],
   "typeAliases": [
-    {
-      "name": "AuthorizationMethod",
-      "slug": "authorizationmethod",
-      "docs": "Authorization method configuration.\nUse this to specify the credentials the SDK uses to authenticate\nand authorize requests with Glia services.",
-      "types": [
-        {
-          "text": "SiteApiKey",
-          "complexTypes": [
-            "SiteApiKey"
-          ]
-        },
-        {
-          "text": "UserApiKey",
-          "complexTypes": [
-            "UserApiKey"
-          ]
-        }
-      ]
-    },
     {
       "name": "Region",
       "slug": "region",

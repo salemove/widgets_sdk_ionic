@@ -53,7 +53,6 @@ example-app/                  Vite test app, not published
 
 Key non-obvious transforms in `glia-sdk.ts`:
 
-- **`authorizationMethod`** — the TS union type (`SiteApiKey | UserApiKey`) is mapped to `{ type, id, secret }` before being passed to native. The legacy `apiKey` field is also up-converted to this shape.
 - **`uiUnifiedConfig`** — if it's a JS object, it's `JSON.stringify`'d before calling native (native expects a string).
 - **`useOptions: true` sentinel** — `startChat`, `startAudio`, `startVideo`, and `showEntryWidget` inject `useOptions: true` into the options object before calling native. The native side uses this flag to decide whether to use the call's `queueIds` or fall back to the `queueIds` captured at `configure()` time. Never remove this flag when editing those methods.
 - **Primitive return unwrapping** — Capacitor can't resolve a promise with a bare primitive. Methods that return one use a wrapper object on the native side (e.g., `{ isAuthenticated: bool }`) and unwrap it in `GliaSdkImpl` (e.g., `isAuthenticatedInternal()` → `.isAuthenticated`).
@@ -84,8 +83,6 @@ References the SDK locally via `"glia-widgets-ionic": "file:.."`. The credential
 ```typescript
 // example-app/src/environments/environment.ts
 export const environment = {
-  IONIC_API_KEY: 'your-key-id',
-  IONIC_API_SECRET: 'your-key-secret',
   IONIC_SITE_ID: 'your-site-id',
   IONIC_REGION: 'us',
   IONIC_COMPANY_NAME: 'YourCompany',

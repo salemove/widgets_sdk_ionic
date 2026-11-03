@@ -50,8 +50,6 @@ To run the provided example application, complete the following steps:
 
 ```typescript
 export const environment = {
-  IONIC_API_KEY: 'site-api-key',
-  IONIC_API_SECRET: 'site-api-secret',
   IONIC_SITE_ID: 'site-identifier',
   IONIC_REGION: 'us',
   IONIC_COMPANY_NAME: 'IonicCompany',

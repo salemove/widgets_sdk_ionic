@@ -4,14 +4,6 @@ export const environment = {
   // The Glia site identifier.
   IONIC_SITE_ID: 'your-site-id',
 
-  // API key ID and secret used to authenticate the app.
-  //
-  // Auth type is auto-detected by the example app from the secret value:
-  //   - Secret starts with 'gls_' → Site API Key (deprecated; use service credentials instead)
-  //   - Any other value           → Service credential (User API Key)
-  IONIC_API_KEY: 'your-api-key-id',
-  IONIC_API_SECRET: 'your-api-key-secret',
-
   // Region of the site. Accepted values: 'us' or 'eu'.
   IONIC_REGION: 'us',
 

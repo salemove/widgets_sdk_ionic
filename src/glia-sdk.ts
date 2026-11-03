@@ -6,26 +6,11 @@ import type {
   Configuration,
   GliaSdk,
   Queues,
-  SiteApiKey,
   VisitorInfo,
   VisitorInfoUpdate,
   PushNotificationType,
   UnreadMessageCountCallback,
-  AuthorizationMethod,
 } from './definitions';
-
-const AuthorizationMethodType = {
-  SITE: 'siteAuth',
-  USER: 'userAuth',
-} as const;
-
-function toNativeAuthMethod(authMethod: AuthorizationMethod): { type: string; id: string; secret: string } {
-  if ('siteApiKeyId' in authMethod) {
-    const siteAuth = authMethod as SiteApiKey;
-    return { type: AuthorizationMethodType.SITE, id: siteAuth.siteApiKeyId, secret: siteAuth.siteApiKeySecret };
-  }
-  return { type: AuthorizationMethodType.USER, id: authMethod.userApiKeyId, secret: authMethod.userApiKeySecret };
-}
 
 const GliaSdkIonicPlugin = registerPlugin<GliaSdkPluginInternal>('GliaSdk', {
   // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
@@ -50,51 +35,6 @@ export class GliaSdkImpl implements GliaSdk {
   }
 
   async configure(configuration: Configuration): Promise<void> {
-    // Validate authorization configuration
-    const hasAuthMethod = !!configuration.authorizationMethod;
-    const hasApiKey = !!configuration.apiKey;
-
-    if (!hasAuthMethod && !hasApiKey) {
-      return Promise.reject(
-        new Error(
-          "Configuration must include either 'authorizationMethod' or 'apiKey'. " +
-            "The 'apiKey' field is deprecated; use 'authorizationMethod' instead.",
-        ),
-      );
-    }
-
-    if (hasAuthMethod && hasApiKey) {
-      console.warn(
-        '[GliaWidgets] Both authorizationMethod and apiKey provided. ' +
-          'Using authorizationMethod. The apiKey field is deprecated and will be removed in a future version.',
-      );
-    }
-
-    if (!hasAuthMethod && hasApiKey) {
-      console.warn(
-        '[GliaWidgets] The apiKey field is deprecated and will be removed in a future version. ' +
-          'Please migrate to authorizationMethod. See documentation for details.',
-      );
-    }
-
-    // Build native config with authorizationMethod always present
-    const nativeConfig = { ...configuration };
-
-    if (hasAuthMethod) {
-      (nativeConfig as any).authorizationMethod = toNativeAuthMethod(configuration.authorizationMethod!);
-    } else if (hasApiKey) {
-      // Legacy path: transform apiKey to authorizationMethod (Site API Key)
-      (nativeConfig as any).authorizationMethod = {
-        type: AuthorizationMethodType.SITE,
-        id: configuration.apiKey!.id,
-        secret: configuration.apiKey!.secret,
-      };
-    }
-
-    // Remove apiKey from native config (always use authorizationMethod internally)
-    delete nativeConfig.apiKey;
-
-    // Handle uiUnifiedConfig transformation (existing logic)
     let uiUnifiedConfig: string | undefined;
     if (configuration.uiUnifiedConfig) {
       if (typeof configuration.uiUnifiedConfig === 'object') {
@@ -105,7 +45,7 @@ export class GliaSdkImpl implements GliaSdk {
     }
 
     return GliaSdkIonicPlugin.configure({
-      ...nativeConfig,
+      ...configuration,
       uiUnifiedConfig: uiUnifiedConfig,
     });
   }

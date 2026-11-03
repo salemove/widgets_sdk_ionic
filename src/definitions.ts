@@ -20,22 +20,6 @@ export interface Configuration {
   queueIds?: string[];
 
   /**
-   * The authorization method for the Glia site.
-   * Supports both service credential (user) API keys and site API keys (deprecated).
-   *
-   * @see {@link AuthorizationMethod} for more details.
-   */
-  authorizationMethod?: AuthorizationMethod;
-
-  /**
-   * The Glia site API key used to authenticate the app.
-   *
-   * @deprecated Use `authorizationMethod` instead.
-   * @see {@link ApiKey} for more details.
-   */
-  apiKey?: ApiKey;
-
-  /**
    * The region of the site.
    * Possible values are defined in the {@link Region}.
    */
@@ -96,25 +80,6 @@ export interface Configuration {
 }
 
 /**
- * Used for configuring the Glia SDK with site API key ID and secret.
- *
- * Note that for the SDK to work properly, the site API key needs to have the 'Create Visitor' permission only.
- *
- * @deprecated Use `AuthorizationMethod` with `siteApiKey()` or `userApiKey()` helper functions instead.
- */
-export interface ApiKey {
-  /**
-   * The ID of the site API key.
-   */
-  id: string;
-
-  /**
-   * The site API key secret.
-   */
-  secret: string;
-}
-
-/**
  * Site's region. Use `us` for US and other regions except Europe, use `eu` for Europe.
  */
 export const Region = Object.freeze({
@@ -122,43 +87,6 @@ export const Region = Object.freeze({
   EU: 'eu',
 });
 export type Region = (typeof Region)[keyof typeof Region];
-
-/**
- * Site API key authorization configuration.
- */
-export interface SiteApiKey {
-  /**
-   * The site API key ID.
-   */
-  siteApiKeyId: string;
-
-  /**
-   * The site API key secret.
-   */
-  siteApiKeySecret: string;
-}
-
-/**
- * Service credential (user) API key authorization configuration.
- */
-export interface UserApiKey {
-  /**
-   * The service credential (user) API key ID.
-   */
-  userApiKeyId: string;
-
-  /**
-   * The service credential (user) API key secret.
-   */
-  userApiKeySecret: string;
-}
-
-/**
- * Authorization method configuration.
- * Use this to specify the credentials the SDK uses to authenticate
- * and authorize requests with Glia services.
- */
-export type AuthorizationMethod = SiteApiKey | UserApiKey;
 
 /**
  * Behavior for authentication and deauthentication.
@@ -411,8 +339,6 @@ export type UnreadMessageCountCallback = (count: number) => void;
 export interface GliaSdk {
   /**
    * Configures GliaWidgets SDK.
-   *
-   * Note that for the SDK to work properly, the site API key needs to have the 'Create Visitor' permission only.
    *
    * @param configuration - {@link Configuration} options for the GliaWidgets SDK.
    */
