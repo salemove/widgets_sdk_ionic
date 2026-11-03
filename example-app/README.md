@@ -22,9 +22,9 @@ To run the provided example application, complete the following steps:
  ```bash
  cd example-app
  ```
-6. Create the environment file and add your Glia credentials:
+6. Create the environment file and add your Glia site settings:
     - Create the file: `example-app/src/environments/environment.ts`.
-    - Refer to the [How to use environment variables?](#how-to-use-environment-variables) section for the instructions on how to add your Glia credentials.
+    - Refer to the [How to use environment variables?](#how-to-use-environment-variables) section for the instructions on how to add your Glia site settings.
 7. Install dependencies for the example app:
  ```bash
  npm install --legacy-peer-deps

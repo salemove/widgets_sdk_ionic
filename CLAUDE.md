@@ -78,7 +78,7 @@ Android dependency versions live in `android/version.properties`, **not** in `pa
 
 ### Example app (`example-app/`)
 
-References the SDK locally via `"glia-widgets-ionic": "file:.."`. The credentials file is gitignored — create it before running:
+References the SDK locally via `"glia-widgets-ionic": "file:.."`. The environment file is gitignored — create it before running:
 
 ```typescript
 // example-app/src/environments/environment.ts
