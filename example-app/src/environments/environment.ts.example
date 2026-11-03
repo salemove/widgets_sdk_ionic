@@ -1,5 +1,5 @@
-// Copy this file to environment.ts and fill in your Glia credentials.
-// environment.ts is gitignored; never commit real credentials.
+// Copy this file to environment.ts and fill in your Glia site settings.
+// environment.ts is gitignored; never commit it.
 export const environment = {
   // The Glia site identifier.
   IONIC_SITE_ID: 'your-site-id',
