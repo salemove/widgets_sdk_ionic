@@ -18,8 +18,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      LEFTHOOK: 0 # Disable Lefthook during CI runs
     steps:
       - name: Generate PR bot token
         id: app-token

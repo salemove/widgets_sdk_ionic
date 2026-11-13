@@ -7,8 +7,6 @@ on:
 jobs:
   change_target_branch:
     runs-on: ubuntu-latest
-    env:
-      LEFTHOOK: 0 # Disable Lefthook during CI runs
     permissions:
       pull-requests: write
       contents: read
