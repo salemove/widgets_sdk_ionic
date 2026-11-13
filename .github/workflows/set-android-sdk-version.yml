@@ -56,8 +56,6 @@ jobs:
           mkdir -p example-app/src/environments
           cat > example-app/src/environments/environment.ts <<'EOF'
           export const environment = {
-            IONIC_API_KEY: 'fake-api-key',
-            IONIC_API_SECRET: 'fake-api-secret',
             IONIC_SITE_ID: 'fake-site-id',
             IONIC_REGION: 'beta',
             IONIC_COMPANY_NAME: 'Glia Widgets Ionic',
