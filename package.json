@@ -1,6 +1,6 @@
 {
   "name": "@salemove/widgets_sdk_ionic",
-  "version": "3.5.7",
+  "version": "3.5.8",
   "description": "GliaWidgets SDK is a simple and customizable framework built on top of GliaSDK. It provides all the necessary UI components to quickly integrate GliaSDK into your project.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -60,7 +60,6 @@
     "@ionic/prettier-config": "^4.0.0",
     "@ionic/swiftlint-config": "^2.0.0",
     "eslint": "^8.57.0",
-    "lefthook": "^2.0.13",
     "prettier": "^3.3.3",
     "prettier-plugin-java": "^2.9.7",
     "rimraf": "^6.0.1",

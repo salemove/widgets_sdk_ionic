@@ -126,6 +126,6 @@ The unread message count is the reference implementation. The pattern:
 
 **Deprecated method aliases** — every deprecated method simply delegates to its replacement without any branching. When adding a new method that supersedes an old one, keep the old method as a one-liner delegate and mark it `@Deprecated` / `@deprecated`. Never duplicate logic.
 
-**Pre-commit hook** — Lefthook runs `.git-hooks/pre-commit` (security scan) on every commit. Disabled in CI via `LEFTHOOK=0`.
+**Pre-commit secret scan** — `.git-hooks/pre-commit` runs the company gitleaks hook from `~/.git-hooks` if present, and otherwise scans staged changes with gitleaks and trufflehog itself. It is not enabled automatically; to use it, run `git config core.hooksPath .git-hooks`.
 
 **Version PRs** — all CI workflows that bump native SDK versions or the project version open PRs targeting the `development` branch, not `master`.
