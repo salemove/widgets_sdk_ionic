@@ -4,6 +4,22 @@ GliaWidgets SDK is a simple and customizable framework built on top of GliaSDK. 
 
 ## Changelog
 
+### 3.5.8
+> [!IMPORTANT]
+> Ionic Widgets SDK 3.5.7 (bundling Android Widgets SDK 3.5.5) required Kotlin 2.2.0 or higher on Android and, in apps that use Jetpack Compose, `compileSdk` 37 and AGP 9.1.0. If your Android app does not build with 3.5.7, upgrade to 3.5.8.
+
+Updated underlying SDK:
+- [Android Widgets SDK v3.5.6](#android-widgets-sdk-v356)
+
+#### Android Widgets SDK v3.5.6
+##### Changed
+- Lowered the minimum build requirements to the following:
+  - Kotlin 2.1.0
+  - `compileSdk` 36
+  - Android Gradle plugin (AGP) 8.12.0
+  - Gradle 8.13
+  - Java 17
+
 ### 3.5.7
 ##### Changed
 - Added compatibility with Android Gradle Plugin (AGP) 9.
