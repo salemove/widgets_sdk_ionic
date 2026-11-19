@@ -33,7 +33,7 @@ jobs:
 
           echo "Detected PR #${PR_NUMBER} by ${PR_AUTHOR} with base branch ${CURRENT_BASE_BRANCH}."
 
-          if [[ ("$PR_AUTHOR" == "snyk-bot" || "$PR_AUTHOR" == "snyk-io") && "$CURRENT_BASE_BRANCH" != "$NEW_BASE_BRANCH" ]]; then
+          if [[ ("$PR_AUTHOR" == "snyk-bot" || "$PR_AUTHOR" == "snyk-io" || "$PR_AUTHOR" == "snyk-io[bot]") && "$CURRENT_BASE_BRANCH" != "$NEW_BASE_BRANCH" ]]; then
             echo "Changing base branch of PR #${PR_NUMBER} from ${CURRENT_BASE_BRANCH} to ${NEW_BASE_BRANCH}."
             gh pr edit "$PR_NUMBER" --base "$NEW_BASE_BRANCH" --repo "${{ github.repository }}"
             echo "Successfully changed base branch."
