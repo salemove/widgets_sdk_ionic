@@ -1,17 +1,6 @@
 var capacitorGliaSdk = (function (exports, core) {
     'use strict';
 
-    const AuthorizationMethodType = {
-        SITE: 'siteAuth',
-        USER: 'userAuth',
-    };
-    function toNativeAuthMethod(authMethod) {
-        if ('siteApiKeyId' in authMethod) {
-            const siteAuth = authMethod;
-            return { type: AuthorizationMethodType.SITE, id: siteAuth.siteApiKeyId, secret: siteAuth.siteApiKeySecret };
-        }
-        return { type: AuthorizationMethodType.USER, id: authMethod.userApiKeyId, secret: authMethod.userApiKeySecret };
-    }
     const GliaSdkIonicPlugin = core.registerPlugin('GliaSdk', {
     // web: () => import('./web').then((m) => new m.GliaSdkWeb()),
     });
@@ -28,37 +17,6 @@ var capacitorGliaSdk = (function (exports, core) {
             });
         }
         async configure(configuration) {
-            // Validate authorization configuration
-            const hasAuthMethod = !!configuration.authorizationMethod;
-            const hasApiKey = !!configuration.apiKey;
-            if (!hasAuthMethod && !hasApiKey) {
-                return Promise.reject(new Error("Configuration must include either 'authorizationMethod' or 'apiKey'. " +
-                    "The 'apiKey' field is deprecated; use 'authorizationMethod' instead."));
-            }
-            if (hasAuthMethod && hasApiKey) {
-                console.warn('[GliaWidgets] Both authorizationMethod and apiKey provided. ' +
-                    'Using authorizationMethod. The apiKey field is deprecated and will be removed in a future version.');
-            }
-            if (!hasAuthMethod && hasApiKey) {
-                console.warn('[GliaWidgets] The apiKey field is deprecated and will be removed in a future version. ' +
-                    'Please migrate to authorizationMethod. See documentation for details.');
-            }
-            // Build native config with authorizationMethod always present
-            const nativeConfig = Object.assign({}, configuration);
-            if (hasAuthMethod) {
-                nativeConfig.authorizationMethod = toNativeAuthMethod(configuration.authorizationMethod);
-            }
-            else if (hasApiKey) {
-                // Legacy path: transform apiKey to authorizationMethod (Site API Key)
-                nativeConfig.authorizationMethod = {
-                    type: AuthorizationMethodType.SITE,
-                    id: configuration.apiKey.id,
-                    secret: configuration.apiKey.secret,
-                };
-            }
-            // Remove apiKey from native config (always use authorizationMethod internally)
-            delete nativeConfig.apiKey;
-            // Handle uiUnifiedConfig transformation (existing logic)
             let uiUnifiedConfig;
             if (configuration.uiUnifiedConfig) {
                 if (typeof configuration.uiUnifiedConfig === 'object') {
@@ -68,7 +26,7 @@ var capacitorGliaSdk = (function (exports, core) {
                     uiUnifiedConfig = configuration.uiUnifiedConfig;
                 }
             }
-            return GliaSdkIonicPlugin.configure(Object.assign(Object.assign({}, nativeConfig), { uiUnifiedConfig: uiUnifiedConfig }));
+            return GliaSdkIonicPlugin.configure(Object.assign(Object.assign({}, configuration), { uiUnifiedConfig: uiUnifiedConfig }));
         }
         async subscribeToPushNotificationTypes(options) {
             return GliaSdkIonicPlugin.subscribeToPushNotificationTypes(options);

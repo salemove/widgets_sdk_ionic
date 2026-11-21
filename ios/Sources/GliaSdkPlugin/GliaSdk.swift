@@ -29,10 +29,6 @@ import GliaOpenTelemetry
             return
         }
 
-        guard let authorizationMethod = authorizationMethod(from: call) else {
-            return
-        }
-
         guard
             let rawValue = call.getString("region"),
             let region = Environment(rawValue: rawValue)
@@ -87,7 +83,6 @@ import GliaOpenTelemetry
             do {
                 try Glia.sharedInstance.configure(
                     with: Configuration(
-                        authorizationMethod: authorizationMethod,
                         environment: region,
                         site: siteId,
                         visitorContext: visitorContext,
@@ -333,44 +328,6 @@ import GliaOpenTelemetry
             }
         }
         call.resolve()
-    }
-
-    private func authorizationMethod(from call: CAPPluginCall) -> Configuration.AuthorizationMethod? {
-        guard let authMethodDict = call.getObject("authorizationMethod") else {
-            call.reject("'authorizationMethod' is missing or invalid.")
-            return nil
-        }
-
-        guard
-            let authMethodType = authMethodDict["type"] as? String,
-            !authMethodType.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        else {
-            call.reject("'authorizationMethod.type' is missing or invalid.")
-            return nil
-        }
-
-        guard
-            let authMethodId = authMethodDict["id"] as? String,
-            !authMethodId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        else {
-            call.reject("'authorizationMethod.id' is missing or invalid.")
-            return nil
-        }
-
-        guard
-            let authMethodSecret = authMethodDict["secret"] as? String,
-            !authMethodSecret.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        else {
-            call.reject("'authorizationMethod.secret' is missing or invalid.")
-            return nil
-        }
-
-        switch authMethodType.lowercased() {
-        case "siteauth":
-            return .siteApiKey(id: authMethodId, secret: authMethodSecret)
-        default:
-            return .userApiKey(id: authMethodId, secret: authMethodSecret)
-        }
     }
 }
 

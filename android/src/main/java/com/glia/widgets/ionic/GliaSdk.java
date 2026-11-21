@@ -11,7 +11,6 @@ import com.glia.androidsdk.Glia;
 import com.glia.telemetry_lib.FrameworkNames;
 import com.glia.telemetry_lib.GliaTelemetry;
 import com.glia.telemetry_lib.GlobalAttribute;
-import com.glia.widgets.AuthorizationMethod;
 import com.glia.widgets.GliaWidgets;
 import com.glia.widgets.GliaWidgetsConfig;
 import com.glia.widgets.Regions;
@@ -57,10 +56,6 @@ public class GliaSdk {
     }
 
     public void configure(PluginCall call, Activity activity) {
-        JSObject authMethod = call.getObject("authorizationMethod");
-        String authMethodType = authMethod != null ? authMethod.getString("type") : null;
-        String authMethodId = authMethod != null ? authMethod.getString("id") : null;
-        String authMethodSecret = authMethod != null ? authMethod.getString("secret") : null;
         String siteId = call.getString("siteId");
         String region = call.getString("region");
         String companyName = call.getString("companyName");
@@ -75,21 +70,6 @@ public class GliaSdk {
             false
         );
 
-        if (authMethodType == null) {
-            call.reject("'authorizationMethod.type' is missing or invalid.");
-            return;
-        }
-
-        if (authMethodId == null) {
-            call.reject("'authorizationMethod.id' is missing or invalid.");
-            return;
-        }
-
-        if (authMethodSecret == null) {
-            call.reject("'authorizationMethod.secret' is missing or invalid.");
-            return;
-        }
-
         if (siteId == null) {
             call.reject("'siteId' is missing.");
             return;
@@ -100,17 +80,7 @@ public class GliaSdk {
             return;
         }
 
-        AuthorizationMethod authorizationMethod;
-        switch (authMethodType.toLowerCase()) {
-            case "siteauth":
-                authorizationMethod = new AuthorizationMethod.SiteApiKey(authMethodId, authMethodSecret);
-                break;
-            default:
-                authorizationMethod = new AuthorizationMethod.UserApiKey(authMethodId, authMethodSecret);
-        }
-
         GliaWidgetsConfig.Builder gliaConfigBuilder = new GliaWidgetsConfig.Builder()
-            .setAuthorizationMethod(authorizationMethod)
             .setSiteId(siteId)
             .setRegion(Regions.fromString(region))
             .setCompanyName(companyName)
